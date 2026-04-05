@@ -1,0 +1,135 @@
+import { v4 as uuid } from "uuid";
+import { ParentProps } from "solid-js";
+import { createStore, produce, reconcile } from "solid-js/store";
+import { Recipe } from "~/model/interfaces/Recipe";
+import { RecipeContext } from "./recipeContext";
+import { UUID } from "~/model/types/UUID";
+import { Ingredient, Instruction } from "~/model/types/recipeTypes";
+import { RecipeImage } from "~/model/types/utils";
+
+
+
+
+export default function RecipeProvider(props: ParentProps) {
+  const [recipe, setRecipe] = createStore<Recipe>({
+    userId: "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
+    name: "test",
+    description: "testne vrijednosti",
+    images: [],
+    rating: 3,
+    portions: 4,
+    cookTime: "2h i 30min",
+    difficulty: 4,
+    sideNotes: "",
+    ingredients: {},
+    instructions: {},
+    ingredientsOrder: [],
+    instructionsOrder: [],
+  })
+
+  const editName = (text: string) => {
+    setRecipe("name", text)
+  }
+
+  const editDescription = (text: string) => {
+    setRecipe("description", text)
+  }
+
+  const editRating = (rating: number) => {
+    setRecipe("rating", rating)
+  }
+
+  const editPortion = (portion: number) => {
+    setRecipe("portions", portion)
+  }
+
+  const editCookTime = (text: string) => {
+    setRecipe("cookTime", text)
+  }
+
+  const editDifficulty = (difficulty: number) => {
+    setRecipe("difficulty", difficulty)
+  }
+
+  const editSideNotes = (text: string) => {
+    setRecipe("sideNotes", text)
+  }
+
+  const addIngredient = () => {
+    const id: UUID = uuid()
+    setRecipe("ingredients", id, {
+      id,
+      name: "",
+      amount: 0,
+      measuringUnit: "",
+      index: recipe.ingredientsOrder.length
+    })
+    setRecipe("ingredientsOrder", recipe.ingredientsOrder.length, id)
+  }
+
+  const editIngredient = (ingredient: Ingredient) => {
+    setRecipe("ingredients", ingredient.id, reconcile(ingredient))
+  }
+
+  const removeIngredient = (id: UUID) => {
+    setRecipe(produce((recipe) => {
+      delete recipe.ingredients[id]
+    }))
+    setRecipe("ingredientsOrder", (order) => order.filter((i) => i !== id))
+  }
+
+  const addInstruction = () => {
+    const id: UUID = uuid()
+    setRecipe("instructions", id, {
+      id,
+      name: "",
+      text: "",
+      index: recipe.instructionsOrder.length,
+      images: []
+    })
+    setRecipe("instructionsOrder", recipe.instructionsOrder.length, id)
+  }
+
+  const editInstruction = (instruction: Instruction) => {
+    setRecipe("instructions", instruction.id, reconcile(instruction))
+  }
+
+  const removeInstruction = (id: UUID) => {
+    setRecipe(produce((recipe) => {
+      delete recipe.instructions[id]
+    }))
+    setRecipe("instructionsOrder", (order) => order.filter((i) => i !== id))
+  }
+
+  const addRecipeImage = (image: RecipeImage) => {
+    setRecipe("images", recipe.images.length, image)
+  }
+
+  const removeRecipeImage = (index: number) => {
+    URL.revokeObjectURL(recipe.images[index].url)
+    setRecipe("images", (images) => images.filter((_, i) => i !== index))
+  }
+
+  return (
+    <RecipeContext.Provider value={{
+      recipe,
+      editName,
+      editDescription,
+      editRating,
+      editPortion,
+      editCookTime,
+      editDifficulty,
+      editSideNotes,
+      addIngredient,
+      editIngredient,
+      removeIngredient,
+      addInstruction,
+      editInstruction,
+      removeInstruction,
+      addRecipeImage,
+      removeRecipeImage,
+    }}>
+      {props.children}
+    </RecipeContext.Provider>
+  )
+}
