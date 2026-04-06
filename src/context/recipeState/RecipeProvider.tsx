@@ -6,26 +6,16 @@ import { RecipeContext } from "./recipeContext";
 import { UUID } from "~/model/types/UUID";
 import { Ingredient, Instruction } from "~/model/types/recipeTypes";
 import { RecipeImage } from "~/model/types/utils";
+import { defaultRecipe } from "./defaultRecipe";
 
 
 
 
 export default function RecipeProvider(props: ParentProps) {
-  const [recipe, setRecipe] = createStore<Recipe>({
-    userId: "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
-    name: "test",
-    description: "testne vrijednosti",
-    images: [],
-    rating: 3,
-    portions: 4,
-    cookTime: "2h i 30min",
-    difficulty: 4,
-    sideNotes: "",
-    ingredients: {},
-    instructions: {},
-    ingredientsOrder: [],
-    instructionsOrder: [],
-  })
+
+  const date = new Date();
+
+  const [recipe, setRecipe] = createStore<Recipe>(defaultRecipe)
 
   const editName = (text: string) => {
     setRecipe("name", text)
