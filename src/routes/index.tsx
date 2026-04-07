@@ -16,6 +16,8 @@ export default function Home() {
           About Page
         </A>{" "}
       </p>
+      <textarea>
+      </textarea>
     </main>
   );
 }

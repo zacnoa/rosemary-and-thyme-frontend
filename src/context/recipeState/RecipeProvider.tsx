@@ -6,16 +6,15 @@ import { RecipeContext } from "./recipeContext";
 import { UUID } from "~/model/types/UUID";
 import { Ingredient, Instruction } from "~/model/types/recipeTypes";
 import { RecipeImage } from "~/model/types/utils";
-import { defaultRecipe } from "./defaultRecipe";
+import { createDefaultRecipe } from "./defaultRecipe";
 
 
 
 
 export default function RecipeProvider(props: ParentProps) {
 
-  const date = new Date();
 
-  const [recipe, setRecipe] = createStore<Recipe>(defaultRecipe)
+  const [recipe, setRecipe] = createStore<Recipe>(createDefaultRecipe())
 
   const editName = (text: string) => {
     setRecipe("name", text)
