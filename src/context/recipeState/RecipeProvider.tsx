@@ -1,5 +1,5 @@
 import { v4 as uuid } from "uuid";
-import { ParentProps } from "solid-js";
+import { onMount, ParentProps } from "solid-js";
 import { createStore, produce, reconcile } from "solid-js/store";
 import { Recipe } from "~/model/interfaces/Recipe";
 import { RecipeContext } from "./recipeContext";
@@ -15,6 +15,10 @@ export default function RecipeProvider(props: ParentProps) {
 
 
   const [recipe, setRecipe] = createStore<Recipe>(createDefaultRecipe())
+
+  const initializeRecipe = (state: Recipe) => {
+    setRecipe(reconcile(state));
+  }
 
   const editName = (text: string) => {
     setRecipe("name", text)
@@ -99,6 +103,10 @@ export default function RecipeProvider(props: ParentProps) {
     setRecipe("images", (images) => images.filter((_, i) => i !== index))
   }
 
+  onMount(() => {
+    initializeRecipe(createDefaultRecipe())
+  })
+
   return (
     <RecipeContext.Provider value={{
       recipe,
@@ -117,6 +125,7 @@ export default function RecipeProvider(props: ParentProps) {
       removeInstruction,
       addRecipeImage,
       removeRecipeImage,
+      initializeRecipe
     }}>
       {props.children}
     </RecipeContext.Provider>

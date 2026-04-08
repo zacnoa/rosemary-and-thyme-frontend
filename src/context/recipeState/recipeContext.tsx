@@ -6,6 +6,7 @@ import { UUID } from "~/model/types/UUID";
 
 type RecipeContextType = {
   recipe: Recipe
+  initializeRecipe: (state: Recipe) => void
   editName: (text: string) => void
   editDescription: (text: string) => void
   editRating: (rating: number) => void
@@ -21,5 +22,6 @@ type RecipeContextType = {
   removeInstruction: (id: UUID) => void
   addRecipeImage: (image: RecipeImage) => void
   removeRecipeImage: (index: number) => void
+
 }
 export const RecipeContext = createContext<RecipeContextType>();

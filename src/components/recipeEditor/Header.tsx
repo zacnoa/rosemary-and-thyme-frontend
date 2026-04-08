@@ -2,6 +2,7 @@ import { ThumbsUp } from "lucide-solid";
 import { onMount } from "solid-js";
 import { useRecipe } from "~/hooks/useRecipe";
 
+//TODO: pokusati ref za visinu da ne izgubimo na reload pravilnu visinu za to
 export default function Header() {
   const context = useRecipe();
   let titleRef: HTMLTextAreaElement | undefined;
@@ -12,10 +13,15 @@ export default function Header() {
     el.style.height = "auto"; // resetiraj visinu da scrollHeight bude točan
     el.style.height = el.scrollHeight + "px";
   };
-
   onMount(() => {
-    resizeTextarea(titleRef);
-    resizeTextarea(descRef);
+    if (titleRef) {
+      titleRef.value = context.recipe.name
+      resizeTextarea(titleRef)
+    }
+    if (descRef) {
+      descRef.value = context.recipe.description
+      resizeTextarea(descRef)
+    }
   })
 
   return (
@@ -26,7 +32,6 @@ export default function Header() {
           class="flex-1 text-2xl md:text-5xl outline-none resize-none min-w-0  leading-tight"
           rows={1}
           placeholder="Naziv recepta"
-          value={context.recipe.name}
           onInput={(e) => {
             resizeTextarea(titleRef);
             context.editName(e.currentTarget.value);
@@ -47,7 +52,6 @@ export default function Header() {
           <textarea
             ref={descRef}
             class=" outline-none w-full resize-none text-sm md:text-xl pt-3 pr-2 md:pr-3 leading-tight"
-            value={context.recipe.description}
             placeholder="Opis..."
             onInput={(e) => {
               resizeTextarea(descRef);
