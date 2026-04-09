@@ -1,6 +1,7 @@
 import { ThumbsUp } from "lucide-solid";
 import { onMount } from "solid-js";
 import { useRecipe } from "~/hooks/useRecipe";
+import { resizeTextarea } from "~/utils/resizeTextArea";
 
 //TODO: pokusati ref za visinu da ne izgubimo na reload pravilnu visinu za to
 export default function Header() {
@@ -8,11 +9,6 @@ export default function Header() {
   let titleRef: HTMLTextAreaElement | undefined;
   let descRef: HTMLTextAreaElement | undefined;
 
-  const resizeTextarea = (el: HTMLTextAreaElement | undefined) => {
-    if (!el) return;
-    el.style.height = "auto"; // resetiraj visinu da scrollHeight bude točan
-    el.style.height = el.scrollHeight + "px";
-  };
   onMount(() => {
     if (titleRef) {
       titleRef.value = context.recipe.name

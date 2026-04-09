@@ -1,6 +1,6 @@
 import { For, Index } from "solid-js";
 import { useRecipe } from "~/hooks/useRecipe";
-import IngredientInput from "./IngredientInput";
+import Ingredient from "./Ingredient";
 
 export default function BasicInformation() {
   const context = useRecipe();
@@ -17,7 +17,7 @@ export default function BasicInformation() {
           <For each={context.recipe.ingredientsOrder}>
             {(id) => (
               <li class="text-sm md:text-xl">
-                <IngredientInput id={id} />
+                <Ingredient id={id} />
               </li>
             )}
           </For>

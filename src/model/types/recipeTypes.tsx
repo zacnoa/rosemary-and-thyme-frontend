@@ -5,14 +5,11 @@ export type Ingredient = {
   name: string,
   amount: number,
   measuringUnit: string,
-  index: number,
 }
 
 export type Instruction = {
   id: UUID,
-  name: string,
   text: string,
-  index: number,
   images: Blob[]
 }
 

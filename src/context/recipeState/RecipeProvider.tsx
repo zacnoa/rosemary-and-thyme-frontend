@@ -55,7 +55,6 @@ export default function RecipeProvider(props: ParentProps) {
       name: "",
       amount: 0,
       measuringUnit: "",
-      index: recipe.ingredientsOrder.length
     })
     setRecipe("ingredientsOrder", recipe.ingredientsOrder.length, id)
   }
@@ -65,22 +64,24 @@ export default function RecipeProvider(props: ParentProps) {
   }
 
   const removeIngredient = (id: UUID) => {
-    setRecipe(produce((recipe) => {
-      delete recipe.ingredients[id]
-    }))
     setRecipe("ingredientsOrder", (order) => order.filter((i) => i !== id))
+    setRecipe(produce((recipe) => { delete recipe.ingredients[id] }))
   }
 
-  const addInstruction = () => {
+  const addInstruction = (afterId: UUID | "") => {
     const id: UUID = uuid()
     setRecipe("instructions", id, {
       id,
-      name: "",
       text: "",
-      index: recipe.instructionsOrder.length,
       images: []
     })
-    setRecipe("instructionsOrder", recipe.instructionsOrder.length, id)
+    setRecipe("instructionsOrder", (order) => {
+      if (!afterId || order.length === 0) return [...order, id]
+      const index = order.indexOf(afterId)
+      const newOrder = [...order]
+      newOrder.splice(index + 1, 0, id)
+      return newOrder
+    })
   }
 
   const editInstruction = (instruction: Instruction) => {
@@ -88,10 +89,10 @@ export default function RecipeProvider(props: ParentProps) {
   }
 
   const removeInstruction = (id: UUID) => {
+    setRecipe("instructionsOrder", (order) => order.filter((i) => i !== id))
     setRecipe(produce((recipe) => {
       delete recipe.instructions[id]
     }))
-    setRecipe("instructionsOrder", (order) => order.filter((i) => i !== id))
   }
 
   const addRecipeImage = (image: RecipeImage) => {

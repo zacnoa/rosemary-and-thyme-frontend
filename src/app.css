@@ -6,6 +6,7 @@
 }
 
 * {
+  overscroll-behavior:none;
   color: var(--color-foreground);
   font-family: 'Electrolize', sans-serif;
   box-sizing:border-box
