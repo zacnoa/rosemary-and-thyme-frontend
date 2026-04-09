@@ -1,6 +1,7 @@
 import BasicInformation from "~/components/recipeEditor/BasicInformation";
 import Header from "~/components/recipeEditor/Header";
 import Instructions from "~/components/recipeEditor/Instructions";
+import Notes from "~/components/recipeEditor/Notes";
 import RecipeProvider from "~/context/recipeState/RecipeProvider";
 
 export default function RecipeEditor() {
@@ -17,6 +18,9 @@ export default function RecipeEditor() {
           </section>
           <section class="mt-20">
             <Instructions />
+          </section>
+          <section class="mt-20">
+            <Notes />
           </section>
         </main>
       </div>
