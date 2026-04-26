@@ -5,8 +5,8 @@
   src: url('/Electrolize-Regular.ttf') format('truetype');
 }
 
+
 * {
-  overscroll-behavior:none;
   color: var(--color-foreground);
   font-family: 'Electrolize', sans-serif;
   box-sizing:border-box

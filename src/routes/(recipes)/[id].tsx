@@ -8,7 +8,7 @@ export default function RecipeEditor() {
 
   return (
     <RecipeProvider>
-      <div class="w-full bg-background bg-x-pattern-sm md:bg-x-pattern overflow-hidden">
+      <div class="w-full overflow-hidden">
         <main class="md:max-w-4xl my-4  mx-2 md:mx-auto">
           <section>
             <Header></Header>
