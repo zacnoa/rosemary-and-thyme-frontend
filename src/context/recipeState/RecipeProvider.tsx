@@ -1,4 +1,3 @@
-import { v4 as uuid } from "uuid";
 import { onMount, ParentProps } from "solid-js";
 import { createStore, produce, reconcile } from "solid-js/store";
 import { Recipe } from "~/model/interfaces/Recipe";
@@ -49,7 +48,7 @@ export default function RecipeProvider(props: ParentProps) {
   }
 
   const addIngredient = () => {
-    const id: UUID = uuid()
+    const id: UUID = crypto.randomUUID()
     setRecipe("ingredients", id, {
       id,
       name: "",
@@ -69,7 +68,7 @@ export default function RecipeProvider(props: ParentProps) {
   }
 
   const addInstruction = (afterId: UUID | "") => {
-    const id: UUID = uuid()
+    const id: UUID = crypto.randomUUID()
     setRecipe("instructions", id, {
       id,
       text: "",
@@ -88,6 +87,11 @@ export default function RecipeProvider(props: ParentProps) {
     setRecipe("instructions", instruction.id, reconcile(instruction))
   }
 
+  const addInstructionImage = (image: RecipeImage, instructionId: UUID) => {
+    setRecipe("images", image.id, image)
+    setRecipe("instructions", instructionId, "images", (images) => [...images, image.id])
+  }
+
   const removeInstruction = (id: UUID) => {
     setRecipe("instructionsOrder", (order) => order.filter((i) => i !== id))
     setRecipe(produce((recipe) => {
@@ -95,13 +99,19 @@ export default function RecipeProvider(props: ParentProps) {
     }))
   }
 
-  const addRecipeImage = (image: RecipeImage) => {
-    setRecipe("images", recipe.images.length, image)
+  const addBannerImage = (image: RecipeImage) => {
+    setRecipe("images", image.id, image)
+    setRecipe("bannerImages", recipe.bannerImages.length, image.id)
   }
 
-  const removeRecipeImage = (index: number) => {
-    URL.revokeObjectURL(recipe.images[index].url)
-    setRecipe("images", (images) => images.filter((_, i) => i !== index))
+  const removeBannerImage = (index: number) => {
+    const imageId = recipe.bannerImages[index];
+    const image = recipe.images[imageId]
+    if (image.blobURL) URL.revokeObjectURL(image.blobURL);
+    setRecipe("bannerImages", (images) => images.filter((_, i) => i !== index));
+    setRecipe(produce((recipe) => {
+      delete recipe.images[imageId]
+    }))
   }
 
   onMount(() => {
@@ -123,9 +133,10 @@ export default function RecipeProvider(props: ParentProps) {
       removeIngredient,
       addInstruction,
       editInstruction,
+      addInstructionImage,
       removeInstruction,
-      addRecipeImage,
-      removeRecipeImage,
+      addBannerImage,
+      removeBannerImage,
       initializeRecipe
     }}>
       {props.children}

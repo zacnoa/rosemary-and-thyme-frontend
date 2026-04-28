@@ -10,7 +10,7 @@ export type Ingredient = {
 export type Instruction = {
   id: UUID,
   text: string,
-  images: Blob[]
+  images: UUID[]
 }
 
 

@@ -9,16 +9,18 @@ export interface Recipe {
   createDate: Date,
   name: string,
   description: string,
-  images: RecipeImage[],
   rating: number,
   portions: number,
   cookTime: string,
   difficulty: number,
   sideNotes: string,
+  images: Record<UUID, RecipeImage>
 
   ingredients: Record<UUID, Ingredient>,
   instructions: Record<UUID, Instruction>,
   ingredientsOrder: UUID[],
   instructionsOrder: UUID[],
+  bannerImages: UUID[],
+
 
 }

@@ -1,11 +1,13 @@
 import { onMount } from "solid-js";
 import { useRecipe } from "~/hooks/useRecipe";
 import { resizeTextarea } from "~/utils/resizeTextArea";
+import ImageGallery from "./ImageGallery";
 
 export default function InstructionItem({ id }: { id: string }) {
   const context = useRecipe();
   const instruction = () => context.recipe.instructions[id];
   const index = () => context.recipe.instructionsOrder.indexOf(id);
+  const { addInstructionImage } = context
   let textAreaRef: HTMLTextAreaElement | undefined
 
   onMount(() => {
@@ -39,6 +41,7 @@ export default function InstructionItem({ id }: { id: string }) {
         }}
         spellcheck="false"
       />
+      <ImageGallery sectionName={id} images={instruction().images} addImage={(image) => addInstructionImage(image, id)} />
     </div>
   )
 }

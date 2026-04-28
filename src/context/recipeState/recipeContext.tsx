@@ -19,9 +19,10 @@ type RecipeContextType = {
   removeIngredient: (id: UUID) => void
   addInstruction: (id: UUID) => void
   editInstruction: (instruction: Instruction) => void
+  addInstructionImage: (image: RecipeImage, instructionId: UUID) => void,
   removeInstruction: (id: UUID) => void
-  addRecipeImage: (image: RecipeImage) => void
-  removeRecipeImage: (index: number) => void
+  addBannerImage: (image: RecipeImage) => void
+  removeBannerImage: (index: number) => void
 
 }
 export const RecipeContext = createContext<RecipeContextType>();
