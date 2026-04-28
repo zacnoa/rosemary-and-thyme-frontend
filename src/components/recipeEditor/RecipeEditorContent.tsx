@@ -5,6 +5,7 @@ import Header from "./Header";
 import ImageGallery from "./ImageGallery";
 import Instructions from "./Instructions";
 import Notes from "./Notes";
+import Dock from "./Dock";
 
 export default function RecipeEditorContent() {
   const { recipe, addBannerImage } = useRecipe()
@@ -17,7 +18,10 @@ export default function RecipeEditorContent() {
         </section>
         <section class="mt-20"><BasicInformation /></section>
         <section class="mt-20"><Instructions /></section>
-        <section class="mt-20"><Notes /></section>
+        <section class="mt-20 mb-40"><Notes /></section>
+        <section class="fixed bottom-10 left-1/2 -translate-x-1/2">
+          <Dock />
+        </section>
       </main>
     </div>
   )

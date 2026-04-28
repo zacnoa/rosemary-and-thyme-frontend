@@ -9,10 +9,10 @@ export default function Instructions() {
     <div class="flex flex-col gap-4">
       <For each={context.recipe.instructionsOrder}>
         {(id) => (
-          <div class="flex flex-col gap-2">
+          <div class="flex flex-col gap-4">
             <InstructionItem id={id} />
             <button
-              class="self-start mt-1 px-3 py-1  text-sm md:text-md rounded-md bg-linear-to-r from-green to-orange cursor-pointer"
+              class="self-start mt-1 px-3 py-1  text-sm md:text-base rounded-md bg-linear-to-r from-green to-orange cursor-pointer"
               onClick={() => context.addInstruction(id)}
             >
               + Add Step
@@ -22,7 +22,7 @@ export default function Instructions() {
       </For>
       {context.recipe.instructionsOrder.length === 0 && (
         <button
-          class="self-start mt-1 px-3 py-1 text-sm md:text-md rounded-md bg-linear-to-r from-green to-orange cursor-pointer"
+          class="self-start mt-1 px-3 py-1 text-sm md:text-base rounded-md bg-linear-to-r from-green to-orange cursor-pointer"
           onClick={() => context.addInstruction("")}
         >
           + Add Step
