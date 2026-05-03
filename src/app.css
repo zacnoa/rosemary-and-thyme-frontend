@@ -6,7 +6,7 @@
 }
 
 
-* {
+body {
   color: var(--color-foreground);
   font-family: 'Electrolize', sans-serif;
   box-sizing:border-box
@@ -16,7 +16,6 @@
   
   --background-image-x-pattern: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%237c6f64' stroke-opacity='0.5' stroke-width='1.5'%3E%3Cline x1='15' y1='15' x2='45' y2='45'/%3E%3Cline x1='45' y1='15' x2='15' y2='45'/%3E%3C/g%3E%3C/svg%3E");
   --background-image-x-pattern-sm: url("data:image/svg+xml,%3Csvg width='50' height='50' viewBox='0 0 50 50' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%237c6f64' stroke-opacity='0.5' stroke-width='1.5'%3E%3Cline x1='10' y1='10' x2='30' y2='30'/%3E%3Cline x1='30' y1='10' x2='10' y2='30'/%3E%3C/g%3E%3C/svg%3E");
-
   --color-background:#282828;
   --color-foreground:#ebdbb2;
   --color-foreground2:#fbf1c7;
@@ -31,4 +30,12 @@
   --color-ligth-blue:#83a598;
   --font-family-sans:"Electrolize",sans-serif;
 
+}
+[data-theme="light"] {
+  --color-background: #EBDBB2;
+  --color-foreground: #504945;
+  --color-foreground2: #3C3836;
+  --color-foreground3: #665C54;
+  --background-image-x-pattern: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23a89984' stroke-opacity='0.5' stroke-width='1.5'%3E%3Cline x1='15' y1='15' x2='45' y2='45'/%3E%3Cline x1='45' y1='15' x2='15' y2='45'/%3E%3C/g%3E%3C/svg%3E");
+  --background-image-x-pattern-sm: url("data:image/svg+xml,%3Csvg width='50' height='50' viewBox='0 0 50 50' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23a89984' stroke-opacity='0.5' stroke-width='1.5'%3E%3Cline x1='10' y1='10' x2='30' y2='30'/%3E%3Cline x1='30' y1='10' x2='10' y2='30'/%3E%3C/g%3E%3C/svg%3E");
 }
