@@ -38,7 +38,7 @@ export default function Header() {
           <span class="flex items-center">
             <ThumbsUp stroke="var(--color-green)" class="md:size-8 size-5" />
           </span>
-          <span class="text-sm mt-1.75 md:mt-2 md:text-2xl leading-none">{context.recipe.rating}</span>
+          <span class="text-sm mt-1.75 md:mt-2 md:text-2xl leading-none">{context.recipe.likes}</span>
         </div>
       </div>
 

@@ -4,12 +4,12 @@ import { UUID } from "../types/UUID";
 
 export interface Recipe {
 
-  authorId: UUID,
-  authorName: string,
+  userId: UUID,
+  userName: string,
   createDate: Date,
   name: string,
   description: string,
-  rating: number,
+  likes: number,
   portions: number,
   cookTime: string,
   difficulty: number,
@@ -20,7 +20,7 @@ export interface Recipe {
   instructions: Record<UUID, Instruction>,
   ingredientsOrder: UUID[],
   instructionsOrder: UUID[],
-  bannerImages: UUID[],
+  heroImages: UUID[],
 
 
 }

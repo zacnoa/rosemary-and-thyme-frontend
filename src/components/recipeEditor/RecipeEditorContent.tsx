@@ -14,7 +14,7 @@ export default function RecipeEditorContent() {
       <main class="md:max-w-4xl my-4 mx-2 md:mx-auto">
         <section><Header /></section>
         <section class="mt-20">
-          <ImageGallery sectionName="banner" images={recipe.bannerImages} addImage={addBannerImage} />
+          <ImageGallery sectionName="banner" images={recipe.heroImages} addImage={addBannerImage} />
         </section>
         <section class="mt-20"><BasicInformation /></section>
         <section class="mt-20"><Instructions /></section>
