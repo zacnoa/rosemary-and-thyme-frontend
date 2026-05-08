@@ -20,7 +20,7 @@ export interface Recipe {
   instructions: Record<UUID, Instruction>,
   ingredientsOrder: UUID[],
   instructionsOrder: UUID[],
-  heroImages: UUID[],
+  heroImagesOrder: UUID[],
 
 
 }
