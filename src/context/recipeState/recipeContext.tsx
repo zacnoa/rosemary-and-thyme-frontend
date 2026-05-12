@@ -6,7 +6,7 @@ import { UUID } from "~/model/types/UUID";
 
 type RecipeContextType = {
   recipe: Recipe
-  initializeRecipe: (state: Recipe) => void
+  // initializeRecipe: (state: Recipe) => void
   editName: (text: string) => void
   editDescription: (text: string) => void
   editRating: (rating: number) => void

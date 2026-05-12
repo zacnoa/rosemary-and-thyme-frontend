@@ -1,24 +1,13 @@
 import { ThumbsUp } from "lucide-solid";
-import { onMount } from "solid-js";
 import { useRecipe } from "~/hooks/useRecipe";
 import { resizeTextarea } from "~/utils/resizeTextArea";
 
-//TODO: pokusati ref za visinu da ne izgubimo na reload pravilnu visinu za to
+//TODO Zamijenij onMount sa value unutar textArea trebalo bi raditi  i sa vecom velicion teksta
 export default function Header() {
   const context = useRecipe();
   let titleRef: HTMLTextAreaElement | undefined;
   let descRef: HTMLTextAreaElement | undefined;
 
-  onMount(() => {
-    if (titleRef) {
-      titleRef.value = context.recipe.name
-      resizeTextarea(titleRef)
-    }
-    if (descRef) {
-      descRef.value = context.recipe.description
-      resizeTextarea(descRef)
-    }
-  })
 
   return (
     <div>
@@ -33,7 +22,7 @@ export default function Header() {
             context.editName(e.currentTarget.value);
           }}
           spellcheck="false"
-        />
+        >{context.recipe.name}</textarea>
         <div class="flex items-center gap-2 text-green border-l-3 md:border-l-4 border-orange pl-2 md:pl-4 w-20 md:w-32">
           <span class="flex items-center">
             <ThumbsUp stroke="var(--color-green)" class="md:size-8 size-5" />
@@ -44,7 +33,7 @@ export default function Header() {
 
       <div class="flex">
         <div class="flex-1 min-w-0">
-          <div class="text-md md:text-4xl">By {context.recipe.authorName}</div>
+          <div class="text-md md:text-4xl">By {context.recipe.userName}</div>
           <textarea
             ref={descRef}
             class=" outline-none w-full resize-none text-sm md:text-xl pt-3 pr-2 md:pr-3 leading-tight"
@@ -54,14 +43,14 @@ export default function Header() {
               context.editDescription(e.currentTarget.value);
             }}
             spellcheck="false"
-          />
+          >{context.recipe.description}</textarea>
         </div>
         <div class=" border-l-3 md:border-l-4 border-orange  pt-2 w-20 md:w-32 text-xs md:text-2xl">
           <ul class="text-center">
-            <li>{context.recipe.createDate.getDate()}.</li>
-            <li>{context.recipe.createDate.getMonth()}.</li>
-            <li>{context.recipe.createDate.getFullYear().toString().slice(0, 2)}</li>
-            <li>{context.recipe.createDate.getFullYear().toString().slice(2)}.</li>
+            {/* <li>{context.recipe.createDate.getDate()}.</li> */}
+            {/* <li>{context.recipe.createDate.getMonth()}.</li> */}
+            {/* <li>{context.recipe.createDate.getFullYear().toString().slice(0, 2)}</li> */}
+            {/* <li>{context.recipe.createDate.getFullYear().toString().slice(2)}.</li> */}
           </ul>
         </div>
       </div>
