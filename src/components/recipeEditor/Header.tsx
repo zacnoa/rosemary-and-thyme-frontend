@@ -47,10 +47,10 @@ export default function Header() {
         </div>
         <div class=" border-l-3 md:border-l-4 border-orange  pt-2 w-20 md:w-32 text-xs md:text-2xl">
           <ul class="text-center">
-            {/* <li>{context.recipe.createDate.getDate()}.</li> */}
-            {/* <li>{context.recipe.createDate.getMonth()}.</li> */}
-            {/* <li>{context.recipe.createDate.getFullYear().toString().slice(0, 2)}</li> */}
-            {/* <li>{context.recipe.createDate.getFullYear().toString().slice(2)}.</li> */}
+            <li>{context.recipe.createDate.getDate()}.</li>
+            <li>{context.recipe.createDate.getMonth()}.</li>
+            <li>{context.recipe.createDate.getFullYear().toString().slice(0, 2)}</li>
+            <li>{context.recipe.createDate.getFullYear().toString().slice(2)}.</li>
           </ul>
         </div>
       </div>
