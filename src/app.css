@@ -1,9 +1,5 @@
 @import "tailwindcss";
 
-@font-face {
-  font-family: 'Electrolize';
-  src: url('/Electrolize-Regular.ttf') format('truetype');
-}
 
 
 body {

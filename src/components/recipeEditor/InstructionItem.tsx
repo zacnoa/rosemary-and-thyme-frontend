@@ -1,6 +1,6 @@
 import { onMount } from "solid-js";
 import { useRecipe } from "~/hooks/useRecipe";
-import { resizeTextarea } from "~/utils/resizeTextArea";
+import { resizeTextarea } from "~/utils/resizeTextarea";
 import ImageGallery from "./ImageGallery";
 
 export default function InstructionItem({ id }: { id: string }) {

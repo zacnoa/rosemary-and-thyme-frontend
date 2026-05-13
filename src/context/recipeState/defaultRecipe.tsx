@@ -3,14 +3,14 @@ import { Recipe } from "~/model/interfaces/Recipe";
 export function createDefaultRecipe(): Recipe {
   console.log("called recipe")
   return {
-    authorId: "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
-    authorName: "Noa",
+    userId: "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
+    userName: "Noa",
     createDate: new Date(2026, 25, 3),
     name: "Chicken Katsu",
     description: "Chicken katsu is Japanese-style fried chicken. This is my family recipe and can also be used to make tonkatsu by using pork cutlets instead of chicken. Serve with white rice and tonkatsu sauce",
     images: {},
-    bannerImages: [],
-    rating: 124,
+    heroImagesOrder: [],
+    likes: 124,
     portions: 4,
     cookTime: "1h",
     difficulty: 3,

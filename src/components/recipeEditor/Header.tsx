@@ -1,6 +1,6 @@
 import { ThumbsUp } from "lucide-solid";
 import { useRecipe } from "~/hooks/useRecipe";
-import { resizeTextarea } from "~/utils/resizeTextArea";
+import { resizeTextarea } from "~/utils/resizeTextarea";
 
 //TODO Zamijenij onMount sa value unutar textArea trebalo bi raditi  i sa vecom velicion teksta
 export default function Header() {

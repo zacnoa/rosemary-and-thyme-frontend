@@ -1,3 +1,4 @@
+
 import { ErrorBoundary, Show, Suspense } from "solid-js";
 import { createAsync, query, useParams } from "@solidjs/router";
 import RecipeEditorContent from "~/components/recipeEditor/RecipeEditorContent";
@@ -51,4 +52,3 @@ export default function RecipeEditor() {
     </ErrorBoundary>
   );
 }
-

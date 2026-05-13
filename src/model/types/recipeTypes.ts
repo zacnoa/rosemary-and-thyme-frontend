@@ -1,3 +1,4 @@
+
 import { UUID } from "./UUID"
 
 export type Ingredient = {
@@ -12,5 +13,4 @@ export type Instruction = {
   text: string,
   images: UUID[]
 }
-
 
