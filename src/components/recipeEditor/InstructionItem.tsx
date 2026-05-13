@@ -1,4 +1,3 @@
-import { onMount } from "solid-js";
 import { useRecipe } from "~/hooks/useRecipe";
 import { resizeTextarea } from "~/utils/resizeTextarea";
 import ImageGallery from "./ImageGallery";
@@ -9,13 +8,6 @@ export default function InstructionItem({ id }: { id: string }) {
   const index = () => context.recipe.instructionsOrder.indexOf(id);
   const { addInstructionImage } = context
   let textAreaRef: HTMLTextAreaElement | undefined
-
-  onMount(() => {
-    if (textAreaRef) {
-      textAreaRef.value = instruction().text
-      resizeTextarea(textAreaRef)
-    }
-  })
 
   return (
     <div class="flex flex-col gap-2">
@@ -40,7 +32,9 @@ export default function InstructionItem({ id }: { id: string }) {
           })
         }}
         spellcheck="false"
-      />
+      >
+        {instruction().text}
+      </textarea>
       <ImageGallery sectionName={id} images={instruction().images} addImage={(image) => addInstructionImage(image, id)} />
     </div>
   )

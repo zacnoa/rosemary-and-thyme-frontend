@@ -4,6 +4,7 @@ import { resizeTextarea } from "~/utils/resizeTextarea";
 export default function Notes() {
   const context = useRecipe();
   let notesRef: HTMLTextAreaElement | undefined
+
   return (
     <section class="flex flex-col gap-4">
       <div class="flex border-b-3 md:border-b-4 border-orange">
@@ -14,15 +15,15 @@ export default function Notes() {
       <textarea
         ref={notesRef}
         class="outline-none resize-none w-full bg-transparent text-md md:text-lg"
-        value={context.recipe.sideNotes}
         placeholder="Dodajte bilješku..."
         onInput={(e) => {
           resizeTextarea(notesRef);
           context.editSideNotes(e.currentTarget.value)
         }
-
         } spellcheck="false"
-      />
+      >
+        {context.recipe.sideNotes}
+      </textarea>
     </section>
   )
 }

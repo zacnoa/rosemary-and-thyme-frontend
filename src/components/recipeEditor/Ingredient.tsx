@@ -7,8 +7,11 @@ export default function Ingredient({ id }: { id: string }) {
   return (
     <div class="flex items-center gap-2">
       <input
+        type="text"
         class="bg-transparent outline-none w-full"
-        value={`${ingredient().name} ${ingredient().amount || ""}${ingredient().measuringUnit}`}
+        value={[ingredient().name, ingredient().amount || "", ingredient().measuringUnit]
+          .filter(Boolean)
+          .join(" ")}
         placeholder="npr. Pileca prsa 150g"
         onBlur={(e) => {
           const match = e.currentTarget.value.match(/^(.+?)\s+([\d.]+)\s*(\p{L}+)?$/u)
