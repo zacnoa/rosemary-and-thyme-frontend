@@ -22,7 +22,11 @@ type RecipeContextType = {
   addInstructionImage: (image: RecipeImage, instructionId: UUID) => void,
   removeInstruction: (id: UUID) => void
   addBannerImage: (image: RecipeImage) => void
-  removeBannerImage: (index: number) => void
+  removeBannerImage: (index: number) => void,
+  viewerImages: () => { images: UUID[], initialIndex?: number } | null
+  openViewer: (images: UUID[], initialIndex?: number) => void
+  closeViewer: () => void
+  removeImage: (id: UUID) => void
 
 }
 export const RecipeContext = createContext<RecipeContextType>();
