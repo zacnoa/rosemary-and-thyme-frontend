@@ -7,7 +7,12 @@ import { Recipe } from "~/model/interfaces/Recipe";
 
 
 const getRecipe = query(async (id: string) => {
-  const response = await fetch(`http://localhost:8080/recipe/${id}`);
+  const response = await fetch(`http://localhost:8080/recipe/${id}`,
+    {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+
+    });
 
   if (!response.ok) {
     const json = await response.json().catch(() => null);

@@ -80,7 +80,7 @@ export default function Dock() {
           >
             <Notebook color="var(--color-background)" class="md:w-[30px] h-auto" />
           </li>
-          <li class="bg-green rounded-md p-1 cursor-pointer">
+          <li onClick={() => context.saveRecipe(context.recipe)} class={`${context.changedFlag() ? "bg-green" : "bg-foreground"} rounded-md p-1 cursor-pointer`}>
             <Save color="var(--color-background)" class="md:w-[30px] h-auto" />
           </li>
           <li class="bg-gray rounded-md p-1 cursor-pointer">

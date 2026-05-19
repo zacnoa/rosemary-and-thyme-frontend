@@ -4,6 +4,7 @@ import { UUID } from "../types/UUID";
 
 export interface Recipe {
 
+  id: UUID,
   userId: UUID,
   userName: string,
   createDate: Date,

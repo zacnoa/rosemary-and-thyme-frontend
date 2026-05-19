@@ -1,11 +1,14 @@
-import { createSignal, ParentProps, Show } from "solid-js";
+import { createEffect, createSignal, on, ParentProps, Show } from "solid-js";
 import { createStore, produce, reconcile } from "solid-js/store";
 import { RecipeContext } from "./recipeContext";
 import { Recipe } from "~/model/interfaces/Recipe";
 import { UUID } from "~/model/types/UUID";
 import { Ingredient, Instruction } from "~/model/types/recipeTypes";
-import { RecipeImage } from "~/model/types/utils";
+import { RecipeImage, stripBlobData } from "~/model/types/utils";
 import ImageViewer from "~/components/recipeEditor/ImageViewer";
+
+
+
 
 interface RecipeProviderProps extends ParentProps {
   initialRecipe: Recipe;
@@ -14,7 +17,38 @@ interface RecipeProviderProps extends ParentProps {
 export default function RecipeProvider(props: RecipeProviderProps) {
 
   const [recipe, setRecipe] = createStore<Recipe>(props.initialRecipe);
-  const [viewerImages, setViewerImages] = createSignal<{ images: UUID[], initialIndex: number } | null>(null);
+  const [viewerImages, setViewerImages] = createSignal<{ images: UUID[], initialIndex?: number } | null>(null);
+  const [changedFlag, setChangedFlag] = createSignal<boolean>(false);
+
+  const saveRecipe = async (recipe: Recipe) => {
+    const formData = new FormData();
+
+    // recipe JSON bez blob podataka
+    const recipeDTO = stripBlobData(recipe);
+
+    // eksplicitno postavi content-type na application/json
+    const recipeBlob = new Blob([JSON.stringify(recipeDTO)], { type: "application/json" });
+    formData.append("recipe", recipeBlob);
+
+    // slike kao binarne
+    Object.entries(recipe.images).forEach(([id, img]) => {
+      if (img.blob) {
+        formData.append(`images[${id}]`, img.blob, id);
+      }
+    });
+
+    const result = await fetch(`http://localhost:8080/recipe/${recipe.id}`, {
+      method: "PUT",
+      body: formData
+      // NE setaš Content-Type, browser sam postavi boundary
+    });
+    console.log(result)
+  }
+
+  createEffect(on(() => JSON.stringify(recipe), () => {
+    setChangedFlag(true);
+  }, { defer: true }))
+
 
   const openViewer = (images: UUID[], initialIndex: number = 0) => setViewerImages({ images: images, initialIndex: initialIndex });
   const closeViewer = () => setViewerImages(null);
@@ -117,6 +151,7 @@ export default function RecipeProvider(props: RecipeProviderProps) {
   return (
     <RecipeContext.Provider value={{
       recipe,
+      changedFlag,
       viewerImages,
       openViewer,
       closeViewer,
@@ -137,6 +172,7 @@ export default function RecipeProvider(props: RecipeProviderProps) {
       removeInstruction,
       addBannerImage,
       removeBannerImage,
+      saveRecipe
     }}>
       {props.children}
       <Show when={viewerImages()?.images}>

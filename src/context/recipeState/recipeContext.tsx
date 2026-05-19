@@ -5,8 +5,8 @@ import { RecipeImage } from "~/model/types/utils";
 import { UUID } from "~/model/types/UUID";
 
 type RecipeContextType = {
-  recipe: Recipe
-  // initializeRecipe: (state: Recipe) => void
+  recipe: Recipe,
+  changedFlag: () => boolean,
   editName: (text: string) => void
   editDescription: (text: string) => void
   editRating: (rating: number) => void
@@ -26,7 +26,8 @@ type RecipeContextType = {
   viewerImages: () => { images: UUID[], initialIndex?: number } | null
   openViewer: (images: UUID[], initialIndex?: number) => void
   closeViewer: () => void
-  removeImage: (id: UUID) => void
+  removeImage: (id: UUID) => void,
+  saveRecipe: (recipe: Recipe) => void
 
 }
 export const RecipeContext = createContext<RecipeContextType>();
