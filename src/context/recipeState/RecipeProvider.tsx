@@ -33,15 +33,20 @@ export default function RecipeProvider(props: RecipeProviderProps) {
     // slike kao binarne
     Object.entries(recipe.images).forEach(([id, img]) => {
       if (img.blob) {
-        formData.append(`images[${id}]`, img.blob, id);
+        formData.append(id, img.blob);
       }
     });
 
     const result = await fetch(`http://localhost:8080/recipe/${recipe.id}`, {
       method: "PUT",
       body: formData
+      //sluzi za odvajanje vrsta podataka
       // NE setaš Content-Type, browser sam postavi boundary
     });
+    const json = await result.json()
+    if (!result.ok) {
+      console.log(json.detail)
+    }
     console.log(result)
   }
 
