@@ -1,10 +1,12 @@
-import { ErrorBoundary, Show, Suspense } from "solid-js";
-import { createAsync, query, useParams } from "@solidjs/router";
+import { ErrorBoundary, Match, Show, Suspense, Switch } from "solid-js";
+import { createAsync, query, useParams, useSearchParams } from "@solidjs/router";
 import RecipeEditorContent from "~/components/recipeEditor/RecipeEditorContent";
 import RecipeProvider from "~/context/recipeState/RecipeProvider";
 import { Recipe } from "~/model/interfaces/Recipe";
+import BlogProvider from "~/context/blog/blogProvider";
+import Blog from "~/components/blog/Blog";
 
-//TODO: add network error specific message
+//TODO :add network error specific message
 const getRecipe = query(async (id: string) => {
   const response = await fetch(`http://localhost:8080/recipe/${id}`, {
     method: "GET",
@@ -27,6 +29,7 @@ const getRecipe = query(async (id: string) => {
 
 export default function RecipeEditor() {
   const params = useParams();
+  const [searchParams, setSearchParams] = useSearchParams()
 
   const recipe = createAsync(() =>
     getRecipe(params.id!!)
@@ -37,12 +40,23 @@ export default function RecipeEditor() {
       <div>Greška: {err.message}</div>
     )}>
       <Suspense fallback={<div>Loading...</div>}>
-
         <Show when={recipe()}>
           {(data) => (
-            <RecipeProvider initialRecipe={data()}>
-              <RecipeEditorContent />
-            </RecipeProvider>
+            <>
+              <Switch fallback={<p>Nema</p>}>
+                <Match when={searchParams.edit == "false"}>
+                  <BlogProvider recipe={data()}>
+                    <Blog />
+                  </BlogProvider>
+                </Match>
+                <Match when={searchParams.edit == "true"}>
+                  <RecipeProvider initialRecipe={data()}>
+                    <RecipeEditorContent />
+                  </RecipeProvider>
+                </Match>
+              </Switch>
+
+            </>
           )}
         </Show>
 
