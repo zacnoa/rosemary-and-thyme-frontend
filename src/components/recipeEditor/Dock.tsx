@@ -22,8 +22,8 @@ export default function Dock() {
     <div class="relative w-full">
 
       {/* Ingredients panel */}
-      <div class="pointer-events-none absolute bottom-full w-full overflow-hidden h-40 translate-y-2">
-        <div class={`w-full h-full transition-transform duration-300 ${activePanel() === "ingredients" ? "translate-y-0" : "translate-y-full"}`}>
+      <div class={`pointer-events-none absolute bottom-full w-full overflow-hidden h-40 translate-y-2`}>
+        <div class={`w-full h-full transition-transform duration-300 ${activePanel() === "ingredients" ? "translate-y-0 pointer-events-auto" : "translate-y-full"}`}>
           <div class="bg-foreground3 rounded-t-2xl p-3 pb-4 w-full h-full overflow-y-auto">
             <ul class="flex flex-col gap-y-2">
               <For each={context.recipe.ingredientsOrder}>
@@ -41,8 +41,8 @@ export default function Dock() {
       </div >
 
       {/* Search panel */}
-      < div class="pointer-events-none absolute bottom-full w-full overflow-hidden h-40 translate-y-2" >
-        <div class={`w-full h-full transition-transform duration-300 ${activePanel() === "search" ? "translate-y-2" : "translate-y-full"}`}>
+      <div class={`pointer-events-none  absolute bottom-full w-full overflow-hidden h-40 translate-y-2`} >
+        <div class={` w-full h-full transition-transform duration-300 ${activePanel() === "search" ? "translate-y-2 pointer-events-auto" : "translate-y-full"}`}>
           <div class="bg-foreground3 rounded-t-2xl p-3 pb-4 w-full h-full">
             <input
               type="text"
