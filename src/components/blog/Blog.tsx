@@ -1,9 +1,10 @@
 import { For, Index, useContext } from "solid-js";
-import { ThumbsUp } from "lucide-solid";
+import { Dock, ThumbsUp } from "lucide-solid";
 import { BlogContext } from "~/context/blog/blogContext";
+import { clientOnly } from "@solidjs/start";
 
 
-function useBlog() {
+export function useBlog() {
   const ctx = useContext(BlogContext);
   if (!ctx) throw new Error("useBlog must be used inside BlogProvider");
   return ctx;
@@ -213,6 +214,7 @@ function Notes() {
 
 export default function Blog() {
 
+  const BlogDock = clientOnly(() => import("./BlogDock"))
   const { recipe } = useBlog()
   return (
     <div class="w-full overflow-hidden">
@@ -225,6 +227,7 @@ export default function Blog() {
         <section class="mt-20"><Instructions /></section>
         <section class="mt-20 mb-40"><Notes /></section>
         <section class="fixed bottom-10 left-1/2 -translate-x-1/2">
+          <BlogDock />
         </section>
       </main>
     </div>
