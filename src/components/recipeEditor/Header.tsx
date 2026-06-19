@@ -1,5 +1,5 @@
 import { ThumbsUp } from "lucide-solid";
-import { useRecipe } from "~/hooks/useRecipe";
+import { useRecipe } from "./context/useRecipe";
 import { resizeTextarea } from "~/utils/resizeTextarea";
 
 //TODO Zamijenij onMount sa value unutar textArea trebalo bi raditi  i sa vecom velicion teksta

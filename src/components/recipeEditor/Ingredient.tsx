@@ -1,4 +1,4 @@
-import { useRecipe } from "~/hooks/useRecipe";
+import { useRecipe } from "./context/useRecipe";
 
 export default function Ingredient({ id }: { id: string }) {
   const context = useRecipe();

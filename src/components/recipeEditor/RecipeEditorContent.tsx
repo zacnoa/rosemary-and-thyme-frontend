@@ -1,11 +1,11 @@
 // RecipeEditorContent.tsx
-import { useRecipe } from "~/hooks/useRecipe";
 import { clientOnly } from "@solidjs/start";
 import BasicInformation from "./BasicInformation";
 import Header from "./Header";
 import ImageGallery from "./ImageGallery";
 import Instructions from "./Instructions";
 import Notes from "./Notes";
+import { useRecipe } from "./context/useRecipe";
 
 export default function RecipeEditorContent() {
   const { recipe, addBannerImage } = useRecipe()

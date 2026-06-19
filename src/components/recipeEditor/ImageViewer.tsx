@@ -1,7 +1,7 @@
 import { createSignal, For, onCleanup, onMount } from "solid-js";
-import { useRecipe } from "~/hooks/useRecipe";
+import { useRecipe } from "./context/useRecipe";
 
-interface ImageViewerProps {
+type ImageViewerProps = {
   images: string[]
   initialIndex?: number,
   onDelete: (id: string) => void

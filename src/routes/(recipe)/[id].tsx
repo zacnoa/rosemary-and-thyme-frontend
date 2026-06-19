@@ -1,10 +1,10 @@
 import { ErrorBoundary, Match, Show, Suspense, Switch } from "solid-js";
 import { createAsync, query, useParams, useSearchParams } from "@solidjs/router";
 import RecipeEditorContent from "~/components/recipeEditor/RecipeEditorContent";
-import RecipeProvider from "~/context/recipeState/RecipeProvider";
 import { Recipe } from "~/model/interfaces/Recipe";
-import BlogProvider from "~/context/blog/blogProvider";
 import Blog from "~/components/blog/Blog";
+import BlogProvider from "~/components/blog/context/blogProvider";
+import RecipeProvider from "~/components/recipeEditor/context/RecipeProvider";
 
 //TODO :add network error specific message
 const getRecipe = query(async (id: string) => {

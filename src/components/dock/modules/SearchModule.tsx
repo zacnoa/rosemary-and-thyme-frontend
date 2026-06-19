@@ -1,6 +1,6 @@
 import { Search } from "lucide-solid";
 import { onMount } from "solid-js";
-import { useDock } from "../DockContext";
+import { useDock } from "../context/DockContext";
 
 const PANEL_ID = "search";
 

@@ -1,5 +1,5 @@
 import { Save } from "lucide-solid";
-import { useRecipe } from "~/hooks/useRecipe";
+import { useRecipe } from "~/components/recipeEditor/context/useRecipe";
 
 export default function SaveButton() {
   const context = useRecipe();

@@ -1,5 +1,5 @@
 import { For } from "solid-js";
-import { useRecipe } from "~/hooks/useRecipe";
+import { useRecipe } from "./context/useRecipe";
 import InstructionItem from "./InstructionItem";
 
 export default function Instructions() {

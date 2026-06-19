@@ -1,5 +1,5 @@
 import { For, Index } from "solid-js";
-import { useRecipe } from "~/hooks/useRecipe";
+import { useRecipe } from "./context/useRecipe";
 import Ingredient from "./Ingredient";
 
 export default function BasicInformation() {

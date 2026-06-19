@@ -1,5 +1,5 @@
 import { createSignal, createMemo, JSX, ParentProps, Show } from "solid-js";
-import { DockContext } from "./DockContext";
+import { DockContext } from "./context/DockContext";
 
 export default function Dock(props: ParentProps) {
   const [activePanel, setActivePanel] = createSignal<string | null>(null);
@@ -19,6 +19,9 @@ export default function Dock(props: ParentProps) {
     return panels()[id]?.() ?? null;
   });
 
+  /**
+   * Because DockContext is not reliant on any external calls for its state we forego a separate DockProvider.ts file
+   */
   return (
     <DockContext.Provider value={{ activePanel, toggle, registerPanel, panels }}>
       <div class="relative w-full">

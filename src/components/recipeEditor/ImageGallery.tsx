@@ -1,7 +1,13 @@
 import { For, JSX } from "solid-js";
-import { useRecipe } from "~/hooks/useRecipe";
-import { ImageGalleryProps } from "~/model/props/ImageGalleryProps";
+import { RecipeImage } from "~/model/types/utils";
+import { UUID } from "~/model/types/UUID";
+import { useRecipe } from "./context/useRecipe";
 
+export type ImageGalleryProps = {
+  images: UUID[],
+  sectionName: string
+  addImage: (image: RecipeImage, ...args: unknown[]) => void
+}
 export default function ImageGallery(props: ImageGalleryProps) {
   const { recipe, openViewer } = useRecipe()
 

@@ -1,6 +1,6 @@
 import { Notebook } from "lucide-solid";
 import { For, Show, onMount } from "solid-js";
-import { useDock } from "../DockContext";
+import { useDock } from "../context/DockContext";
 import { UUID } from "~/model/types/UUID";
 import { Ingredient } from "~/model/types/recipeTypes";
 

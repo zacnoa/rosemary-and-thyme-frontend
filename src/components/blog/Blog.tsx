@@ -1,14 +1,10 @@
-import { For, Index, useContext } from "solid-js";
-import { Dock, ThumbsUp } from "lucide-solid";
-import { BlogContext } from "~/context/blog/blogContext";
+import { For, Index } from "solid-js";
+import { ThumbsUp } from "lucide-solid";
 import { clientOnly } from "@solidjs/start";
+import { useBlog } from "./context/useBlog";
 
 
-export function useBlog() {
-  const ctx = useContext(BlogContext);
-  if (!ctx) throw new Error("useBlog must be used inside BlogProvider");
-  return ctx;
-}
+
 
 
 function Header() {

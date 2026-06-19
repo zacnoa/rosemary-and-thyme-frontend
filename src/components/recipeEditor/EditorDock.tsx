@@ -1,4 +1,4 @@
-import { useRecipe } from "~/hooks/useRecipe";
+import { useRecipe } from "./context/useRecipe";
 import HomeButton from "../dock/modules/HomeModule";
 import IngredientsModule from "../dock/modules/IngredientsModule";
 import SaveButton from "../dock/modules/SaveModule";

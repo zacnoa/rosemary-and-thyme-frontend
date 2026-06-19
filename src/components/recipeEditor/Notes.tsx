@@ -1,5 +1,5 @@
-import { useRecipe } from "~/hooks/useRecipe";
 import { resizeTextarea } from "~/utils/resizeTextarea";
+import { useRecipe } from "./context/useRecipe";
 
 export default function Notes() {
   const context = useRecipe();

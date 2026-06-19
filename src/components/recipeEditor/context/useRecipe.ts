@@ -1,5 +1,5 @@
 import { useContext } from "solid-js"
-import { RecipeContext } from "~/context/recipeState/recipeContext"
+import { RecipeContext } from "./recipeContext"
 
 export const useRecipe = () => {
 

@@ -5,7 +5,7 @@ import IngredientsModule from "../dock/modules/IngredientsModule";
 import EyeOffButton from "../dock/modules/ScreenOnModule";
 import ThemeToggle from "../dock/modules/ThemeModule";
 import UserButton from "../dock/modules/UserModule";
-import { useBlog } from "./Blog";
+import { useBlog } from "./context/useBlog";
 
 export default function BlogDockSection() {
   const { recipe } = useBlog();

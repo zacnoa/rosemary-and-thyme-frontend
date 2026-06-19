@@ -1,4 +1,4 @@
-import { useRecipe } from "~/hooks/useRecipe";
+import { useRecipe } from "./context/useRecipe";
 import { resizeTextarea } from "~/utils/resizeTextarea";
 import ImageGallery from "./ImageGallery";
 
