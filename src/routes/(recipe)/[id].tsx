@@ -3,7 +3,7 @@ import { createAsync, query, useParams, useSearchParams } from "@solidjs/router"
 import RecipeEditorContent from "~/components/recipeEditor/RecipeEditorContent";
 import { Recipe } from "~/model/interfaces/Recipe";
 import Blog from "~/components/blog/Blog";
-import BlogProvider from "~/components/blog/context/blogProvider";
+import BlogProvider from "~/components/blog/context/BlogProvider";
 import RecipeProvider from "~/components/recipeEditor/context/RecipeProvider";
 
 //TODO :add network error specific message
