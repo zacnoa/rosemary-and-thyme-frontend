@@ -5,31 +5,42 @@ import { Recipe } from "~/model/interfaces/Recipe";
 import Blog from "~/components/blog/Blog";
 import BlogProvider from "~/components/blog/context/BlogProvider";
 import RecipeProvider from "~/components/recipeEditor/context/RecipeProvider";
+import { useAuth } from "~/components/auth/context/useAuth";
 
 //TODO :add network error specific message
 const getRecipe = query(async (id: string) => {
   const response = await fetch(`http://localhost:8080/recipe/${id}`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
-  })
+    credentials: "include"
+  });
 
-  const json = await response.json()
+  console.log("recipe status:", response.status);
+  console.log("recipe content-type:", response.headers.get("content-type"));
+
+  const text = await response.text();
+
+  console.log("recipe body:", text);
 
   if (!response.ok) {
-    throw new Error(json.detail ?? "Failed recipe fetch")
+    throw new Error(text || "Failed recipe fetch");
   }
 
-  const recipe = json.payload
+  const json = JSON.parse(text);
+
+  console.log(json);
+
   return {
-    ...recipe,
-    createDate: new Date(recipe.createDate),
-  } as Recipe
+    ...json,
+    createDate: new Date(json.createDate),
+  } as Recipe;
 }, "recipe")
 
 
 export default function RecipeEditor() {
   const params = useParams();
   const [searchParams, setSearchParams] = useSearchParams()
+  const user = useAuth()
 
   const recipe = createAsync(() =>
     getRecipe(params.id!!)
@@ -44,12 +55,12 @@ export default function RecipeEditor() {
           {(data) => (
             <>
               <Switch fallback={<p>Nema</p>}>
-                <Match when={searchParams.edit == "false"}>
+                <Match when={user === null || user.id != data().userId}>
                   <BlogProvider recipe={data()}>
                     <Blog />
                   </BlogProvider>
                 </Match>
-                <Match when={searchParams.edit == "true"}>
+                <Match when={user && user.id === data().userId}>
                   <RecipeProvider initialRecipe={data()}>
                     <RecipeEditorContent />
                   </RecipeProvider>

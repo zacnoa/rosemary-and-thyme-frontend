@@ -19,7 +19,9 @@ export default function LoginPage() {
       body: JSON.stringify({ email, password })
     })
     if (!result.ok) {
-      console.log("Something when wrong while looging in")
+      const json = await result.json()
+      console.log(json.title + json.detail)
+      return
     }
 
     console.log("User is authenticated")
@@ -35,7 +37,7 @@ export default function LoginPage() {
       <label for="password">password</label>
       <input value={password()} onChange={(e) => setPassword(e.target.value)} type="text"></input>
 
-      <button type="submit" onClick={() => loginUser(email(), password())}>Submit</button>
+      <button onClick={() => loginUser(email(), password())}>Submit</button>
 
 
 
