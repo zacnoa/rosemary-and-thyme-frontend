@@ -27,7 +27,7 @@ export default function Dock(props: ParentProps) {
       <div class="relative w-full">
 
         {/* Single shared panel */}
-        <div class="pointer-events-none absolute bottom-full w-full overflow-hidden h-40 translate-y-2">
+        <div class="pointer-events-none absolute bottom-full w-full overflow-hidden h-50 translate-y-2">
           <div
             class={`w-full h-full transition-transform duration-300 ${activePanel() !== null
               ? "translate-y-0 pointer-events-auto"

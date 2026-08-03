@@ -1,65 +1,45 @@
 import { createAsync, Router, query } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
-import { Suspense } from "solid-js";
-import { isServer, getRequestEvent } from "solid-js/web";
 import "./app.css";
 import AuthProvider from "./components/auth/context/AuthProvider";
+import { getRequestEvent } from "solid-js/web";
 import { User } from "./components/auth/context/authContext";
 
-const fetchUser = query(async (): Promise<User | null> => {
-  console.log("fetchUser START");
+const getUser = query(async () => {
+  "use server";
+  const event = getRequestEvent();
+  const cookie = event?.locals.sessionCookie ?? "";
 
-  const cookie = isServer
-    ? (getRequestEvent()?.request.headers.get("cookie") ?? "")
-    : undefined;
-
-  console.log("cookie:", cookie);
-
-  const result = await fetch("http://localhost:8080/auth/aboutme", {
+  const response = await fetch(`http://localhost:8080/auth/aboutme`, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      ...(cookie ? { cookie } : {})
-    },
-    credentials: "include"
+    headers: { "Content-Type": "application/json", cookie },
   });
 
-  console.log("status:", result.status);
-  console.log("content-type:", result.headers.get("content-type"));
-
-  const text = await result.text();
-
-  console.log("response body:", text);
-
-  if (!result.ok) {
-    console.log("AUTH ERROR", result.status);
-
-    const text = await result.text();
-    console.log("AUTH BODY", text);
-
+  if (response.status === 401) {
+    // korisnik nije prijavljen — normalno stanje, ne greška
     return null;
   }
 
-  const user = JSON.parse(text);
+  if (!response.ok) {
+    console.error("Auth check failed:", response.status);
+    return null
+  }
 
-  return {
-    username: user.username,
-    id: user.id
-  };
+  const json = await response.json();
+  return json as User;
 }, "user");
 
 export default function App() {
   return (
     <Router
-      root={props => {
-        const user = createAsync(() => fetchUser());
+      root={(props) => {
         return (
-          <Suspense>
-            <AuthProvider user={user.latest ?? null}>
-              {props.children}
-            </AuthProvider>
-          </Suspense>
+
+          <>
+            {props.children}
+          </>
         );
+
       }}
     >
       <FileRoutes />

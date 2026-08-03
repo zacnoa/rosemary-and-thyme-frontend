@@ -4,7 +4,8 @@ import { UUID } from "~/model/types/UUID";
 
 export type User = {
   username: string,
-  id: UUID
+  id: UUID,
+  email: string
 }
 
 
