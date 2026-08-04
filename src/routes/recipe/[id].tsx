@@ -5,20 +5,17 @@ import Blog from "~/components/blog/Blog";
 import BlogProvider from "~/components/blog/context/BlogProvider";
 import RecipeProvider from "~/components/recipeEditor/context/RecipeProvider";
 import { getRecipe } from "~/queries/getRecipe";
+import { useAuth } from "~/components/auth/context/useAuth";
 
 
 //BFF patten --> our SSR server extracts session_cookie and forwards it to our backend
 
 //TODO :add network error specific message
 
-export const route = {
-  preload({ params }) {
-    void getRecipe(params.id!);
-  }
-};
 
 export default function RecipeEditor() {
   const params = useParams();
+  const user = useAuth();
 
   const recipe = createAsync(() =>
     getRecipe(params.id!!)
@@ -31,11 +28,18 @@ export default function RecipeEditor() {
       <Suspense fallback={<div>Loading...</div>}>
         <Show when={recipe()}>
           {(data) => (
-            <>
-              <RecipeProvider initialRecipe={data()}>
-                <RecipeEditorContent />
-              </RecipeProvider>
-            </>
+            <Switch>
+              <Match when={user?.id === data().userId}>
+                <RecipeProvider initialRecipe={data()}>
+                  <RecipeEditorContent />
+                </RecipeProvider>
+              </Match>
+              <Match when={true}>
+                <BlogProvider recipe={data()}>
+                  <Blog />
+                </BlogProvider>
+              </Match>
+            </Switch>
           )}
         </Show>
 

@@ -1,4 +1,4 @@
-import { query } from "@solidjs/router";
+import { query, redirect } from "@solidjs/router";
 import { getRequestEvent } from "solid-js/web";
 import { Recipe } from "~/model/interfaces/Recipe";
 
@@ -13,8 +13,12 @@ export const getRecipe = query(async (id: string) => {
 
   const response = await fetch(`http://localhost:8080/recipe/${id}`, {
     method: "GET",
-    headers: { "Content-Type": "application/json", cookie },
+    headers: { "Content-Type": "application/json", cookie: `session_cookie=${cookie}` },
   });
+
+  if (response.status === 404) {
+    throw redirect(`/recipe/${id}/not-found`);
+  }
 
   if (!response.ok) {
     throw new Error("Failed recipe fetch:" + response.status + response.statusText);

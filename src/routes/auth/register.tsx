@@ -1,15 +1,17 @@
-import { createSignal } from "solid-js"
+import { createSignal, Show } from "solid-js"
+import { A } from "@solidjs/router"
 
 export default function RegisterPage() {
-
 
   const [username, setUsername] = createSignal("")
   const [email, setEmail] = createSignal("")
   const [password, setPassword] = createSignal("")
+  const [error, setError] = createSignal("")
+  const [pending, setPending] = createSignal(false)
 
-
-
-  const registerUser = async (username: string, email: string, password: string,) => {
+  const registerUser = async (username: string, email: string, password: string) => {
+    setError("")
+    setPending(true)
 
     const result = await fetch("http://localhost:8080/auth/register", {
       method: "POST",
@@ -19,30 +21,88 @@ export default function RegisterPage() {
       },
       body: JSON.stringify({ username, email, password })
     })
+
     if (!result.ok) {
-      console.log("something whent wrong when registering")
+      const json = await result.json()
+      setError(json.detail ?? "Registration failed")
+      setPending(false)
+      return
     }
 
+    window.location.href = "/"
   }
 
   return (
-    <div>
+    <main class="md:max-w-md mx-2 md:mx-auto mt-20 px-2">
+      <form
+        class="flex flex-col gap-6"
+        onSubmit={(e) => {
+          e.preventDefault()
+          registerUser(username(), email(), password())
+        }}
+      >
+        <h1 class="text-2xl md:text-5xl border-b-3 md:border-b-4 border-foreground2 pb-2 leading-tight">
+          Register
+        </h1>
 
-      <label for="username">username</label>
-      <input value={username()} id="username" type="text" onChange={(e) => setUsername(e.target.value)}></input>
+        <div class="flex flex-col gap-1">
+          <label for="username" class="text-sm md:text-base text-foreground3">Username</label>
+          <input
+            id="username"
+            type="text"
+            autocomplete="username"
+            required
+            class="outline-none bg-transparent border-b-2 border-foreground3 focus:border-orange py-1 text-base md:text-lg"
+            value={username()}
+            onInput={(e) => setUsername(e.target.value)}
+          />
+        </div>
 
-      <label for="email">Email</label>
-      <input value={email()} id="email" type="text" onChange={(e) => setEmail(e.target.value)}></input>
+        <div class="flex flex-col gap-1">
+          <label for="email" class="text-sm md:text-base text-foreground3">Email</label>
+          <input
+            id="email"
+            type="email"
+            autocomplete="email"
+            required
+            class="outline-none bg-transparent border-b-2 border-foreground3 focus:border-orange py-1 text-base md:text-lg"
+            value={email()}
+            onInput={(e) => setEmail(e.target.value)}
+          />
+        </div>
 
-      <label for="password">password</label>
-      <input value={password()} onChange={(e) => setPassword(e.target.value)} type="text"></input>
+        <div class="flex flex-col gap-1">
+          <label for="password" class="text-sm md:text-base text-foreground3">Password</label>
+          <input
+            id="password"
+            type="password"
+            autocomplete="new-password"
+            required
+            class="outline-none bg-transparent border-b-2 border-foreground3 focus:border-orange py-1 text-base md:text-lg"
+            value={password()}
+            onInput={(e) => setPassword(e.target.value)}
+          />
+        </div>
 
-      <button type="submit" onClick={() => registerUser(username(), email(), password())}>Submit</button>
+        <Show when={error()}>
+          <p class="text-red text-sm">{error()}</p>
+        </Show>
 
+        <button
+          type="submit"
+          disabled={pending()}
+          class="px-4 py-2 rounded-md bg-linear-to-r from-green to-orange cursor-pointer font-bold disabled:opacity-50"
+        >
+          {pending() ? "Creating account..." : "Create account"}
+        </button>
 
-
-
-    </div>
+        <p class="text-sm text-foreground3">
+          Already have an account?{" "}
+          <A href="/auth/login" class="text-orange underline">
+            Login
+          </A>
+        </p>
+      </form>
+    </main>
   )
-
 }

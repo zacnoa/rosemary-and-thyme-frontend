@@ -1,4 +1,5 @@
 import { useRecipe } from "./context/useRecipe";
+import CreateRecipeButton from "../dock/modules/CreateRecipeModule";
 import HomeButton from "../dock/modules/HomeModule";
 import IngredientsModule from "../dock/modules/IngredientsModule";
 import SaveButton from "../dock/modules/SaveModule";
@@ -21,6 +22,7 @@ export default function BlogDockSection() {
       <IngredientsModule ingredients={recipe.ingredients} ingredientsOrder={recipe.ingredientsOrder} />
       <SaveButton />
       <UserButton />
+      <CreateRecipeButton />
     </Dock>
   );
 }

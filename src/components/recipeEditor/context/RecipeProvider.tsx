@@ -6,6 +6,7 @@ import { UUID } from "~/model/types/UUID";
 import { Ingredient, Instruction } from "~/model/types/recipeTypes";
 import { RecipeImage, stripBlobData } from "~/model/types/utils";
 import ImageViewer from "~/components/recipeEditor/ImageViewer";
+import { useNotification } from "~/components/notification/context/useNotification";
 
 
 
@@ -19,6 +20,7 @@ export default function RecipeProvider(props: RecipeProviderProps) {
   const [recipe, setRecipe] = createStore<Recipe>(props.initialRecipe);
   const [viewerImages, setViewerImages] = createSignal<{ images: UUID[], initialIndex?: number } | null>(null);
   const [changedFlag, setChangedFlag] = createSignal<boolean>(false);
+  const { notify } = useNotification();
 
   const saveRecipe = async (recipe: Recipe) => {
     const formData = new FormData();
@@ -39,15 +41,20 @@ export default function RecipeProvider(props: RecipeProviderProps) {
 
     const result = await fetch(`http://localhost:8080/recipe/${recipe.id}`, {
       method: "PUT",
+      credentials: "include",
       body: formData
       //sluzi za odvajanje vrsta podataka
       // NE setaš Content-Type, browser sam postavi boundary
     });
     const json = await result.json()
+
     if (!result.ok) {
-      console.log(json.detail)
+      notify("error", json.detail ?? "Saving failed");
+      return;
     }
-    console.log(result)
+
+    setChangedFlag(false);
+    notify("success", "Saving successful");
   }
 
   createEffect(on(() => JSON.stringify(recipe), () => {
