@@ -3,10 +3,11 @@ import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   server: {
-    // Nitro preset for deploying to Cloudflare Pages (SSR via Pages Functions,
-    // not a static export) - outputs to dist/ with a _worker.js, which is what
-    // Cloudflare Pages expects as the build output directory.
-    preset: "cloudflare-pages"
+    // Nitro preset for Cloudflare's unified Workers (+ static assets) deploy
+    // model - the dashboard's "Deployment command" field expects a plain
+    // `wrangler deploy`, which reads the generated wrangler.jsonc, rather than
+    // the classic `wrangler pages deploy <dir>` the cloudflare-pages preset targets.
+    preset: "cloudflare-module"
   },
   vite: {
     plugins: [tailwindcss()]
