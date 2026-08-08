@@ -1,6 +1,7 @@
 import { query, redirect } from "@solidjs/router";
 import { getRequestEvent } from "solid-js/web";
 import { Recipe } from "~/model/interfaces/Recipe";
+import { API_URL } from "~/utils/apiUrl";
 
 export const getRecipe = query(async (id: string) => {
 
@@ -11,7 +12,7 @@ export const getRecipe = query(async (id: string) => {
 
 
 
-  const response = await fetch(`http://localhost:8080/recipe/${id}`, {
+  const response = await fetch(`${API_URL}/recipe/${id}`, {
     method: "GET",
     headers: { "Content-Type": "application/json", cookie: `session_cookie=${cookie}` },
   });

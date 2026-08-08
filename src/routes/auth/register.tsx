@@ -1,5 +1,6 @@
 import { createSignal, Show } from "solid-js"
 import { A } from "@solidjs/router"
+import { registerUser } from "~/queries/registerUser"
 
 export default function RegisterPage() {
 
@@ -8,101 +9,107 @@ export default function RegisterPage() {
   const [password, setPassword] = createSignal("")
   const [error, setError] = createSignal("")
   const [pending, setPending] = createSignal(false)
+  const [registered, setRegistered] = createSignal(false)
 
-  const registerUser = async (username: string, email: string, password: string) => {
+  const register = async (username: string, email: string, password: string) => {
     setError("")
     setPending(true)
 
-    const result = await fetch("http://localhost:8080/auth/register", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ username, email, password })
-    })
+    const { ok, json } = await registerUser(username, email, password)
+    setPending(false)
 
-    if (!result.ok) {
-      const json = await result.json()
+    if (!ok) {
       setError(json.detail ?? "Registration failed")
-      setPending(false)
       return
     }
 
-    window.location.href = "/"
+    // account exists but is unusable until the verification link is clicked -
+    // no session cookie is set on register anymore, so there's nowhere to redirect to
+    setRegistered(true)
   }
 
   return (
     <main class="md:max-w-md mx-2 md:mx-auto mt-20 px-2">
-      <form
-        class="flex flex-col gap-6"
-        onSubmit={(e) => {
-          e.preventDefault()
-          registerUser(username(), email(), password())
-        }}
-      >
-        <h1 class="text-2xl md:text-5xl border-b-3 md:border-b-4 border-foreground2 pb-2 leading-tight">
-          Register
+      <Show when={registered()}>
+        <h1 class="text-2xl md:text-5xl border-b-3 md:border-b-4 border-foreground2 pb-2 leading-tight mb-6">
+          Check your email
         </h1>
-
-        <div class="flex flex-col gap-1">
-          <label for="username" class="text-sm md:text-base text-foreground3">Username</label>
-          <input
-            id="username"
-            type="text"
-            autocomplete="username"
-            required
-            class="outline-none bg-transparent border-b-2 border-foreground3 focus:border-orange py-1 text-base md:text-lg"
-            value={username()}
-            onInput={(e) => setUsername(e.target.value)}
-          />
-        </div>
-
-        <div class="flex flex-col gap-1">
-          <label for="email" class="text-sm md:text-base text-foreground3">Email</label>
-          <input
-            id="email"
-            type="email"
-            autocomplete="email"
-            required
-            class="outline-none bg-transparent border-b-2 border-foreground3 focus:border-orange py-1 text-base md:text-lg"
-            value={email()}
-            onInput={(e) => setEmail(e.target.value)}
-          />
-        </div>
-
-        <div class="flex flex-col gap-1">
-          <label for="password" class="text-sm md:text-base text-foreground3">Password</label>
-          <input
-            id="password"
-            type="password"
-            autocomplete="new-password"
-            required
-            class="outline-none bg-transparent border-b-2 border-foreground3 focus:border-orange py-1 text-base md:text-lg"
-            value={password()}
-            onInput={(e) => setPassword(e.target.value)}
-          />
-        </div>
-
-        <Show when={error()}>
-          <p class="text-red text-sm">{error()}</p>
-        </Show>
-
-        <button
-          type="submit"
-          disabled={pending()}
-          class="px-4 py-2 rounded-md bg-linear-to-r from-green to-orange cursor-pointer font-bold disabled:opacity-50"
-        >
-          {pending() ? "Creating account..." : "Create account"}
-        </button>
-
-        <p class="text-sm text-foreground3">
-          Already have an account?{" "}
-          <A href="/auth/login" class="text-orange underline">
-            Login
-          </A>
+        <p class="text-foreground3">
+          We sent a verification link to <strong>{email()}</strong>. Click it to activate your account, then log in.
         </p>
-      </form>
+      </Show>
+
+      <Show when={!registered()}>
+        <form
+          class="flex flex-col gap-6"
+          onSubmit={(e) => {
+            e.preventDefault()
+            register(username(), email(), password())
+          }}
+        >
+          <h1 class="text-2xl md:text-5xl border-b-3 md:border-b-4 border-foreground2 pb-2 leading-tight">
+            Register
+          </h1>
+
+          <div class="flex flex-col gap-1">
+            <label for="username" class="text-sm md:text-base text-foreground3">Username</label>
+            <input
+              id="username"
+              type="text"
+              autocomplete="username"
+              required
+              class="outline-none bg-transparent border-b-2 border-foreground3 focus:border-orange py-1 text-base md:text-lg"
+              value={username()}
+              onInput={(e) => setUsername(e.target.value)}
+            />
+          </div>
+
+          <div class="flex flex-col gap-1">
+            <label for="email" class="text-sm md:text-base text-foreground3">Email</label>
+            <input
+              id="email"
+              type="email"
+              autocomplete="email"
+              required
+              class="outline-none bg-transparent border-b-2 border-foreground3 focus:border-orange py-1 text-base md:text-lg"
+              value={email()}
+              onInput={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          <div class="flex flex-col gap-1">
+            <label for="password" class="text-sm md:text-base text-foreground3">Password</label>
+            <input
+              id="password"
+              type="password"
+              autocomplete="new-password"
+              required
+              class="outline-none bg-transparent border-b-2 border-foreground3 focus:border-orange py-1 text-base md:text-lg"
+              value={password()}
+              onInput={(e) => setPassword(e.target.value)}
+            />
+          </div>
+
+          <Show when={error()}>
+            <p class="text-red text-sm">{error()}</p>
+          </Show>
+
+          <button
+            type="submit"
+            disabled={pending()}
+            class="px-4 py-2 rounded-md bg-linear-to-r from-green to-orange cursor-pointer font-bold disabled:opacity-50"
+          >
+            {pending() ? "Creating account..." : "Create account"}
+          </button>
+
+          <p class="text-sm text-foreground3">
+            Already have an account?{" "}
+            <A href="/auth/login" class="text-orange underline">
+              Login
+            </A>
+          </p>
+        </form>
+      </Show>
     </main>
   )
 }

@@ -4,6 +4,7 @@ import { useNavigate } from "@solidjs/router";
 import { useAuth } from "~/components/auth/context/useAuth";
 import { useNotification } from "~/components/notification/context/useNotification";
 import { useDock } from "../context/DockContext";
+import { putRecipe } from "~/queries/putRecipe";
 
 const PANEL_ID = "createRecipe";
 
@@ -11,7 +12,7 @@ export default function CreateRecipeButton() {
   const user = useAuth();
   const navigate = useNavigate();
   const { notify } = useNotification();
-  const { toggle, activePanel, registerPanel } = useDock();
+  const { toggle, registerPanel } = useDock();
   const [name, setName] = createSignal("");
   const [pending, setPending] = createSignal(false);
 
@@ -47,15 +48,10 @@ export default function CreateRecipeButton() {
       new Blob([JSON.stringify(blankRecipe)], { type: "application/json" })
     );
 
-    const result = await fetch(`http://localhost:8080/recipe/${tempId}`, {
-      method: "PUT",
-      credentials: "include",
-      body: formData,
-    });
-    const json = await result.json();
+    const { ok, json } = await putRecipe(tempId, formData);
     setPending(false);
 
-    if (!result.ok) {
+    if (!ok) {
       notify("error", json.detail ?? "Could not create recipe");
       return;
     }

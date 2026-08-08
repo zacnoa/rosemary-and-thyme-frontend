@@ -7,6 +7,7 @@ import { Ingredient, Instruction } from "~/model/types/recipeTypes";
 import { RecipeImage, stripBlobData } from "~/model/types/utils";
 import ImageViewer from "~/components/recipeEditor/ImageViewer";
 import { useNotification } from "~/components/notification/context/useNotification";
+import { putRecipe } from "~/queries/putRecipe";
 
 
 
@@ -39,16 +40,9 @@ export default function RecipeProvider(props: RecipeProviderProps) {
       }
     });
 
-    const result = await fetch(`http://localhost:8080/recipe/${recipe.id}`, {
-      method: "PUT",
-      credentials: "include",
-      body: formData
-      //sluzi za odvajanje vrsta podataka
-      // NE setaš Content-Type, browser sam postavi boundary
-    });
-    const json = await result.json()
+    const { ok, json } = await putRecipe(recipe.id, formData);
 
-    if (!result.ok) {
+    if (!ok) {
       notify("error", json.detail ?? "Saving failed");
       return;
     }

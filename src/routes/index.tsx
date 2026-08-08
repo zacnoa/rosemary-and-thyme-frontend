@@ -1,23 +1,23 @@
-import { A } from "@solidjs/router";
+import { clientOnly } from "@solidjs/start";
 
 export default function Home() {
+  const HomeDock = clientOnly(() => import("~/components/home/HomeDock"));
+
   return (
-    <main class="text-center mx-auto text-gray-700 p-4">
-      <h1 class="max-6-xs text-6xl text-sky-700 font-thin uppercase my-16">Hello world!</h1>
-      <p class="mt-8">
-        Visit{" "}
-        <a href="https://solidjs.com" target="_blank" class="text-sky-600 hover:underline">
-          solidjs.com
-        </a>{" "}
-        to learn how to build Solid apps.
-      </p>
-      <p class="my-4">
-        <span>Home</span>
-        {" - "}
-        <A href="/about" class="text-sky-600 hover:underline">
-          About Page
-        </A>{" "}
-      </p>
-    </main>
+    <div class="w-full overflow-hidden">
+      <main class="md:max-w-4xl my-4 mx-2 md:mx-auto">
+        <section class="mt-20 mb-40">
+          <h1 class="text-2xl md:text-5xl border-b-3 md:border-b-4 border-foreground2 pb-2 leading-tight">
+            Rosemary & Thyme
+          </h1>
+          <p class="mt-4 text-sm md:text-lg text-foreground3">
+            Your recipes, all in one place.
+          </p>
+        </section>
+        <section class="fixed bottom-10 left-1/2 -translate-x-1/2">
+          <HomeDock />
+        </section>
+      </main>
+    </div>
   );
 }

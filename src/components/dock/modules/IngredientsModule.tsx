@@ -14,21 +14,31 @@ type IngredientsModuleProps = {
 export default function IngredientsModule(props: IngredientsModuleProps) {
   const { toggle, activePanel, registerPanel } = useDock();
 
+  const hasIngredients = () =>
+    props.ingredientsOrder.some((id) => props.ingredients[id]?.name);
+
   onMount(() => {
     registerPanel(PANEL_ID, () => (
-      <ul class="flex flex-col gap-y-2">
-        <For each={props.ingredientsOrder}>
-          {(id: UUID) => (
-            <Show when={props.ingredients[id].name}>
+      <Show
+        when={hasIngredients()}
+        fallback={
+          <p class="text-sm text-background opacity-80">
+            This is your ingredient list - add a few ingredients to see them show up here.
+          </p>
+        }
+      >
+        <ul class="flex flex-col gap-y-2">
+          <For each={props.ingredientsOrder}>
+            {(id: UUID) => (
               <li class="text-background border-b-2 border-background">
                 {props.ingredients[id].name}{" "}
                 {props.ingredients[id].amount}{" "}
                 {props.ingredients[id].measuringUnit}
               </li>
-            </Show>
-          )}
-        </For>
-      </ul>
+            )}
+          </For>
+        </ul>
+      </Show>
     ));
   });
 

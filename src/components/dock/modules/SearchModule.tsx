@@ -2,6 +2,8 @@ import { Search } from "lucide-solid";
 import { createSignal, For, onMount, Show } from "solid-js";
 import { A } from "@solidjs/router";
 import { useDock } from "../context/DockContext";
+import { searchRecipes } from "~/queries/searchRecipes";
+import { useAuth } from "~/components/auth/context/useAuth";
 
 const PANEL_ID = "search";
 
@@ -9,6 +11,7 @@ type RecipeResult = { first: string; second: string };
 
 export default function SearchModule() {
   const { toggle, activePanel, registerPanel } = useDock();
+  const user = useAuth();
   const [query, setQuery] = createSignal("");
   const [results, setResults] = createSignal<RecipeResult[]>([]);
   const [loading, setLoading] = createSignal(false);
@@ -17,17 +20,8 @@ export default function SearchModule() {
 
   const search = async (q: string) => {
     setLoading(true);
-    const params = q.trim() ? `?q=${encodeURIComponent(q.trim())}` : "";
-    const result = await fetch(`http://localhost:8080/user/recipes/search${params}`, {
-      credentials: "include",
-    });
+    setResults(await searchRecipes(q));
     setLoading(false);
-
-    if (!result.ok) {
-      setResults([]);
-      return;
-    }
-    setResults(await result.json());
   };
 
   const onInput = (value: string) => {
@@ -39,41 +33,53 @@ export default function SearchModule() {
   const handleToggle = () => {
     const wasOpen = activePanel() === PANEL_ID;
     toggle(PANEL_ID);
-    if (!wasOpen) search(query());
+    // signed-out visitors get a static message instead - the search endpoint
+    // needs a session, so there's nothing to fetch here
+    if (!wasOpen && user) search(query());
   };
 
   onMount(() => {
     registerPanel(PANEL_ID, () => (
-      <div class="flex flex-col gap-3 text-background">
-        <input
-          type="text"
-          value={query()}
-          onInput={(e) => onInput(e.currentTarget.value)}
-          class="w-full p-2 text-background border-2 rounded-2xl border-background outline-none bg-transparent"
-          placeholder="Search your recipes"
-        />
-        <ul class="flex flex-col gap-2">
-          <Show
-            when={!loading()}
-            fallback={<li class="text-sm opacity-70">Searching...</li>}
-          >
+      <Show
+        when={user}
+        fallback={
+          <p class="text-sm text-background opacity-80">
+            This is where your own recipes show up once you're signed in -{" "}
+            <A href="/auth/login" class="underline">log in</A> to search them.
+          </p>
+        }
+      >
+        <div class="flex flex-col gap-3 text-background">
+          <input
+            type="text"
+            value={query()}
+            onInput={(e) => onInput(e.currentTarget.value)}
+            class="w-full p-2 text-background border-2 rounded-2xl border-background outline-none bg-transparent"
+            placeholder="Search your recipes"
+          />
+          <ul class="flex flex-col gap-2">
             <Show
-              when={results().length > 0}
-              fallback={<li class="text-sm opacity-70">No recipes found</li>}
+              when={!loading()}
+              fallback={<li class="text-sm opacity-70">Searching...</li>}
             >
-              <For each={results()}>
-                {(recipe) => (
-                  <li class="border-b-2 border-background pb-1">
-                    <A href={`/recipe/${recipe.first}`} class="text-sm md:text-base">
-                      {recipe.second}
-                    </A>
-                  </li>
-                )}
-              </For>
+              <Show
+                when={results().length > 0}
+                fallback={<li class="text-sm opacity-70">No recipes found</li>}
+              >
+                <For each={results()}>
+                  {(recipe) => (
+                    <li class="border-b-2 border-background pb-1">
+                      <A href={`/recipe/${recipe.first}`} class="text-sm md:text-base">
+                        {recipe.second}
+                      </A>
+                    </li>
+                  )}
+                </For>
+              </Show>
             </Show>
-          </Show>
-        </ul>
-      </div>
+          </ul>
+        </div>
+      </Show>
     ));
   });
 

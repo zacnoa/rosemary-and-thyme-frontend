@@ -3,6 +3,7 @@ import { A } from "@solidjs/router";
 import { onMount } from "solid-js";
 import { useDock } from "../context/DockContext";
 import { useAuth } from "~/components/auth/context/useAuth";
+import { logoutUser } from "~/queries/logoutUser";
 
 const PANEL_ID = "user";
 
@@ -11,10 +12,7 @@ export default function UserButton() {
   const user = useAuth();
 
   const logout = async () => {
-    await fetch("http://localhost:8080/auth/logout", {
-      method: "POST",
-      credentials: "include",
-    });
+    await logoutUser();
     window.location.href = "/";
   };
 

@@ -1,5 +1,7 @@
 import { createSignal, Show } from "solid-js"
 import { A } from "@solidjs/router"
+import { loginUser } from "~/queries/loginUser"
+import { resendVerificationEmail } from "~/queries/resendVerificationEmail"
 
 export default function LoginPage() {
 
@@ -7,28 +9,30 @@ export default function LoginPage() {
   const [password, setPassword] = createSignal("")
   const [error, setError] = createSignal("")
   const [pending, setPending] = createSignal(false)
+  const [unverified, setUnverified] = createSignal(false)
+  const [resendSent, setResendSent] = createSignal(false)
 
-  const loginUser = async (email: string, password: string) => {
+  const login = async (email: string, password: string) => {
     setError("")
+    setUnverified(false)
+    setResendSent(false)
     setPending(true)
 
-    const result = await fetch("http://localhost:8080/auth/login", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ email, password })
-    })
+    const { ok, status, json } = await loginUser(email, password)
+    setPending(false)
 
-    if (!result.ok) {
-      const json = await result.json()
+    if (!ok) {
       setError(json.detail ?? "Login failed")
-      setPending(false)
+      setUnverified(status === 403)
       return
     }
 
     window.location.href = "/"
+  }
+
+  const resend = async () => {
+    await resendVerificationEmail(email())
+    setResendSent(true)
   }
 
   return (
@@ -37,7 +41,7 @@ export default function LoginPage() {
         class="flex flex-col gap-6"
         onSubmit={(e) => {
           e.preventDefault()
-          loginUser(email(), password())
+          login(email(), password())
         }}
       >
         <h1 class="text-2xl md:text-5xl border-b-3 md:border-b-4 border-foreground2 pb-2 leading-tight">
@@ -72,6 +76,21 @@ export default function LoginPage() {
 
         <Show when={error()}>
           <p class="text-red text-sm">{error()}</p>
+        </Show>
+
+        <Show when={unverified()}>
+          <Show
+            when={!resendSent()}
+            fallback={<p class="text-sm text-foreground3">Verification email sent - check your inbox.</p>}
+          >
+            <button
+              type="button"
+              onClick={resend}
+              class="text-sm text-orange underline self-start cursor-pointer"
+            >
+              Resend verification email
+            </button>
+          </Show>
         </Show>
 
         <button
