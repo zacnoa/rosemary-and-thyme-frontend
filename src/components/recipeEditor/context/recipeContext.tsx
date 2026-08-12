@@ -4,6 +4,7 @@ import { Ingredient, Instruction } from "~/model/types/recipeTypes";
 import { RecipeImage } from "~/model/types/utils";
 import { UUID } from "~/model/types/UUID";
 
+/** The editable recipe store plus every mutator on it - see RecipeProvider, the only implementation. */
 type RecipeContextType = {
   recipe: Recipe,
   changedFlag: () => boolean,

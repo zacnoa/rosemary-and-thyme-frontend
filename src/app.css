@@ -26,6 +26,38 @@ body {
   --color-ligth-blue:#83a598;
   --font-family-sans:"Electrolize",sans-serif;
 
+  /*
+   * Fluid font-size steps, replacing the old `text-X md:text-Y` hard jump at
+   * exactly the md breakpoint (768px) with a smooth clamp() interpolation
+   * between 375px (small phone) and 768px. Below 375px the size is pinned to
+   * the smaller value; at/above 768px it's pinned to the larger value - i.e.
+   * both ends render at exactly the same size as the old two-step classes
+   * did, only the transition between them is now continuous.
+   *
+   * Named after the pair of steps on Tailwind's default type scale they
+   * bridge (e.g. --text-fluid-sm-base spans "sm" -> "base"), generated from
+   * that scale's px values (xs 12 / sm 14 / base 16 / lg 18 / xl 20 / 2xl 24
+   * / 3xl 30 / 4xl 36 / 5xl 48) via the standard linear-interpolation fluid
+   * type formula. Use `text-fluid-<a>-<b>` in place of `text-<a> md:text-<b>`
+   * - do not use these for a size with no existing md: pair, and do not
+   * introduce new pairs without regenerating the clamp() the same way.
+   */
+  --text-fluid-xs-sm: clamp(0.75rem, 0.6307rem + 0.5089vw, 0.875rem);
+  --text-fluid-sm-base: clamp(0.875rem, 0.7557rem + 0.5089vw, 1rem);
+  --text-fluid-base-lg: clamp(1rem, 0.8807rem + 0.5089vw, 1.125rem);
+  --text-fluid-lg-xl: clamp(1.125rem, 1.0057rem + 0.5089vw, 1.25rem);
+  --text-fluid-xl-2xl: clamp(1.25rem, 1.0115rem + 1.0178vw, 1.5rem);
+  --text-fluid-sm-lg: clamp(0.875rem, 0.6365rem + 1.0178vw, 1.125rem);
+  --text-fluid-base-xl: clamp(1rem, 0.7615rem + 1.0178vw, 1.25rem);
+  --text-fluid-sm-xl: clamp(0.875rem, 0.5172rem + 1.5267vw, 1.25rem);
+  --text-fluid-xs-2xl: clamp(0.75rem, 0.0344rem + 3.0534vw, 1.5rem);
+  --text-fluid-sm-2xl: clamp(0.875rem, 0.2786rem + 2.5445vw, 1.5rem);
+  --text-fluid-xl-3xl: clamp(1.25rem, 0.6536rem + 2.5445vw, 1.875rem);
+  --text-fluid-2xl-5xl: clamp(1.5rem, 0.0687rem + 6.1069vw, 3rem);
+  --text-fluid-3xl-5xl: clamp(1.875rem, 0.8015rem + 4.5802vw, 3rem);
+  --text-fluid-lg-4xl: clamp(1.125rem, 0.0515rem + 4.5802vw, 2.25rem);
+  --text-fluid-base-4xl: clamp(1rem, -0.1927rem + 5.0891vw, 2.25rem);
+
 }
 [data-theme="light"] {
   --color-background: #EBDBB2;

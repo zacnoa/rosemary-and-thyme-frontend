@@ -11,9 +11,23 @@ type IngredientsModuleProps = {
   ingredientsOrder: UUID[];
 }
 
+/**
+ * Read-only ingredients checklist panel, shared by the editor (EditorDock,
+ * fed from the live-editable RecipeProvider store) and the blog view
+ * (BlogDock, fed from the read-only BlogProvider store) - this component
+ * itself doesn't know or care which.
+ *
+ * `props.ingredients`/`props.ingredientsOrder` are read reactively (plain
+ * property access inside JSX/`<Show>`/`<For>`, not copied into local state),
+ * so the list reflects the store live: while editing, every keystroke that
+ * successfully parses (see recipeEditor/Ingredient.tsx) updates this panel
+ * immediately if it's open, and a save's server-reconciled ids/values (see
+ * RecipeProvider.applyServerRecipe) flow through the same way.
+ */
 export default function IngredientsModule(props: IngredientsModuleProps) {
   const { toggle, activePanel, registerPanel } = useDock();
 
+  /** Ingredients only "count" once they have a name - a freshly-added, still-blank ingredient shouldn't flip the panel out of its empty-state fallback. */
   const hasIngredients = () =>
     props.ingredientsOrder.some((id) => props.ingredients[id]?.name);
 

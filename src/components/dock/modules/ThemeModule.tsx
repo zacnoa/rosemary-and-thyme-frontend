@@ -1,6 +1,15 @@
 import { Moon, Sun } from "lucide-solid";
 import { createSignal, Show } from "solid-js";
 
+/**
+ * Dark/light theme toggle. Sets `data-theme` on `<html>`, which app.css's
+ * `[data-theme="light"]` selector overrides the (dark-by-default) `@theme`
+ * color tokens under.
+ *
+ * The `theme` signal starts at `"dark"` unconditionally rather than reading
+ * any persisted preference (e.g. `localStorage` or `prefers-color-scheme`),
+ * so the choice doesn't survive a page reload/new session.
+ */
 export default function ThemeToggle() {
   const [theme, setTheme] = createSignal<"dark" | "light">("dark");
 

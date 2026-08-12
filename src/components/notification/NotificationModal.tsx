@@ -2,6 +2,7 @@ import { Show } from "solid-js";
 import { CircleCheck, CircleX, X } from "lucide-solid";
 import { useNotification } from "./context/useNotification";
 
+/** Fixed-position toast, rendered by NotificationProvider. Renders nothing while `notification()` is `null`. */
 export default function NotificationModal() {
   const { notification, dismiss } = useNotification();
 
@@ -16,7 +17,7 @@ export default function NotificationModal() {
             <Show when={n().type === "success"} fallback={<CircleX class="size-6 shrink-0" />}>
               <CircleCheck class="size-6 shrink-0" />
             </Show>
-            <p class="flex-1 text-sm md:text-base">{n().message}</p>
+            <p class="flex-1 text-fluid-sm-base">{n().message}</p>
             <button
               class="cursor-pointer shrink-0"
               onClick={dismiss}

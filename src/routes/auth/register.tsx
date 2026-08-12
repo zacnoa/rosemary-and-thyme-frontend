@@ -2,6 +2,13 @@ import { createSignal, Show } from "solid-js"
 import { A } from "@solidjs/router"
 import { registerUser } from "~/queries/registerUser"
 
+/**
+ * Registration never logs the user in directly (see queries/registerUser.ts) -
+ * a successful submit swaps the form for a "check your email" message
+ * instead of redirecting anywhere, since there's no session yet to redirect
+ * into. The user only gets a session after clicking the emailed link,
+ * handled by routes/auth/verify-email.tsx.
+ */
 export default function RegisterPage() {
 
   const [username, setUsername] = createSignal("")
@@ -31,7 +38,7 @@ export default function RegisterPage() {
   return (
     <main class="md:max-w-md mx-2 md:mx-auto mt-20 px-2">
       <Show when={registered()}>
-        <h1 class="text-2xl md:text-5xl border-b-3 md:border-b-4 border-foreground2 pb-2 leading-tight mb-6">
+        <h1 class="text-fluid-2xl-5xl border-b-3 md:border-b-4 border-foreground2 pb-2 leading-tight mb-6">
           Check your email
         </h1>
         <p class="text-foreground3">
@@ -47,44 +54,44 @@ export default function RegisterPage() {
             register(username(), email(), password())
           }}
         >
-          <h1 class="text-2xl md:text-5xl border-b-3 md:border-b-4 border-foreground2 pb-2 leading-tight">
+          <h1 class="text-fluid-2xl-5xl border-b-3 md:border-b-4 border-foreground2 pb-2 leading-tight">
             Register
           </h1>
 
           <div class="flex flex-col gap-1">
-            <label for="username" class="text-sm md:text-base text-foreground3">Username</label>
+            <label for="username" class="text-fluid-sm-base text-foreground3">Username</label>
             <input
               id="username"
               type="text"
               autocomplete="username"
               required
-              class="outline-none bg-transparent border-b-2 border-foreground3 focus:border-orange py-1 text-base md:text-lg"
+              class="outline-none bg-transparent border-b-2 border-foreground3 focus:border-orange py-1 text-fluid-base-lg"
               value={username()}
               onInput={(e) => setUsername(e.target.value)}
             />
           </div>
 
           <div class="flex flex-col gap-1">
-            <label for="email" class="text-sm md:text-base text-foreground3">Email</label>
+            <label for="email" class="text-fluid-sm-base text-foreground3">Email</label>
             <input
               id="email"
               type="email"
               autocomplete="email"
               required
-              class="outline-none bg-transparent border-b-2 border-foreground3 focus:border-orange py-1 text-base md:text-lg"
+              class="outline-none bg-transparent border-b-2 border-foreground3 focus:border-orange py-1 text-fluid-base-lg"
               value={email()}
               onInput={(e) => setEmail(e.target.value)}
             />
           </div>
 
           <div class="flex flex-col gap-1">
-            <label for="password" class="text-sm md:text-base text-foreground3">Password</label>
+            <label for="password" class="text-fluid-sm-base text-foreground3">Password</label>
             <input
               id="password"
               type="password"
               autocomplete="new-password"
               required
-              class="outline-none bg-transparent border-b-2 border-foreground3 focus:border-orange py-1 text-base md:text-lg"
+              class="outline-none bg-transparent border-b-2 border-foreground3 focus:border-orange py-1 text-fluid-base-lg"
               value={password()}
               onInput={(e) => setPassword(e.target.value)}
             />

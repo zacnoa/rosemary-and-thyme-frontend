@@ -7,10 +7,18 @@ import { logoutUser } from "~/queries/logoutUser";
 
 const PANEL_ID = "user";
 
+/**
+ * Panel showing either the signed-in user's profile + logout, or
+ * login/register links for a signed-out visitor - `user` is a one-time
+ * snapshot from useAuth(), so this doesn't need to react to auth state
+ * changing (see AuthProvider for why: login/logout both force a full page
+ * reload rather than updating anything in place).
+ */
 export default function UserButton() {
   const { toggle, activePanel, registerPanel } = useDock();
   const user = useAuth();
 
+  /** Clears the session server-side, then hard-reloads to `/` so the next page load resolves queries/getUser.ts fresh (see AuthProvider). */
   const logout = async () => {
     await logoutUser();
     window.location.href = "/";
@@ -21,8 +29,8 @@ export default function UserButton() {
       user ? (
         <div class="flex flex-col gap-3 text-background">
           <div class="border-b-2 border-background pb-2">
-            <p class="text-base md:text-lg font-bold">{user.username}</p>
-            <p class="text-xs md:text-sm opacity-80">{user.email}</p>
+            <p class="text-fluid-base-lg font-bold">{user.username}</p>
+            <p class="text-fluid-xs-sm opacity-80">{user.email}</p>
           </div>
           <button
             class="flex items-center gap-2 self-start px-3 py-1 rounded-md bg-linear-to-r from-red to-orange cursor-pointer"

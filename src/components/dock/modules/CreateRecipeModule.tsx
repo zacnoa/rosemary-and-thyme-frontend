@@ -8,6 +8,12 @@ import { putRecipe } from "~/queries/putRecipe";
 
 const PANEL_ID = "createRecipe";
 
+/**
+ * "New recipe" panel: takes just a name, then does a full save immediately
+ * (there's no separate "create" endpoint on the backend - see the TODO in
+ * RecipeService - so this reuses the same `PUT /recipe/{id}` upsert path
+ * saving from the editor does, with everything but the name left blank).
+ */
 export default function CreateRecipeButton() {
   const user = useAuth();
   const navigate = useNavigate();
@@ -21,6 +27,10 @@ export default function CreateRecipeButton() {
     if (!trimmedName || pending() || !user) return;
     setPending(true);
 
+    // Only used to steer RecipeRepository.upsertRecipeBase onto its insert
+    // branch (no existing row has this id) - the backend never actually
+    // persists a client-submitted id for a new row, so the real id comes
+    // back as json.id below and this one is discarded.
     const tempId = crypto.randomUUID();
     const blankRecipe = {
       id: tempId,
@@ -63,7 +73,7 @@ export default function CreateRecipeButton() {
   onMount(() => {
     registerPanel(PANEL_ID, () => (
       <div class="flex flex-col gap-3 text-background">
-        <label for="new-recipe-name" class="text-sm md:text-base">
+        <label for="new-recipe-name" class="text-fluid-sm-base">
           Recipe name
         </label>
         <input

@@ -7,8 +7,14 @@ import { useAuth } from "~/components/auth/context/useAuth";
 
 const PANEL_ID = "search";
 
+/** (id, name) pair, as returned by GET /user/recipes/search - see queries/searchRecipes.ts. */
 type RecipeResult = { first: string; second: string };
 
+/**
+ * Search panel over the signed-in user's own recipes. Debounced (300ms)
+ * rather than searching on every keystroke, to avoid firing a request per
+ * character while typing.
+ */
 export default function SearchModule() {
   const { toggle, activePanel, registerPanel } = useDock();
   const user = useAuth();
@@ -24,12 +30,14 @@ export default function SearchModule() {
     setLoading(false);
   };
 
+  /** Debounces `search()` by 300ms - resets the timer on every call, so only the last keystroke in a burst actually fires a request. */
   const onInput = (value: string) => {
     setQuery(value);
     clearTimeout(debounceId);
     debounceId = setTimeout(() => search(value), 300);
   };
 
+  /** Runs an immediate (non-debounced) search with whatever query is already typed each time the panel is freshly opened, so reopening shows results right away instead of an empty list until the next keystroke. */
   const handleToggle = () => {
     const wasOpen = activePanel() === PANEL_ID;
     toggle(PANEL_ID);
@@ -69,7 +77,7 @@ export default function SearchModule() {
                 <For each={results()}>
                   {(recipe) => (
                     <li class="border-b-2 border-background pb-1">
-                      <A href={`/recipe/${recipe.first}`} class="text-sm md:text-base">
+                      <A href={`/recipe/${recipe.first}`} class="text-fluid-sm-base">
                         {recipe.second}
                       </A>
                     </li>

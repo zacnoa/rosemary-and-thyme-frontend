@@ -2,7 +2,15 @@ import { ThumbsUp } from "lucide-solid";
 import { useRecipe } from "./context/useRecipe";
 import { resizeTextarea } from "~/utils/resizeTextarea";
 
-//TODO Zamijenij onMount sa value unutar textArea trebalo bi raditi  i sa vecom velicion teksta
+/**
+ * Recipe name/description as auto-growing `<textarea>`s (see
+ * utils/resizeTextarea.ts) instead of plain inputs, so long text wraps
+ * in-place rather than scrolling horizontally.
+ *
+ * TODO: call resizeTextarea() once on mount too, not just from onInput -
+ * a textarea whose *initial* value is already long stays locked at
+ * `rows={1}` until the user's first edit.
+ */
 export default function Header() {
   const context = useRecipe();
   let titleRef: HTMLTextAreaElement | undefined;
@@ -14,7 +22,7 @@ export default function Header() {
       <div class="flex border-b-3 md:border-b-4 border-foreground2">
         <textarea
           ref={titleRef}
-          class="flex-1 text-2xl md:text-5xl outline-none resize-none min-w-0  leading-tight"
+          class="flex-1 text-fluid-2xl-5xl outline-none resize-none min-w-0  leading-tight"
           rows={1}
           placeholder="Naziv recepta"
           onInput={(e) => {
@@ -27,16 +35,16 @@ export default function Header() {
           <span class="flex items-center">
             <ThumbsUp stroke="var(--color-green)" class="md:size-8 size-5" />
           </span>
-          <span class="text-sm mt-1.75 md:mt-2 md:text-2xl leading-none">{context.recipe.likes}</span>
+          <span class="text-fluid-sm-2xl mt-1.75 md:mt-2 leading-none">{context.recipe.likes}</span>
         </div>
       </div>
 
       <div class="flex">
         <div class="flex-1 min-w-0">
-          <div class="text-md md:text-4xl">By {context.recipe.userName}</div>
+          <div class="text-fluid-base-4xl">By {context.recipe.userName}</div>
           <textarea
             ref={descRef}
-            class=" outline-none w-full resize-none text-sm md:text-xl pt-3 pr-2 md:pr-3 leading-tight"
+            class=" outline-none w-full resize-none text-fluid-sm-xl pt-3 pr-2 md:pr-3 leading-tight"
             placeholder="Opis..."
             onInput={(e) => {
               resizeTextarea(descRef);
@@ -45,7 +53,7 @@ export default function Header() {
             spellcheck="false"
           >{context.recipe.description}</textarea>
         </div>
-        <div class=" border-l-3 md:border-l-4 border-orange  pt-2 w-20 md:w-32 text-xs md:text-2xl">
+        <div class=" border-l-3 md:border-l-4 border-orange  pt-2 w-20 md:w-32 text-fluid-xs-2xl">
           <ul class="text-center">
             <li>{context.recipe.createDate.getDate()}.</li>
             <li>{context.recipe.createDate.getMonth()}.</li>
