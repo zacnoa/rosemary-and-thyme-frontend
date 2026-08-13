@@ -23,15 +23,22 @@ export default function NotificationProvider(props: ParentProps) {
   };
 
   /**
-   * Shows a toast, auto-dismissing after [DISPLAY_DURATION_MS]. Clears any
+   * Shows a toast, auto-dismissing after [DISPLAY_DURATION_MS] - except for
+   * `type: "loading"`, which is left showing indefinitely (no timer is
+   * started for it at all) since it's meant to track an in-progress action
+   * of unknown duration rather than a fire-and-forget message. Clears any
    * pending auto-dismiss timer first, so calling this again while a toast is
-   * already showing swaps its content and restarts the countdown, rather
-   * than the old timer dismissing the new message early.
+   * already showing (e.g. a `"loading"` toast being replaced by the
+   * `"success"`/`"error"` result once the action finishes) swaps its content
+   * and restarts the countdown, rather than the old timer dismissing the new
+   * message early.
    */
   const notify = (type: NotificationType, message: string) => {
     clearTimeout(timeoutId);
     setNotification({ type, message });
-    timeoutId = setTimeout(dismiss, DISPLAY_DURATION_MS);
+    if (type !== "loading") {
+      timeoutId = setTimeout(dismiss, DISPLAY_DURATION_MS);
+    }
   };
 
   return (

@@ -128,9 +128,15 @@ export default function Dock(props: ParentProps) {
           </div>
         </div>
 
-        {/* Dock bar */}
+        {/*
+          Dock bar. gap-x-1 on mobile is deliberately tight - EditorDock
+          alone renders 8 module `<li>`s, and justify-between only
+          distributes *leftover* space between them (it doesn't shrink
+          them), so a wider gap here overflows the narrow w-[92vw] wrapper
+          these docks are rendered in on small screens instead of wrapping.
+        */}
         <div class="relative translate-y-1 w-full bg-foreground md:p-2 p-1 rounded-md z-10">
-          <ul class="flex justify-between md:justify-start gap-x-3 md:gap-x-12">
+          <ul class="flex justify-between md:justify-start gap-x-1 md:gap-x-12">
             {props.children}
           </ul>
         </div>

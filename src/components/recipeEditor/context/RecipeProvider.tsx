@@ -8,6 +8,7 @@ import { RecipeDTO, RecipeImage, stripBlobData } from "~/model/types/utils";
 import ImageViewer from "~/components/recipeEditor/ImageViewer";
 import { useNotification } from "~/components/notification/context/useNotification";
 import { putRecipe } from "~/queries/putRecipe";
+import { getSaveBlockers } from "~/utils/validateRecipe";
 
 
 
@@ -55,12 +56,39 @@ export default function RecipeProvider(props: RecipeProviderProps) {
    * On success, reconciles the store with the server's response - see
    * [applyServerRecipe].
    *
+   * Guarded by two checks *before* any network request is made, both
+   * enforced here (not only in SaveModule's slider UI) so this is the one
+   * place a save can actually happen from, and nothing can bypass the
+   * checks by calling this directly:
+   * - `changedFlag()` must be true - nothing to save otherwise, so this
+   *   silently no-ops rather than round-tripping an identical recipe.
+   * - [getSaveBlockers] must return no blockers (e.g. too many ingredients,
+   *   description over the word limit) - if it does, the first one is shown
+   *   as an error toast and the save is refused. Mirrored server-side by
+   *   RecipeValidation.kt (see RecipeService.saveRecipe on the backend),
+   *   which is the check that actually matters - this one just fails fast
+   *   without a network round trip.
+   *
+   * While the request is in flight, a `"loading"` toast is shown via
+   * [notify] (see NotificationProvider - that type doesn't auto-dismiss),
+   * replaced by the existing success/error toast once the request settles.
+   *
    * @param recipe the recipe to save (always the live store, `context.recipe` -
    * taken as a parameter rather than closing over the outer `recipe` purely
    * so callers read naturally as "save this recipe", not because a
    * different recipe is ever actually passed in)
    */
   const saveRecipe = async (recipe: Recipe) => {
+    if (!changedFlag()) return;
+
+    const blockers = getSaveBlockers(recipe);
+    if (blockers.length > 0) {
+      notify("error", blockers[0]);
+      return;
+    }
+
+    notify("loading", "Saving...");
+
     const formData = new FormData();
 
     // recipe JSON without the blob data - the backend only wants the
@@ -272,6 +300,7 @@ export default function RecipeProvider(props: RecipeProviderProps) {
     <RecipeContext.Provider value={{
       recipe,
       changedFlag,
+      saveBlockers: () => getSaveBlockers(recipe),
       viewerImages,
       openViewer,
       closeViewer,

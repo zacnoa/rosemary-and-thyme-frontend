@@ -19,22 +19,30 @@ type IngredientsModuleProps = {
  *
  * `props.ingredients`/`props.ingredientsOrder` are read reactively (plain
  * property access inside JSX/`<Show>`/`<For>`, not copied into local state),
- * so the list reflects the store live: while editing, every keystroke that
- * successfully parses (see recipeEditor/Ingredient.tsx) updates this panel
- * immediately if it's open, and a save's server-reconciled ids/values (see
- * RecipeProvider.applyServerRecipe) flow through the same way.
+ * so the list reflects the store live: while editing, every keystroke in any
+ * of recipeEditor/Ingredient.tsx's name/amount/measuringUnit inputs commits
+ * straight to the store and updates this panel immediately if it's open,
+ * and a save's server-reconciled ids/values (see RecipeProvider.applyServerRecipe)
+ * flow through the same way.
  */
 export default function IngredientsModule(props: IngredientsModuleProps) {
   const { toggle, activePanel, registerPanel } = useDock();
 
-  /** Ingredients only "count" once they have a name - a freshly-added, still-blank ingredient shouldn't flip the panel out of its empty-state fallback. */
-  const hasIngredients = () =>
-    props.ingredientsOrder.some((id) => props.ingredients[id]?.name);
+  /**
+   * Ingredients only "count" once they have a name - a freshly-added,
+   * still-blank ingredient (added via BasicInformation's "+ Add Ingredient"
+   * but not typed into yet) shouldn't show up as a stray row reading just
+   * "0" here, nor flip the panel out of its empty-state fallback by itself.
+   * Used both to decide the fallback and to filter the `<For>` below, so the
+   * list only ever renders ingredients that actually have something to show.
+   */
+  const namedIngredientIds = () =>
+    props.ingredientsOrder.filter((id) => props.ingredients[id]?.name);
 
   onMount(() => {
     registerPanel(PANEL_ID, () => (
       <Show
-        when={hasIngredients()}
+        when={namedIngredientIds().length > 0}
         fallback={
           <p class="text-sm text-background opacity-80">
             This is your ingredient list - add a few ingredients to see them show up here.
@@ -42,7 +50,7 @@ export default function IngredientsModule(props: IngredientsModuleProps) {
         }
       >
         <ul class="flex flex-col gap-y-2">
-          <For each={props.ingredientsOrder}>
+          <For each={namedIngredientIds()}>
             {(id: UUID) => (
               <li class="text-background border-b-2 border-background">
                 {props.ingredients[id].name}{" "}

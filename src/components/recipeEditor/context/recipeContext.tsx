@@ -8,6 +8,8 @@ import { UUID } from "~/model/types/UUID";
 type RecipeContextType = {
   recipe: Recipe,
   changedFlag: () => boolean,
+  /** Reasons `saveRecipe` would currently refuse to save (limit violations) - see utils/validateRecipe.ts. Empty when the recipe is within every limit. */
+  saveBlockers: () => string[],
   editName: (text: string) => void
   editDescription: (text: string) => void
   editRating: (rating: number) => void
