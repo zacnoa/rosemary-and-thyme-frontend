@@ -106,8 +106,17 @@ export default function CreateRecipeButton() {
   };
 
   return (
+    // No ml-auto here (there used to be one): Dock.tsx's <ul> is already
+    // justify-between, which spreads every module evenly on its own - an
+    // ml-auto on just this last item fought that by pulling *all* the
+    // wrapper's leftover width into one gap right before this button
+    // specifically, instead of it being distributed across every gap. Only
+    // showed up on mobile, where the dock's wrapper is a fixed w-[92vw]
+    // (wider than the icons' natural content width) - on desktop the
+    // wrapper is content-width (md:w-auto), so there was never any leftover
+    // space for ml-auto to consume there in the first place.
     <li
-      class="ml-auto rounded-full p-1 cursor-pointer bg-linear-to-r from-green to-orange"
+      class="rounded-full p-1 cursor-pointer bg-linear-to-r from-green to-orange"
       onClick={handleClick}
     >
       <Plus color="var(--color-background)" class="md:w-[30px] h-auto" />

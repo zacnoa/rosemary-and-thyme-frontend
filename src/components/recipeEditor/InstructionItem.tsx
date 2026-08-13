@@ -1,3 +1,4 @@
+import { onMount } from "solid-js";
 import { useRecipe } from "./context/useRecipe";
 import { resizeTextarea } from "~/utils/resizeTextarea";
 import ImageGallery from "./ImageGallery";
@@ -5,6 +6,14 @@ import ImageGallery from "./ImageGallery";
 /**
  * One instruction step: its (1-based, order-derived - not stored on the
  * instruction itself) step number, text, and attached images.
+ *
+ * [resizeTextarea] runs once on mount (in addition to every `onInput`) so a
+ * step loaded with existing, already-long text shows fully expanded right
+ * away, instead of staying clipped at its collapsed height until the first
+ * edit - see Header.tsx for the same fix and fuller explanation. Each
+ * `InstructionItem` mounts independently (see Instructions.tsx's `<For>`),
+ * so this correctly resizes every step's own textarea to its own text, not
+ * just the first one.
  *
  * @param id the instruction's id, looked up in the store fresh on every
  * access (`instruction()`/`index()` are plain accessor functions, not
@@ -17,6 +26,8 @@ export default function InstructionItem({ id }: { id: string }) {
   const index = () => context.recipe.instructionsOrder.indexOf(id);
   const { addInstructionImage } = context
   let textAreaRef: HTMLTextAreaElement | undefined
+
+  onMount(() => resizeTextarea(textAreaRef));
 
   return (
     <div class="flex flex-col gap-2">

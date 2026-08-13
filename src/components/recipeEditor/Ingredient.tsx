@@ -22,7 +22,12 @@ export default function Ingredient({ id }: { id: string }) {
   const ingredient = () => context.recipe.ingredients[id];
 
   return (
-    <div class="flex items-center gap-2">
+    // gap-1 on mobile (md:gap-2): this row lives in a narrow column even on
+    // its own full-width mobile line (see BasicInformation.tsx) - amount/
+    // measuringUnit are deliberately narrower than they need to be on
+    // desktop so name (the one field worth reading at a glance) gets
+    // priority over the two short fields next to it.
+    <div class="flex items-center gap-1 md:gap-2">
       <input
         type="text"
         class="bg-transparent outline-none min-w-0 flex-1"
@@ -35,7 +40,7 @@ export default function Ingredient({ id }: { id: string }) {
       />
       <input
         type="number"
-        class="bg-transparent outline-none w-14 shrink-0"
+        class="bg-transparent outline-none w-10 md:w-14 shrink-0"
         // Blank instead of "0" for a not-yet-entered amount - showing a
         // literal 0 here would read as "zero of this ingredient" rather
         // than "amount not set yet".
@@ -47,7 +52,7 @@ export default function Ingredient({ id }: { id: string }) {
       />
       <input
         type="text"
-        class="bg-transparent outline-none w-16 shrink-0"
+        class="bg-transparent outline-none w-10 md:w-16 shrink-0"
         value={ingredient().measuringUnit}
         placeholder="g"
         onInput={(e) =>

@@ -1,10 +1,20 @@
+import { onMount } from "solid-js";
 import { resizeTextarea } from "~/utils/resizeTextarea";
 import { useRecipe } from "./context/useRecipe";
 
-/** Free-text notes field, the last section of the editor. */
+/**
+ * Free-text notes field, the last section of the editor.
+ *
+ * [resizeTextarea] runs once on mount (in addition to every `onInput`) so a
+ * recipe loaded with existing, already-long notes shows fully expanded
+ * right away, instead of staying clipped at its collapsed height until the
+ * first edit - see Header.tsx for the same fix and fuller explanation.
+ */
 export default function Notes() {
   const context = useRecipe();
   let notesRef: HTMLTextAreaElement | undefined
+
+  onMount(() => resizeTextarea(notesRef));
 
   return (
     <section class="flex flex-col gap-4">

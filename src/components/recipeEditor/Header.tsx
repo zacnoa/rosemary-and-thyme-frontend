@@ -1,3 +1,4 @@
+import { onMount } from "solid-js";
 import { ThumbsUp } from "lucide-solid";
 import { useRecipe } from "./context/useRecipe";
 import { resizeTextarea } from "~/utils/resizeTextarea";
@@ -7,15 +8,21 @@ import { resizeTextarea } from "~/utils/resizeTextarea";
  * utils/resizeTextarea.ts) instead of plain inputs, so long text wraps
  * in-place rather than scrolling horizontally.
  *
- * TODO: call resizeTextarea() once on mount too, not just from onInput -
- * a textarea whose *initial* value is already long stays locked at
- * `rows={1}` until the user's first edit.
+ * [resizeTextarea] is called both from `onInput` (as the user types) and
+ * once from `onMount` below - without the `onMount` call, a textarea whose
+ * *initial* value is already long (opening an existing recipe with a long
+ * name/description) would stay locked at its collapsed `rows={1}` height
+ * until the user's first edit, clipping text that's already there.
  */
 export default function Header() {
   const context = useRecipe();
   let titleRef: HTMLTextAreaElement | undefined;
   let descRef: HTMLTextAreaElement | undefined;
 
+  onMount(() => {
+    resizeTextarea(titleRef);
+    resizeTextarea(descRef);
+  });
 
   return (
     <div>
