@@ -29,16 +29,29 @@ export default function LoginPage() {
     setResendSent(false)
     setPending(true)
 
-    const { ok, status, json } = await loginUser(email, password)
-    setPending(false)
+    // try/finally, not a bare await: loginUser() can throw instead of
+    // resolving with ok:false - a network failure, a CORS rejection, or a
+    // non-JSON error body (result.json() itself throws then) all reject the
+    // promise rather than returning a value. Without catching that, this
+    // function would exit before reaching setPending(false) below, leaving
+    // the button stuck on "Logging in..." forever with no indication
+    // anything went wrong - exactly what setError's fallback message here
+    // is for.
+    try {
+      const { ok, status, json } = await loginUser(email, password)
 
-    if (!ok) {
-      setError(json.detail ?? "Login failed")
-      setUnverified(status === 403)
-      return
+      if (!ok) {
+        setError(json.detail ?? "Login failed")
+        setUnverified(status === 403)
+        return
+      }
+
+      window.location.href = "/"
+    } catch {
+      setError("Could not reach the server - check your connection and try again")
+    } finally {
+      setPending(false)
     }
-
-    window.location.href = "/"
   }
 
   const resend = async () => {
