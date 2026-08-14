@@ -25,6 +25,24 @@ import Loading from "~/components/Loading";
  * TODO: add a network-error-specific message - the ErrorBoundary fallback
  * below currently shows the same generic message for a fetch/network
  * failure as for any other unexpected error.
+ *
+ * `<Show keyed>` below, not a plain `<Show>`: both RecipeProvider and
+ * BlogProvider seed their store from their `initialRecipe`/`recipe` prop
+ * exactly once, via `createStore(props.initialRecipe)` in their own setup -
+ * that's a one-time read, not a reactive binding. A non-keyed `<Show>` only
+ * re-invokes its children when `when`'s *truthiness* changes, so navigating
+ * from one already-open recipe straight to another (e.g. via SearchModule,
+ * while staying on this same route) would keep the same RecipeProvider/
+ * BlogProvider instance mounted and just hand it a new `data()` value it
+ * never actually reads again - `params.id` and the underlying fetch would
+ * update correctly, but the editor/blog view would silently keep showing
+ * the first recipe. `keyed` re-invokes the children (so a fresh
+ * RecipeProvider/BlogProvider mounts and reseeds its store) whenever the
+ * *value* itself changes - which every navigation to a different id causes,
+ * since createAsync/getRecipe returns a new object each fetch. Saving the
+ * currently-open recipe doesn't refetch this query (see
+ * RecipeProvider.applyServerRecipe, which reconciles the store directly
+ * instead), so this won't cause an unwanted remount mid-edit.
  */
 export default function RecipeEditor() {
   const params = useParams();
@@ -39,16 +57,16 @@ export default function RecipeEditor() {
       <div>Greška: {err.message}</div>
     )}>
       <Suspense fallback={<Loading />}>
-        <Show when={recipe()}>
+        <Show when={recipe()} keyed>
           {(data) => (
             <Switch>
-              <Match when={user?.id === data().userId}>
-                <RecipeProvider initialRecipe={data()}>
+              <Match when={user?.id === data.userId}>
+                <RecipeProvider initialRecipe={data}>
                   <RecipeEditorContent />
                 </RecipeProvider>
               </Match>
               <Match when={true}>
-                <BlogProvider recipe={data()}>
+                <BlogProvider recipe={data}>
                   <Blog />
                 </BlogProvider>
               </Match>
