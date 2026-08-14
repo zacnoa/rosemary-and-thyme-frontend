@@ -43,7 +43,7 @@ export default function InstructionItem({ id }: { id: string }) {
       <textarea
         ref={textAreaRef}
         class="outline-none resize-none w-full text-fluid-base-lg"
-        placeholder="Opisite korak..."
+        placeholder="Describe the step..."
         onInput={(e) => {
           resizeTextarea(textAreaRef)
           context.editInstruction({

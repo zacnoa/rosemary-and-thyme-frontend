@@ -26,7 +26,7 @@ export default function Notes() {
       <textarea
         ref={notesRef}
         class="outline-none resize-none w-full bg-transparent text-fluid-base-lg"
-        placeholder="Dodajte bilješku..."
+        placeholder="Add a note..."
         onInput={(e) => {
           resizeTextarea(notesRef);
           context.editSideNotes(e.currentTarget.value)

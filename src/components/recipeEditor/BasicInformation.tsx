@@ -1,4 +1,4 @@
-import { For, Index } from "solid-js";
+import { For, Index, createSignal } from "solid-js";
 import { useRecipe } from "./context/useRecipe";
 import Ingredient from "./Ingredient";
 
@@ -26,6 +26,31 @@ import Ingredient from "./Ingredient";
  */
 export default function BasicInformation() {
   const context = useRecipe();
+
+  // Local buffer for the Portions input, same reasoning as Ingredient.tsx's
+  // amount field: `Number(e.currentTarget.value)` on a non-numeric string
+  // (e.g. "abc") is NaN, and committing that straight to the store used to
+  // both store NaN *and* echo it right back into the input as the literal
+  // text "NaN". Buffering locally means an unparsable keystroke is simply
+  // never committed - the store (and so the displayed value once it's
+  // reverted on blur) only ever holds a real number.
+  const [portionsText, setPortionsText] = createSignal(String(context.recipe.portions));
+
+  const commitPortions = (raw: string) => {
+    setPortionsText(raw);
+    const parsed = Number(raw);
+    if (Number.isFinite(parsed)) {
+      context.editPortion(parsed);
+    }
+  };
+
+  /** Rejects whatever was left behind if it never resolved to a real number - reverts to the last valid, committed value instead of leaving unparsable text sitting in the field. */
+  const revertPortionsIfInvalid = () => {
+    if (!Number.isFinite(Number(portionsText()))) {
+      setPortionsText(String(context.recipe.portions));
+    }
+  };
+
   return (
     <section>
       <div class="flex border-b-3 md:border-b-4 border-foreground2">
@@ -69,9 +94,11 @@ export default function BasicInformation() {
             <span class="text-orange">→</span>
             <input
               class="outline-none text-fluid-sm-xl w-12"
-              value={context.recipe.portions}
+              value={portionsText()}
               type="text"
-              onInput={(e) => context.editPortion(Number(e.currentTarget.value))}
+              inputmode="numeric"
+              onInput={(e) => commitPortions(e.currentTarget.value)}
+              onBlur={revertPortionsIfInvalid}
             />
           </div>
           <div class="flex items-center gap-2 flex-wrap">

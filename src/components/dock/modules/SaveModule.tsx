@@ -13,6 +13,19 @@ const PANEL_ID = "save";
 const CONFIRM_THRESHOLD = 0.85;
 
 /**
+ * The thumb's resting inset from the track's edge - matches the `top-1
+ * left-1` (4px) Tailwind classes on the thumb below, and the `+ 4` added to
+ * `offsetPx()` in its `style.left`. Subtracted from *both* sides when
+ * computing [SaveSlider.maxOffset] so the thumb ends its drag with the same
+ * 4px gap from the track's right edge that it starts with on the left -
+ * without this, the fully-dragged thumb's right edge lands 4px past the
+ * track's own right edge (only the track's `overflow-hidden` was hiding
+ * that as a clipped, flattened-looking circle instead of a full round thumb
+ * sitting flush inside the track).
+ */
+const THUMB_INSET_PX = 4;
+
+/**
  * The dock's save panel content: a "slide to save" gesture instead of a
  * plain button, so saving needs a deliberate drag across the track rather
  * than a single tap that's easy to trigger by accident (e.g. reaching past
@@ -65,7 +78,7 @@ function SaveSlider() {
   const onPointerDown = (e: PointerEvent) => {
     if (disabledReason() || !trackRef || !thumbRef) return;
 
-    maxOffset = trackRef.clientWidth - thumbRef.clientWidth;
+    maxOffset = trackRef.clientWidth - thumbRef.clientWidth - THUMB_INSET_PX * 2;
     startX = e.clientX;
     startOffset = offsetPx();
     setDragging(true);

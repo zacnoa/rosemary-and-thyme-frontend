@@ -31,7 +31,7 @@ export default function Header() {
           ref={titleRef}
           class="flex-1 text-fluid-2xl-5xl outline-none resize-none min-w-0  leading-tight"
           rows={1}
-          placeholder="Naziv recepta"
+          placeholder="Recipe name"
           onInput={(e) => {
             resizeTextarea(titleRef);
             context.editName(e.currentTarget.value);
@@ -52,7 +52,7 @@ export default function Header() {
           <textarea
             ref={descRef}
             class=" outline-none w-full resize-none text-fluid-sm-xl pt-3 pr-2 md:pr-3 leading-tight"
-            placeholder="Opis..."
+            placeholder="Description..."
             onInput={(e) => {
               resizeTextarea(descRef);
               context.editDescription(e.currentTarget.value);
