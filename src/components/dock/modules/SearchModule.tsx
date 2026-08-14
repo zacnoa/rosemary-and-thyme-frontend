@@ -1,5 +1,5 @@
 import { Search } from "lucide-solid";
-import { createSignal, For, onMount, Show } from "solid-js";
+import { createSignal, Index, onMount, Show } from "solid-js";
 import { A } from "@solidjs/router";
 import { useDock } from "../context/DockContext";
 import { searchRecipes } from "~/queries/searchRecipes";
@@ -74,15 +74,32 @@ export default function SearchModule() {
                 when={results().length > 0}
                 fallback={<li class="text-sm opacity-70">No recipes found</li>}
               >
-                <For each={results()}>
+                {/*
+                  Index, not For: searchRecipes() returns brand-new
+                  {first, second} objects on every call (even for an
+                  unchanged query re-fetched by the debounce below), so a
+                  keyed <For> - which reconciles by object *reference* - would
+                  tear down and recreate every result's <a> on every search,
+                  even when its content didn't actually change. If that
+                  teardown landed between a click's mousedown and its click
+                  (e.g. the debounce firing right as the user clicked a
+                  result), the <a> being clicked would vanish mid-gesture and
+                  the click would silently do nothing - the recipe link
+                  wouldn't open except via a path that bypasses this handler
+                  entirely, like a right-click "open in new tab". Index
+                  reconciles by *position* instead, so the same <a> element
+                  stays mounted across re-searches (only its bound text/href
+                  update in place), which removes that race entirely.
+                */}
+                <Index each={results()}>
                   {(recipe) => (
                     <li class="border-b-2 border-background pb-1">
-                      <A href={`/recipe/${recipe.first}`} class="text-fluid-sm-base">
-                        {recipe.second}
+                      <A href={`/recipe/${recipe().first}`} class="text-fluid-sm-base">
+                        {recipe().second}
                       </A>
                     </li>
                   )}
-                </For>
+                </Index>
               </Show>
             </Show>
           </ul>
