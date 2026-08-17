@@ -27,6 +27,7 @@ export interface Recipe {
   name: string,
   description: string,
   likes: number,
+  liked: boolean,
   portions: number,
   cookTime: string,
   difficulty: number,

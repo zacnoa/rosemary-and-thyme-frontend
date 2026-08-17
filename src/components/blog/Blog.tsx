@@ -2,6 +2,7 @@ import { For, Index } from "solid-js";
 import { ThumbsUp } from "lucide-solid";
 import { clientOnly } from "@solidjs/start";
 import { useBlog } from "./context/useBlog";
+import { formatAmount } from "~/utils/parseAmount";
 
 /*
  * Read-only mirror of the recipeEditor/* components, section for section
@@ -22,18 +23,33 @@ import { useBlog } from "./context/useBlog";
 
 function Header() {
 
-  const { recipe } = useBlog();
+  const { recipe, liked, likes, toggleLike } = useBlog();
   return (
     <section>
       <div class="flex border-b-3 md:border-b-4 border-foreground2">
         <h1 class="flex-1 text-fluid-2xl-5xl outline-none resize-none min-w-0  leading-tight"
         >{recipe.name}</h1>
-        <div class="flex items-center gap-2 text-green border-l-3 md:border-l-4 border-orange pl-2 md:pl-4 w-20 md:w-32">
+        {/*
+          The only interactive element on an otherwise read-only page - see
+          BlogProvider.toggleLike for the redirect-to-login/idempotent-request
+          handling behind this click. `fill` (not just stroke color) mirrors the
+          liked/unliked state so it reads clearly at the icon's small mobile size,
+          not just by the color difference alone.
+        */}
+        <button
+          type="button"
+          onClick={toggleLike}
+          class="flex items-center gap-2 text-green border-l-3 md:border-l-4 border-orange pl-2 md:pl-4 w-20 md:w-32 cursor-pointer"
+        >
           <span class="flex items-center">
-            <ThumbsUp stroke="var(--color-green)" class="md:size-8 size-5" />
+            <ThumbsUp
+              stroke="var(--color-green)"
+              fill={liked() ? "var(--color-green)" : "none"}
+              class="md:size-8 size-5"
+            />
           </span>
-          <span class="text-fluid-sm-2xl mt-1.75 md:mt-2 leading-none">{recipe.likes}</span>
-        </div>
+          <span class="text-fluid-sm-2xl mt-1.75 md:mt-2 leading-none">{likes()}</span>
+        </button>
       </div>
 
       <div class="flex">
@@ -63,7 +79,7 @@ function Ingredient({ id }: { id: string }) {
   return (
     <div class="flex items-center gap-2">
       <p class="bg-transparent outline-none w-full">
-        {[ingredient().name, ingredient().amount || "", ingredient().measuringUnit]
+        {[ingredient().name, formatAmount(ingredient().amount), ingredient().measuringUnit]
           .filter(Boolean)
           .join(" ")}
       </p>
@@ -84,8 +100,8 @@ function BasicInformation() {
         </h2>
         <span class="flex-1" />
       </div>
-      <div class="flex">
-        <ul class="w-1/2 flex flex-col gap-4 list-none border-r-3 md:border-r-4 border-orange pt-3 pr-3">
+      <div class="flex flex-col md:flex-row">
+        <ul class="w-full md:w-1/2 order-2 md:order-1 flex flex-col gap-4 list-none border-orange md:border-r-4 pt-3 pr-0 md:pr-3">
           <For each={recipe.ingredientsOrder}>
             {(id) => (
               <li class="text-fluid-sm-xl">
@@ -94,7 +110,7 @@ function BasicInformation() {
             )}
           </For>
         </ul>
-        <aside class="w-1/2 pt-3 pl-3 flex flex-col gap-4">
+        <aside class="w-full md:w-1/2 order-1 md:order-2 border-orange border-b-3 md:border-b-0 pt-3 pb-4 md:pb-0 pl-0 md:pl-3 flex flex-col gap-4">
           <div class="flex items-center gap-2">
             <span class="text-fluid-sm-xl">Preparation</span>
             <span class="text-orange">→</span>

@@ -28,7 +28,7 @@ export const getUser = query(async () => {
   });
 
   if (response.status === 401 || response.status === 403) {
-    // korisnik nije prijavljen — normalno stanje, ne greška
+    //user not logged in, normal bahaviour not an error
     return null;
   }
 
