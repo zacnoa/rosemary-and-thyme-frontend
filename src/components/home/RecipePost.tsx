@@ -47,7 +47,7 @@ export default function RecipePost(props: { recipe: RecipeFeed }) {
         </div>
       </div>
 
-      <hr class="border-background opacity-30" />
+      <hr class="border-orange border-t-2 md:border-t-3" />
 
       <div class="flex flex-col md:flex-row gap-3">
         <Show when={props.recipe.heroImageUrl}>
@@ -62,7 +62,7 @@ export default function RecipePost(props: { recipe: RecipeFeed }) {
         <p class="text-fluid-sm-base line-clamp-3 flex-1">{props.recipe.description}</p>
       </div>
 
-      <hr class="border-background opacity-30" />
+      <hr class="border-orange border-t-2 md:border-t-3" />
 
       <div class="flex items-center justify-between text-fluid-xs-sm opacity-80">
         <span>{props.recipe.userName}</span>
