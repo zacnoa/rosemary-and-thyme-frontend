@@ -1,21 +1,21 @@
 import { createSignal, For, onMount, Show } from "solid-js";
-import { A } from "@solidjs/router";
 import { searchAllRecipes } from "~/queries/searchAllRecipes";
-
-type RecipeResult = { first: string; second: string };
+import type { RecipeFeed } from "~/model/interfaces/RecipeFeed";
+import RecipePost from "./RecipePost";
 
 /**
- * Home page's recipe browser: a name filter over *all* users' recipes, ordered by
- * like count (see queries/searchAllRecipes.ts) - fills the space under the title
- * that used to be empty, and doubles as a "what's popular" landing list for a
- * visitor with nothing specific in mind (see the immediate `onMount` search below).
+ * Home page's recipe feed: a name filter over *all* users' recipes, ordered by like
+ * count (see queries/searchAllRecipes.ts), each rendered as a RecipePost card - fills
+ * the space under the title that used to be empty, and doubles as a "what's popular"
+ * landing feed for a visitor with nothing specific in mind (see the immediate
+ * `onMount` search below).
  *
  * Debounced (300ms) rather than searching on every keystroke, same reasoning and
  * timing as the dock's SearchModule.
  */
 export default function RecipeSearch() {
   const [query, setQuery] = createSignal("");
-  const [results, setResults] = createSignal<RecipeResult[]>([]);
+  const [results, setResults] = createSignal<RecipeFeed[]>([]);
   const [loading, setLoading] = createSignal(false);
 
   let debounceId: ReturnType<typeof setTimeout> | undefined;
@@ -46,27 +46,21 @@ export default function RecipeSearch() {
         class="w-full p-2 border-2 rounded-2xl border-foreground outline-none bg-transparent text-fluid-sm-base"
         placeholder="Search all recipes"
       />
-      <ul class="flex flex-col gap-2">
+      <div class="flex flex-col gap-3">
         <Show
           when={!loading()}
-          fallback={<li class="text-sm text-foreground3">Searching...</li>}
+          fallback={<p class="text-sm text-foreground3">Searching...</p>}
         >
           <Show
             when={results().length > 0}
-            fallback={<li class="text-sm text-foreground3">No recipes found</li>}
+            fallback={<p class="text-sm text-foreground3">No recipes found</p>}
           >
             <For each={results()}>
-              {(recipe) => (
-                <li class="border-b-2 border-foreground2 pb-1">
-                  <A href={`/recipe/${recipe.first}`} class="text-fluid-sm-base">
-                    {recipe.second}
-                  </A>
-                </li>
-              )}
+              {(recipe) => <RecipePost recipe={recipe} />}
             </For>
           </Show>
         </Show>
-      </ul>
+      </div>
     </div>
   );
 }
