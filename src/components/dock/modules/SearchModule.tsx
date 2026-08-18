@@ -2,8 +2,8 @@ import { Search } from "lucide-solid";
 import { createSignal, For, onMount, Show } from "solid-js";
 import { A } from "@solidjs/router";
 import { useDock } from "../context/DockContext";
-import { searchRecipes } from "~/queries/searchRecipes";
 import { useAuth } from "~/components/auth/context/useAuth";
+import { searchUserRecipes } from "~/queries/searchUserRecipes";
 
 const PANEL_ID = "search";
 
@@ -26,7 +26,7 @@ export default function SearchModule() {
 
   const search = async (q: string) => {
     setLoading(true);
-    setResults(await searchRecipes(q));
+    setResults(await searchUserRecipes(q));
     setLoading(false);
   };
 

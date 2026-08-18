@@ -1,4 +1,4 @@
-import { LogIn, LogOut, User, UserPlus } from "lucide-solid";
+import { LayoutDashboard, LogIn, LogOut, User, UserPlus } from "lucide-solid";
 import { A } from "@solidjs/router";
 import { onMount } from "solid-js";
 import { useDock } from "../context/DockContext";
@@ -32,6 +32,10 @@ export default function UserButton() {
             <p class="text-fluid-base-lg font-bold">{user.username}</p>
             <p class="text-fluid-xs-sm opacity-80">{user.email}</p>
           </div>
+          <A href="/dashboard" class="flex items-center gap-2 self-start px-3 py-1 rounded-md bg-linear-to-r from-green to-blue cursor-pointer">
+            <LayoutDashboard class="size-5" />
+            Dashboard
+          </A>
           <button
             class="flex items-center gap-2 self-start px-3 py-1 rounded-md bg-linear-to-r from-red to-orange cursor-pointer"
             onClick={logout}

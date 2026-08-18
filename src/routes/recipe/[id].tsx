@@ -7,6 +7,7 @@ import RecipeProvider from "~/components/recipeEditor/context/RecipeProvider";
 import { getRecipe } from "~/queries/getRecipe";
 import { useAuth } from "~/components/auth/context/useAuth";
 import Loading from "~/components/Loading";
+import ServerError from "~/components/error/ServerError";
 
 
 /**
@@ -23,8 +24,9 @@ import Loading from "~/components/Loading";
  * transparently just see the read-only view instead.
  *
  * TODO: add a network-error-specific message - the ErrorBoundary fallback
- * below currently shows the same generic message for a fetch/network
- * failure as for any other unexpected error.
+ * below (ServerError, see components/error/ServerError.tsx) currently shows
+ * the same generic message for a fetch/network failure as for any other
+ * unexpected error.
  *
  * `<Show keyed>` below, not a plain `<Show>`: both RecipeProvider and
  * BlogProvider seed their store from their `initialRecipe`/`recipe` prop
@@ -53,9 +55,7 @@ export default function RecipeEditor() {
   );
 
   return (
-    <ErrorBoundary fallback={(err) => (
-      <div>Greška: {err.message}</div>
-    )}>
+    <ErrorBoundary fallback={() => <ServerError />}>
       <Suspense fallback={<Loading />}>
         <Show when={recipe()} keyed>
           {(data) => (

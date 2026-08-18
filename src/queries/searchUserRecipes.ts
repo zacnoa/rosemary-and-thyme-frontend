@@ -19,7 +19,7 @@ type RecipeResult = { first: string; second: string };
  * @returns matching recipes, or `[]` on any non-2xx response (errors are
  * swallowed here rather than surfaced - there's no error UI in the search panel)
  */
-export const searchRecipes = async (q: string): Promise<RecipeResult[]> => {
+export const searchUserRecipes = async (q: string): Promise<RecipeResult[]> => {
   const params = q.trim() ? `?q=${encodeURIComponent(q.trim())}` : "";
   const result = await fetch(`${API_URL}/user/recipes/search${params}`, {
     credentials: "include",
