@@ -1,9 +1,10 @@
 import { LayoutDashboard, LogIn, LogOut, User, UserPlus } from "lucide-solid";
-import { A } from "@solidjs/router";
+import { A, useLocation } from "@solidjs/router";
 import { onMount } from "solid-js";
 import { useDock } from "../context/DockContext";
 import { useAuth } from "~/components/auth/context/useAuth";
 import { logoutUser } from "~/queries/logoutUser";
+import { loginHref } from "~/utils/loginRedirect";
 
 const PANEL_ID = "user";
 
@@ -17,6 +18,7 @@ const PANEL_ID = "user";
 export default function UserButton() {
   const { toggle, activePanel, registerPanel } = useDock();
   const user = useAuth();
+  const location = useLocation();
 
   /** Clears the session server-side, then hard-reloads to `/` so the next page load resolves queries/getUser.ts fresh (see AuthProvider). */
   const logout = async () => {
@@ -47,7 +49,7 @@ export default function UserButton() {
       ) : (
         <ul class="flex flex-col gap-3 text-background list-none">
           <li>
-            <A href="/auth/login" class="flex items-center gap-2">
+            <A href={loginHref(location.pathname)} class="flex items-center gap-2">
               <LogIn class="size-5" />
               Login
             </A>

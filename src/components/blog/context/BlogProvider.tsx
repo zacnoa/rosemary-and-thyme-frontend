@@ -2,11 +2,12 @@ import { Recipe } from "~/model/interfaces/Recipe";
 import { BlogContext } from "./blogContext";
 import { createStore } from "solid-js/store";
 import { createSignal, ParentProps, Show } from "solid-js";
-import { useNavigate } from "@solidjs/router";
+import { useLocation, useNavigate } from "@solidjs/router";
 import { UUID } from "~/model/types/UUID";
 import ImageViewer from "~/components/recipeEditor/ImageViewer";
 import { useAuth } from "~/components/auth/context/useAuth";
 import { setRecipeLiked } from "~/queries/likeRecipe";
+import { loginHref } from "~/utils/loginRedirect";
 
 interface BlogProviderProps extends ParentProps {
   recipe: Recipe
@@ -41,6 +42,7 @@ export default function BlogProvider(props: BlogProviderProps) {
 
   const user = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const openViewer = (images: UUID[], initialIndex: number = 0) => setViewerImages({ images: images, initialIndex: initialIndex });
   const closeViewer = () => setViewerImages(null);
@@ -58,7 +60,7 @@ export default function BlogProvider(props: BlogProviderProps) {
    */
   const toggleLike = async () => {
     if (!user) {
-      navigate("/auth/login");
+      navigate(loginHref(location.pathname));
       return;
     }
     if (likePending()) return;

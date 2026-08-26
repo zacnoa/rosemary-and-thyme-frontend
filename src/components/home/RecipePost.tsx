@@ -23,6 +23,10 @@ function formatDate(date: Date): string {
  * use, per the feature request, so the feed reads as its own distinct browsing
  * surface sitting on the page.
  *
+ * `bg-foreground2` (not `bg-foreground`) specifically so the card reads as a distinct
+ * surface from the dock bar sitting on top of it (Dock.tsx's bar is `bg-foreground`) -
+ * they used to be the exact same shade.
+ *
  * Image-and-description is `flex-col` by default (image stacked above description)
  * and only becomes a side-by-side row at `md:` - the reverse of most of this app's
  * "row on desktop, stack on mobile" sections, but that's exactly what was asked for
@@ -37,7 +41,7 @@ export default function RecipePost(props: { recipe: RecipeFeed }) {
   return (
     <A
       href={`/recipe/${props.recipe.id}`}
-      class="flex flex-col gap-2 bg-foreground text-background rounded-md p-3"
+      class="flex flex-col gap-2 bg-foreground2 text-background rounded-md p-3"
     >
       <div class="flex flex-col">
         <h3 class="text-fluid-base-xl font-bold truncate">{props.recipe.name}</h3>

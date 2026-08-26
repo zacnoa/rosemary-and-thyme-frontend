@@ -29,6 +29,19 @@ type SlideToConfirmProps = {
   disabledReason: () => string | null;
   /** Called once, on a successful release past [CONFIRM_THRESHOLD] - fire-and-forget from this component's point of view, the thumb always snaps back to the start shortly after regardless of the outcome. */
   onConfirm: () => void;
+  /**
+   * Tailwind `bg-*` class for the track itself. Defaults to `"bg-background"`, which
+   * only reads as a distinct track when this component sits on some *other* surface
+   * (e.g. the dock's `bg-foreground3` panel, or a card wrapper) - a caller rendering
+   * it straight on the page (which is itself `bg-background`, see `entry-server.tsx`)
+   * needs to override this or the track disappears entirely. Paired with [labelClass]/
+   * [mutedTextClass] below, which need to flip along with it for the text to stay legible.
+   */
+  trackClass?: string;
+  /** Tailwind `text-*` class for the centered label - must contrast against [trackClass]. Defaults to `"text-foreground"`, matching the default dark `trackClass`. */
+  labelClass?: string;
+  /** Tailwind `text-*` class for the `disabledReason` line under the track - unlike the label, this sits *outside* the track, directly on whatever surface this component itself is placed on, so it must contrast against that (not against [trackClass]). Defaults to `"text-background"`, matching the dock/card surfaces this component originally shipped inside. */
+  mutedTextClass?: string;
 };
 
 /**
@@ -49,6 +62,10 @@ type SlideToConfirmProps = {
  * "let go early" from "completed the gesture").
  */
 export default function SlideToConfirm(props: SlideToConfirmProps) {
+  const trackClass = () => props.trackClass ?? "bg-background";
+  const labelClass = () => props.labelClass ?? "text-foreground";
+  const mutedTextClass = () => props.mutedTextClass ?? "text-background";
+
   const [offsetPx, setOffsetPx] = createSignal(0);
   const [dragging, setDragging] = createSignal(false);
 
@@ -93,10 +110,10 @@ export default function SlideToConfirm(props: SlideToConfirmProps) {
     <div class="flex flex-col gap-2">
       <div
         ref={trackRef}
-        class={`relative h-12 rounded-full bg-background overflow-hidden ${props.disabledReason() ? "opacity-50" : ""
+        class={`relative h-12 rounded-full ${trackClass()} overflow-hidden ${props.disabledReason() ? "opacity-50" : ""
           }`}
       >
-        <p class="absolute inset-0 flex items-center justify-center text-foreground text-fluid-sm-base pointer-events-none select-none">
+        <p class={`absolute inset-0 flex items-center justify-center ${labelClass()} text-fluid-sm-base pointer-events-none select-none`}>
           {props.label}
         </p>
         <div
@@ -114,7 +131,7 @@ export default function SlideToConfirm(props: SlideToConfirmProps) {
         </div>
       </div>
       <Show when={props.disabledReason()}>
-        <p class="text-background text-fluid-xs-sm opacity-80">{props.disabledReason()}</p>
+        <p class={`${mutedTextClass()} text-fluid-xs-sm opacity-80`}>{props.disabledReason()}</p>
       </Show>
     </div>
   );

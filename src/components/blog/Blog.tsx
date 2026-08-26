@@ -1,7 +1,8 @@
-import { For, Index } from "solid-js";
-import { ThumbsUp } from "lucide-solid";
+import { For, Index, Show } from "solid-js";
+import { Eye, EyeOff, ThumbsUp } from "lucide-solid";
 import { clientOnly } from "@solidjs/start";
 import { useBlog } from "./context/useBlog";
+import { useWakeLock } from "~/components/common/useWakeLock";
 import { formatAmount } from "~/utils/parseAmount";
 
 /*
@@ -92,13 +93,35 @@ function Ingredient({ id }: { id: string }) {
 function BasicInformation() {
 
   const { recipe } = useBlog();
+  const wakeLock = useWakeLock();
+
   return (
     <section>
       <div class="flex border-b-3 md:border-b-4 border-foreground2">
         <h2 class="text-fluid-lg-4xl font-bold pb-1 w-1/2 border-r-3 md:border-r-4 border-orange">
           What You Need
         </h2>
-        <span class="flex-1" />
+        {/*
+          Wake-lock control lives here (not just as a dock icon, which used to be
+          the only place to reach it) because this is the exact moment someone
+          following the recipe hands-on needs it - about to check ingredients
+          before the screen has a chance to time out. `disabled` (not hidden)
+          when unsupported, same as the old dock version, with a `title`
+          explaining why rather than a silently inert button.
+        */}
+        <button
+          type="button"
+          onClick={wakeLock.toggle}
+          disabled={!wakeLock.supported()}
+          title={wakeLock.supported() ? undefined : "Keeping the screen on isn't supported in this browser"}
+          class={`flex-1 flex items-center pl-2 md:pl-4 gap-1 md:gap-2 pb-1 text-fluid-xs-sm ${wakeLock.supported() ? "cursor-pointer" : "cursor-not-allowed opacity-50"
+            } ${wakeLock.active() ? "text-green" : "text-foreground3"}`}
+        >
+          <Show when={wakeLock.active()} fallback={<EyeOff class="size-3 md:size-4 shrink-0" />}>
+            <Eye class="size-3 md:size-4 shrink-0" />
+          </Show>
+          Press to keep screen awake
+        </button>
       </div>
       <div class="flex flex-col md:flex-row">
         <ul class="w-full md:w-1/2 order-2 md:order-1 flex flex-col gap-4 list-none border-orange md:border-r-4 pt-3 pr-0 md:pr-3">

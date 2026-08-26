@@ -1,6 +1,8 @@
 import { createSignal, Show } from "solid-js"
-import { A } from "@solidjs/router"
+import { A, useSearchParams } from "@solidjs/router"
 import { registerUser } from "~/queries/registerUser"
+import { API_URL } from "~/utils/apiUrl"
+import { sanitizeRedirect } from "~/utils/loginRedirect"
 
 /**
  * Registration never logs the user in directly (see queries/registerUser.ts) -
@@ -8,8 +10,18 @@ import { registerUser } from "~/queries/registerUser"
  * instead of redirecting anywhere, since there's no session yet to redirect
  * into. The user only gets a session after clicking the emailed link,
  * handled by routes/auth/verify-email.tsx.
+ *
+ * `redirect` (see utils/loginRedirect.ts) is only ever forwarded here, never
+ * consumed - this page has nothing to redirect *to* on success, but the
+ * "already have an account? Login" and "Continue with Google" links both
+ * still need to carry it onward so it isn't dropped if someone lands here
+ * first (e.g. from routes/auth/login.tsx's own "Register" link).
  */
 export default function RegisterPage() {
+
+  const [searchParams] = useSearchParams()
+  const redirectTarget = () =>
+    sanitizeRedirect(Array.isArray(searchParams.redirect) ? searchParams.redirect[0] : searchParams.redirect)
 
   const [username, setUsername] = createSignal("")
   const [email, setEmail] = createSignal("")
@@ -109,9 +121,17 @@ export default function RegisterPage() {
             {pending() ? "Creating account..." : "Create account"}
           </button>
 
+          {/* Same reasoning as routes/auth/login.tsx's own Google link - a plain navigation, not a fetch. */}
+          <a
+            href={`${API_URL}/auth/google?redirect=${encodeURIComponent(redirectTarget())}`}
+            class="px-4 py-2 rounded-md border-2 border-foreground3 text-center font-bold"
+          >
+            Continue with Google
+          </a>
+
           <p class="text-sm text-foreground3">
             Already have an account?{" "}
-            <A href="/auth/login" class="text-orange underline">
+            <A href={`/auth/login?redirect=${encodeURIComponent(redirectTarget())}`} class="text-orange underline">
               Login
             </A>
           </p>

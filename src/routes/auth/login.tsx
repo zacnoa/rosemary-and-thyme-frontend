@@ -1,7 +1,9 @@
 import { createSignal, Show } from "solid-js"
-import { A } from "@solidjs/router"
+import { A, useSearchParams } from "@solidjs/router"
 import { loginUser } from "~/queries/loginUser"
 import { resendVerificationEmail } from "~/queries/resendVerificationEmail"
+import { API_URL } from "~/utils/apiUrl"
+import { sanitizeRedirect } from "~/utils/loginRedirect"
 
 /**
  * On success, does a full `window.location.href` redirect rather than a
@@ -13,8 +15,21 @@ import { resendVerificationEmail } from "~/queries/resendVerificationEmail"
  * verified yet" (see AuthService.login on the backend) - that's the one
  * failure case with its own UI (a resend-verification-email button) instead
  * of just the generic error message.
+ *
+ * `redirectTarget` is the "return to where the visitor started" value carried
+ * through a `?redirect=` query param (see utils/loginRedirect.ts, and every
+ * `loginHref()` caller that lands someone here) - re-sanitized on read even
+ * though the caller already sanitized it once, since it's still just a plain
+ * string that arrived over the URL. Threaded into both the plain login
+ * success redirect below and the "Continue with Google" link, which forwards
+ * it through the backend/Google round trip via its own cookie (see
+ * AuthController.startGoogleLogin / GoogleOidcSuccessHandler).
  */
 export default function LoginPage() {
+
+  const [searchParams] = useSearchParams()
+  const redirectTarget = () =>
+    sanitizeRedirect(Array.isArray(searchParams.redirect) ? searchParams.redirect[0] : searchParams.redirect)
 
   const [email, setEmail] = createSignal("")
   const [password, setPassword] = createSignal("")
@@ -46,7 +61,7 @@ export default function LoginPage() {
         return
       }
 
-      window.location.href = "/"
+      window.location.href = redirectTarget()
     } catch {
       setError("Could not reach the server - check your connection and try again")
     } finally {
@@ -125,9 +140,22 @@ export default function LoginPage() {
           {pending() ? "Logging in..." : "Log in"}
         </button>
 
+        {/*
+          A plain navigation, not a queries/*.ts fetch - this has to leave the SPA
+          entirely for Google's own consent screen. `redirect` is forwarded as-is
+          (not client-side sanitized here) since the backend re-sanitizes it anyway
+          on both ends of the round trip - see AuthController.startGoogleLogin.
+        */}
+        <a
+          href={`${API_URL}/auth/google?redirect=${encodeURIComponent(redirectTarget())}`}
+          class="px-4 py-2 rounded-md border-2 border-foreground3 text-center font-bold"
+        >
+          Continue with Google
+        </a>
+
         <p class="text-sm text-foreground3">
           Don't have an account?{" "}
-          <A href="/auth/register" class="text-orange underline">
+          <A href={`/auth/register?redirect=${encodeURIComponent(redirectTarget())}`} class="text-orange underline">
             Register
           </A>
         </p>

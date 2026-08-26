@@ -89,8 +89,12 @@ export default function Ingredient({ id }: { id: string }) {
         }
         spellcheck="false"
       />
+      {/* ml-1/md:ml-2 on top of the row's own gap - the measuring unit field is
+          [field-sizing:content], so its right edge can sit right up against this
+          button with no visual buffer at all; this pushes the delete target a bit
+          further off so it isn't an easy mis-tap while typing the unit. */}
       <button
-        class="cursor-pointer text-foreground shrink-0"
+        class="cursor-pointer text-foreground shrink-0 ml-1 md:ml-2"
         onClick={() => context.removeIngredient(id)}
       >
         ✕

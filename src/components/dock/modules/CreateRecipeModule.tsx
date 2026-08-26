@@ -1,10 +1,11 @@
 import { Plus } from "lucide-solid";
 import { createSignal, onMount } from "solid-js";
-import { useNavigate } from "@solidjs/router";
+import { useLocation, useNavigate } from "@solidjs/router";
 import { useAuth } from "~/components/auth/context/useAuth";
 import { useNotification } from "~/components/notification/context/useNotification";
 import { useDock } from "../context/DockContext";
 import { putRecipe } from "~/queries/putRecipe";
+import { loginHref } from "~/utils/loginRedirect";
 
 const PANEL_ID = "createRecipe";
 
@@ -17,6 +18,7 @@ const PANEL_ID = "createRecipe";
 export default function CreateRecipeButton() {
   const user = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const { notify } = useNotification();
   const { toggle, registerPanel } = useDock();
   const [name, setName] = createSignal("");
@@ -99,7 +101,7 @@ export default function CreateRecipeButton() {
 
   const handleClick = () => {
     if (!user) {
-      navigate("/auth/login");
+      navigate(loginHref(location.pathname));
       return;
     }
     toggle(PANEL_ID);

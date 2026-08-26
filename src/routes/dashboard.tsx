@@ -3,6 +3,7 @@ import { useNavigate } from "@solidjs/router";
 import { clientOnly } from "@solidjs/start";
 import { useAuth } from "~/components/auth/context/useAuth";
 import RecipeSearch from "~/components/dashboard/RecipeSearch";
+import { loginHref } from "~/utils/loginRedirect";
 
 /**
  * Login-gated dashboard: the signed-in user's own recipes, browsable/searchable and
@@ -25,7 +26,7 @@ export default function Dashboard() {
   const HomeDock = clientOnly(() => import("~/components/home/HomeDock"));
 
   onMount(() => {
-    if (!user) navigate("/auth/login", { replace: true });
+    if (!user) navigate(loginHref("/dashboard"), { replace: true });
   });
 
   return (

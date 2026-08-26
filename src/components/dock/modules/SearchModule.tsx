@@ -2,31 +2,37 @@ import { Search } from "lucide-solid";
 import { createSignal, For, onMount, Show } from "solid-js";
 import { A } from "@solidjs/router";
 import { useDock } from "../context/DockContext";
-import { useAuth } from "~/components/auth/context/useAuth";
-import { searchUserRecipes } from "~/queries/searchUserRecipes";
+import { searchAllRecipes } from "~/queries/searchAllRecipes";
+import type { RecipeFeed } from "~/model/interfaces/RecipeFeed";
 
 const PANEL_ID = "search";
 
-/** (id, name) pair, as returned by GET /user/recipes/search - see queries/searchRecipes.ts. */
-type RecipeResult = { first: string; second: string };
-
 /**
- * Search panel over the signed-in user's own recipes. Debounced (300ms)
- * rather than searching on every keystroke, to avoid firing a request per
- * character while typing.
+ * Search panel over *every* user's recipes - the dock bar's own search icon is
+ * present on every dock configuration (Home/Blog/Editor), so it needs to behave the
+ * way a bare "search" icon in a dock intuitively reads: search everything, not just
+ * whatever's signed in. Backed by the same public `GET /recipe/search` endpoint as
+ * the home page's feed (queries/searchAllRecipes.ts) - no sign-in required, unlike
+ * the old `searchUserRecipes`/`GET /user/recipes/search` this used to call.
+ *
+ * The "my own recipes only" search lives on the dashboard instead (see
+ * components/dashboard/RecipeSearch.tsx / queries/searchUserFeed.ts) - that one's
+ * scoping is just as intuitive, since the whole page is already "your recipes".
+ *
+ * Debounced (300ms) rather than searching on every keystroke, same reasoning and
+ * timing as the dashboard/home page searches.
  */
 export default function SearchModule() {
   const { toggle, activePanel, registerPanel } = useDock();
-  const user = useAuth();
   const [query, setQuery] = createSignal("");
-  const [results, setResults] = createSignal<RecipeResult[]>([]);
+  const [results, setResults] = createSignal<RecipeFeed[]>([]);
   const [loading, setLoading] = createSignal(false);
 
   let debounceId: ReturnType<typeof setTimeout> | undefined;
 
   const search = async (q: string) => {
     setLoading(true);
-    setResults(await searchUserRecipes(q));
+    setResults(await searchAllRecipes(q));
     setLoading(false);
   };
 
@@ -41,53 +47,41 @@ export default function SearchModule() {
   const handleToggle = () => {
     const wasOpen = activePanel() === PANEL_ID;
     toggle(PANEL_ID);
-    // signed-out visitors get a static message instead - the search endpoint
-    // needs a session, so there's nothing to fetch here
-    if (!wasOpen && user) search(query());
+    if (!wasOpen) search(query());
   };
 
   onMount(() => {
     registerPanel(PANEL_ID, () => (
-      <Show
-        when={user}
-        fallback={
-          <p class="text-sm text-background opacity-80">
-            This is where your own recipes show up once you're signed in -{" "}
-            <A href="/auth/login" class="underline">log in</A> to search them.
-          </p>
-        }
-      >
-        <div class="flex flex-col gap-3 text-background">
-          <input
-            type="text"
-            value={query()}
-            onInput={(e) => onInput(e.currentTarget.value)}
-            class="w-full p-2 text-background border-2 rounded-2xl border-background outline-none bg-transparent"
-            placeholder="Search your recipes"
-          />
-          <ul class="flex flex-col gap-2">
+      <div class="flex flex-col gap-3 text-background">
+        <input
+          type="text"
+          value={query()}
+          onInput={(e) => onInput(e.currentTarget.value)}
+          class="w-full p-2 text-background border-2 rounded-2xl border-background outline-none bg-transparent"
+          placeholder="Search all recipes"
+        />
+        <ul class="flex flex-col gap-2">
+          <Show
+            when={!loading()}
+            fallback={<li class="text-sm opacity-70">Searching...</li>}
+          >
             <Show
-              when={!loading()}
-              fallback={<li class="text-sm opacity-70">Searching...</li>}
+              when={results().length > 0}
+              fallback={<li class="text-sm opacity-70">No recipes found</li>}
             >
-              <Show
-                when={results().length > 0}
-                fallback={<li class="text-sm opacity-70">No recipes found</li>}
-              >
-                <For each={results()}>
-                  {(recipe) => (
-                    <li class="border-b-2 border-background pb-1">
-                      <A href={`/recipe/${recipe.first}`} class="text-fluid-sm-base">
-                        {recipe.second}
-                      </A>
-                    </li>
-                  )}
-                </For>
-              </Show>
+              <For each={results()}>
+                {(recipe) => (
+                  <li class="border-b-2 border-background pb-1">
+                    <A href={`/recipe/${recipe.id}`} class="text-fluid-sm-base">
+                      {recipe.name}
+                    </A>
+                  </li>
+                )}
+              </For>
             </Show>
-          </ul>
-        </div>
-      </Show>
+          </Show>
+        </ul>
+      </div>
     ));
   });
 
