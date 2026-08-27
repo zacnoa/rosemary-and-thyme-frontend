@@ -7,6 +7,7 @@ import { ErrorBoundary, Suspense } from "solid-js";
 import { getUser } from "./queries/getUser";
 import Loading from "./components/Loading";
 import ServerError from "./components/error/ServerError";
+import CookieNotice from "./components/common/CookieNotice";
 
 /**
  * App root: wraps every route in the providers pages need regardless of
@@ -30,15 +31,24 @@ export default function App() {
         const user = createAsync(() => getUser());
 
         return (
-          <Suspense fallback={<Loading />}>
-            <NotificationProvider>
-              <AuthProvider user={user() ?? null}>
-                <ErrorBoundary fallback={() => <ServerError />}>
-                  {props.children}
-                </ErrorBoundary>
-              </AuthProvider>
-            </NotificationProvider>
-          </Suspense>
+          <>
+            <Suspense fallback={<Loading />}>
+              <NotificationProvider>
+                <AuthProvider user={user() ?? null}>
+                  <ErrorBoundary fallback={() => <ServerError />}>
+                    {props.children}
+                  </ErrorBoundary>
+                </AuthProvider>
+              </NotificationProvider>
+            </Suspense>
+            {/*
+              Outside the Suspense above deliberately - it doesn't depend on
+              getUser() at all, so it shouldn't wait behind that boundary's
+              loading fallback (or disappear behind ServerError's fallback on
+              an unrelated page error).
+            */}
+            <CookieNotice />
+          </>
         );
       }}
     >

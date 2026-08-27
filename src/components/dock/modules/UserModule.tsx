@@ -1,4 +1,4 @@
-import { LayoutDashboard, LogIn, LogOut, User, UserPlus } from "lucide-solid";
+import { LayoutDashboard, LogIn, LogOut, Shield, User, UserPlus } from "lucide-solid";
 import { A, useLocation } from "@solidjs/router";
 import { onMount } from "solid-js";
 import { useDock } from "../context/DockContext";
@@ -45,6 +45,10 @@ export default function UserButton() {
             <LogOut class="size-5" />
             Log out
           </button>
+          <A href="/privacy" class="flex items-center gap-2 text-fluid-xs-sm opacity-80 border-t-2 border-background pt-2">
+            <Shield class="size-4" />
+            Privacy Policy
+          </A>
         </div>
       ) : (
         <ul class="flex flex-col gap-3 text-background list-none">
@@ -58,6 +62,12 @@ export default function UserButton() {
             <A href="/auth/register" class="flex items-center gap-2">
               <UserPlus class="size-5" />
               Register
+            </A>
+          </li>
+          <li class="border-t-2 border-background pt-2">
+            <A href="/privacy" class="flex items-center gap-2 text-fluid-xs-sm opacity-80">
+              <Shield class="size-4" />
+              Privacy Policy
             </A>
           </li>
         </ul>
