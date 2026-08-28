@@ -3,6 +3,7 @@ import { A, useLocation } from "@solidjs/router";
 import { onMount } from "solid-js";
 import { useDock } from "../context/DockContext";
 import { useAuth } from "~/components/auth/context/useAuth";
+import { ACCOUNT_DELETION_NOTICE_SHOWN_KEY } from "~/components/common/AccountDeletionNotice";
 import { logoutUser } from "~/queries/logoutUser";
 import { loginHref } from "~/utils/loginRedirect";
 
@@ -23,6 +24,14 @@ export default function UserButton() {
   /** Clears the session server-side, then hard-reloads to `/` so the next page load resolves queries/getUser.ts fresh (see AuthProvider). */
   const logout = async () => {
     await logoutUser();
+    // Clears AccountDeletionNotice's "already shown this login" flag, so a fresh
+    // login afterward (same account or a different one, in the same tab) isn't
+    // suppressed by a flag left over from before this logout.
+    try {
+      sessionStorage.removeItem(ACCOUNT_DELETION_NOTICE_SHOWN_KEY);
+    } catch {
+      // sessionStorage unavailable - nothing to clean up, logout still proceeds
+    }
     window.location.href = "/";
   };
 

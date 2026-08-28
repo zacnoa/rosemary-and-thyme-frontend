@@ -8,6 +8,7 @@ import { getUser } from "./queries/getUser";
 import Loading from "./components/Loading";
 import ServerError from "./components/error/ServerError";
 import CookieNotice from "./components/common/CookieNotice";
+import AccountDeletionNotice from "./components/common/AccountDeletionNotice";
 
 /**
  * App root: wraps every route in the providers pages need regardless of
@@ -38,6 +39,14 @@ export default function App() {
                   <ErrorBoundary fallback={() => <ServerError />}>
                     {props.children}
                   </ErrorBoundary>
+                  {/*
+                    Sibling to the ErrorBoundary above, not inside it - an unrelated
+                    page error shouldn't hide this, and it doesn't render anything of
+                    its own to break. Needs both AuthProvider (useAuth()) and
+                    NotificationProvider (useNotification()), unlike CookieNotice below,
+                    which is why it lives here instead of alongside that one.
+                  */}
+                  <AccountDeletionNotice />
                 </AuthProvider>
               </NotificationProvider>
             </Suspense>

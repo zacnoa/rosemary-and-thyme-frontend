@@ -10,11 +10,17 @@ import RecipePost from "./RecipePost";
  * landing feed for a visitor with nothing specific in mind (see the immediate
  * `onMount` search below).
  *
+ * `initialQuery` seeds both the input and the first search - it's how the dock's
+ * SearchModule hands off a query typed elsewhere: that module just navigates to
+ * `/?query=...` rather than rendering its own results, and routes/index.tsx passes
+ * the `query` search param straight through as this prop, so landing here from the
+ * dock shows results immediately instead of an empty input.
+ *
  * Debounced (300ms) rather than searching on every keystroke, same reasoning and
- * timing as the dock's SearchModule.
+ * timing as the dock's SearchModule used to have.
  */
-export default function RecipeSearch() {
-  const [query, setQuery] = createSignal("");
+export default function RecipeSearch(props: { initialQuery?: string }) {
+  const [query, setQuery] = createSignal(props.initialQuery ?? "");
   const [results, setResults] = createSignal<RecipeFeed[]>([]);
   const [loading, setLoading] = createSignal(false);
 
@@ -32,9 +38,10 @@ export default function RecipeSearch() {
     debounceId = setTimeout(() => search(value), 300);
   };
 
-  // Runs once on mount with the (empty) query, so the page shows the top-100
-  // most-liked recipes immediately instead of a blank list until the visitor
-  // types something.
+  // Runs once on mount with whatever query we started with (empty, or seeded from
+  // `initialQuery`), so the page shows either the top-100 most-liked recipes or the
+  // handed-off search's results immediately, instead of a blank list until the
+  // visitor types something.
   onMount(() => search(query()));
 
   return (

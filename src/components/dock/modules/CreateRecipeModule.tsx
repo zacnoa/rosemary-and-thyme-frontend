@@ -1,6 +1,6 @@
 import { Plus } from "lucide-solid";
-import { createSignal, onMount } from "solid-js";
-import { useLocation, useNavigate } from "@solidjs/router";
+import { createSignal, onMount, Show } from "solid-js";
+import { A, useLocation, useNavigate } from "@solidjs/router";
 import { useAuth } from "~/components/auth/context/useAuth";
 import { useNotification } from "~/components/notification/context/useNotification";
 import { useDock } from "../context/DockContext";
@@ -14,11 +14,16 @@ const PANEL_ID = "createRecipe";
  * (there's no separate "create" endpoint on the backend - see the TODO in
  * RecipeService - so this reuses the same `PUT /recipe/{id}` upsert path
  * saving from the editor does, with everything but the name left blank).
+ *
+ * Signed-out visitors get the panel too, not a redirect to `/auth/login` -
+ * it just shows why creating is unavailable (with a login link) instead of
+ * silently bouncing them away, which used to leave no explanation for why
+ * clicking "+" left the page.
  */
 export default function CreateRecipeButton() {
   const user = useAuth();
-  const navigate = useNavigate();
   const location = useLocation();
+  const navigate = useNavigate();
   const { notify } = useNotification();
   const { toggle, registerPanel } = useDock();
   const [name, setName] = createSignal("");
@@ -74,38 +79,47 @@ export default function CreateRecipeButton() {
 
   onMount(() => {
     registerPanel(PANEL_ID, () => (
-      <div class="flex flex-col gap-3 text-background">
-        <label for="new-recipe-name" class="text-fluid-sm-base">
-          Recipe name
-        </label>
-        <input
-          id="new-recipe-name"
-          type="text"
-          value={name()}
-          onInput={(e) => setName(e.currentTarget.value)}
-          onKeyDown={(e) => e.key === "Enter" && createRecipe()}
-          placeholder="e.g. Grandma's Apple Pie"
-          class="outline-none bg-transparent border-b-2 border-background py-1 text-base"
-        />
-        <button
-          type="button"
-          disabled={pending() || !name().trim()}
-          class="self-start px-3 py-1 rounded-md bg-linear-to-r from-green to-orange cursor-pointer disabled:opacity-50"
-          onClick={createRecipe}
-        >
-          {pending() ? "Creating..." : "Create"}
-        </button>
-      </div>
+      <Show
+        when={user}
+        fallback={
+          <div class="flex flex-col gap-3 text-background">
+            <p class="text-fluid-sm-base">
+              You need to be logged in to create a recipe.
+            </p>
+            <A
+              href={loginHref(location.pathname)}
+              class="self-start px-3 py-1 rounded-md bg-linear-to-r from-green to-orange cursor-pointer font-bold"
+            >
+              Log in
+            </A>
+          </div>
+        }
+      >
+        <div class="flex flex-col gap-3 text-background">
+          <label for="new-recipe-name" class="text-fluid-sm-base">
+            Recipe name
+          </label>
+          <input
+            id="new-recipe-name"
+            type="text"
+            value={name()}
+            onInput={(e) => setName(e.currentTarget.value)}
+            onKeyDown={(e) => e.key === "Enter" && createRecipe()}
+            placeholder="e.g. Grandma's Apple Pie"
+            class="outline-none bg-transparent border-b-2 border-background py-1 text-base"
+          />
+          <button
+            type="button"
+            disabled={pending() || !name().trim()}
+            class="self-start px-3 py-1 rounded-md bg-linear-to-r from-green to-orange cursor-pointer disabled:opacity-50"
+            onClick={createRecipe}
+          >
+            {pending() ? "Creating..." : "Create"}
+          </button>
+        </div>
+      </Show>
     ));
   });
-
-  const handleClick = () => {
-    if (!user) {
-      navigate(loginHref(location.pathname));
-      return;
-    }
-    toggle(PANEL_ID);
-  };
 
   return (
     // No ml-auto here (there used to be one): Dock.tsx's <ul> is already
@@ -119,7 +133,7 @@ export default function CreateRecipeButton() {
     // space for ml-auto to consume there in the first place.
     <li
       class="rounded-full p-1 cursor-pointer bg-linear-to-r from-green to-orange"
-      onClick={handleClick}
+      onClick={() => toggle(PANEL_ID)}
     >
       <Plus color="var(--color-background)" class="md:w-[30px] h-auto" />
     </li>

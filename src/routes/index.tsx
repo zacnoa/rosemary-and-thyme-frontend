@@ -1,15 +1,19 @@
 import { clientOnly } from "@solidjs/start";
+import { useSearchParams } from "@solidjs/router";
 import RecipeSearch from "~/components/home/RecipeSearch";
 
 /**
  * Landing page - title, a cross-user recipe search/browse list (RecipeSearch), and
- * the home dock (my-recipes-search/login/create-recipe). RecipeSearch is unrelated
- * to the dock's own SearchModule: that one searches only the signed-in user's own
- * recipes from a popout panel, this one browses/searches every user's recipes,
- * ordered by popularity, directly on the page.
+ * the home dock (search/login/create-recipe). The dock's own SearchModule doesn't
+ * search in place - it navigates here with `?query=...`, so the `query` param read
+ * below is how a search started from anywhere else in the dock (visible on every
+ * page) ends up rendered as full RecipePost cards on this page.
  */
 export default function Home() {
   const HomeDock = clientOnly(() => import("~/components/home/HomeDock"));
+  const [searchParams] = useSearchParams();
+  const initialQuery = () =>
+    Array.isArray(searchParams.query) ? searchParams.query[0] : searchParams.query;
 
   return (
     <div class="w-full overflow-hidden">
@@ -21,7 +25,7 @@ export default function Home() {
           <p class="mt-4 mb-6 text-fluid-sm-lg text-foreground3">
             Your recipes, all in one place.
           </p>
-          <RecipeSearch />
+          <RecipeSearch initialQuery={initialQuery()} />
         </section>
         <section class="fixed bottom-10 left-1/2 -translate-x-1/2 w-[92vw] max-w-md md:w-auto md:max-w-none">
           <HomeDock />

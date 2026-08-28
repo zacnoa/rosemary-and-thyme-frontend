@@ -56,6 +56,16 @@ export default function LoginPage() {
       const { ok, status, json } = await loginUser(email, password)
 
       if (!ok) {
+        // 422 = this email belongs to a Google-only account (GoogleAccountException
+        // on the backend) - regardless of what was typed in the password field,
+        // there's no password to check it against, so send the visitor straight
+        // into the Google sign-in flow instead of showing a confusing credentials
+        // error they can never fix by retyping a password.
+        if (status === 422) {
+          window.location.href = `${API_URL}/auth/google?redirect=${encodeURIComponent(redirectTarget())}`
+          return
+        }
+
         setError(json.detail ?? "Login failed")
         setUnverified(status === 403)
         return
@@ -116,6 +126,10 @@ export default function LoginPage() {
         <Show when={error()}>
           <p class="text-red text-sm">{error()}</p>
         </Show>
+
+        <A href="/auth/forgot-password" class="text-sm text-orange underline self-start">
+          Forgot password?
+        </A>
 
         <Show when={unverified()}>
           <Show

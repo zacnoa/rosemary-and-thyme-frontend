@@ -45,16 +45,25 @@ export default function DashboardRecipeCard(props: {
   return (
     <div class="flex flex-col gap-2">
       <RecipePost recipe={props.recipe} />
-      <SlideToConfirm
-        label="Slide to delete →"
-        icon={<Trash2 color="var(--color-background)" class="size-5" />}
-        thumbColor="bg-red"
-        trackClass="bg-foreground3"
-        labelClass="text-background"
-        mutedTextClass="text-foreground3"
-        disabledReason={() => (deleting() ? "Deleting..." : null)}
-        onConfirm={confirmDelete}
-      />
+      {/*
+        md:w-1/4 - on a wide screen the full-width slider left a lot of empty track to
+        drag across for what's otherwise a small control; capped down to about a
+        quarter of the card's width there. Full-width below `md:` (mobile), where the
+        card itself is already narrow and a quartered slider would be uncomfortably
+        small to drag accurately.
+      */}
+      <div class="md:w-3/7">
+        <SlideToConfirm
+          label="Slide to delete →"
+          icon={<Trash2 color="var(--color-background)" class="size-5" />}
+          thumbColor="bg-red"
+          trackClass="bg-foreground3"
+          labelClass="text-background"
+          mutedTextClass="text-foreground3"
+          disabledReason={() => (deleting() ? "Deleting..." : null)}
+          onConfirm={confirmDelete}
+        />
+      </div>
     </div>
   );
 }

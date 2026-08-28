@@ -3,6 +3,7 @@ import { useNavigate } from "@solidjs/router";
 import { clientOnly } from "@solidjs/start";
 import { useAuth } from "~/components/auth/context/useAuth";
 import RecipeSearch from "~/components/dashboard/RecipeSearch";
+import AccountSettings from "~/components/dashboard/AccountSettings";
 import { loginHref } from "~/utils/loginRedirect";
 
 /**
@@ -42,6 +43,7 @@ export default function Dashboard() {
                 {u().email}
               </p>
               <RecipeSearch />
+              <AccountSettings user={u()} />
             </section>
             <section class="fixed bottom-10 left-1/2 -translate-x-1/2 w-[92vw] max-w-md md:w-auto md:max-w-none">
               <HomeDock />
