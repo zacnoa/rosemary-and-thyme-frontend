@@ -29,16 +29,24 @@ export default function VerifyEmailPage() {
       return
     }
 
-    const { ok, json } = await verifyEmail(token)
+    // try/catch - a network failure or non-JSON error body rejects the
+    // promise rather than returning a value; without this the page would
+    // stay stuck on "Verifying..." forever with no indication anything went wrong.
+    try {
+      const { ok, json } = await verifyEmail(token)
 
-    if (!ok) {
+      if (!ok) {
+        setStatus("error")
+        setError(json?.detail ?? "Verification failed")
+        return
+      }
+
+      setStatus("success")
+      window.location.href = "/"
+    } catch {
       setStatus("error")
-      setError(json?.detail ?? "Verification failed")
-      return
+      setError("Could not reach the server - check your connection and try again")
     }
-
-    setStatus("success")
-    window.location.href = "/"
   })
 
   return (

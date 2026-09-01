@@ -17,7 +17,7 @@ import { UUID } from "./UUID"
  *   confirms the upload, and revokes the now-superseded `blobURL` (object
  *   URLs are a browser resource that leaks memory if never revoked).
  *
- * Anywhere an image is displayed (ImageGallery, ImageViewer), the render
+ * Anywhere an image is displayed (ImageGallery, DeleteImageModal), the render
  * logic is `url ?? blobURL!` - prefer the persisted url, fall back to the
  * local preview for anything not saved yet.
  */

@@ -33,16 +33,25 @@ export default function ResetPasswordPage() {
     }
 
     setStatus("pending")
-    const { ok, json } = await confirmPasswordReset(rawToken, newPassword())
 
-    if (!ok) {
+    // try/catch - a network failure or non-JSON error body rejects the
+    // promise rather than returning a value; without this the form would
+    // stay stuck on "pending" (button disabled, no error shown) forever.
+    try {
+      const { ok, json } = await confirmPasswordReset(rawToken, newPassword())
+
+      if (!ok) {
+        setStatus("error")
+        setError(json?.detail ?? "Password reset failed")
+        return
+      }
+
+      setStatus("success")
+      window.location.href = "/"
+    } catch {
       setStatus("error")
-      setError(json?.detail ?? "Password reset failed")
-      return
+      setError("Could not reach the server - check your connection and try again")
     }
-
-    setStatus("success")
-    window.location.href = "/"
   }
 
   return (

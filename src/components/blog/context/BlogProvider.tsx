@@ -1,10 +1,8 @@
 import { Recipe } from "~/model/interfaces/Recipe";
 import { BlogContext } from "./blogContext";
 import { createStore } from "solid-js/store";
-import { createSignal, ParentProps, Show } from "solid-js";
+import { createSignal, ParentProps } from "solid-js";
 import { useLocation, useNavigate } from "@solidjs/router";
-import { UUID } from "~/model/types/UUID";
-import ImageViewer from "~/components/recipeEditor/ImageViewer";
 import { useAuth } from "~/components/auth/context/useAuth";
 import { setRecipeLiked } from "~/queries/likeRecipe";
 import { loginHref } from "~/utils/loginRedirect";
@@ -21,9 +19,10 @@ interface BlogProviderProps extends ParentProps {
  * IngredientsModule - nothing here ever calls `setRecipe`, so in practice
  * this store's value never changes after mount.
  *
- * Also mounts the shared ImageViewer, same as RecipeProvider - but with no
- * `onDelete`, since this context exposes no mutators at all (see
- * ImageViewer for how that hides the delete button).
+ * No image viewer/modal here at all (unlike RecipeProvider's DeleteImageModal) -
+ * this context exposes no mutators, so there's nothing a click on an image could
+ * meaningfully do; see components/blog/Blog.tsx's own ImageGallery, which renders
+ * a plain static strip.
  *
  * `liked`/`likes` are tracked as their own signals rather than read straight off
  * `recipe.liked`/`recipe.likes` - `recipe` here is a `createStore` snapshot seeded
@@ -35,7 +34,6 @@ interface BlogProviderProps extends ParentProps {
 export default function BlogProvider(props: BlogProviderProps) {
 
   const [recipe, setRecipe] = createStore<Recipe>(props.recipe)
-  const [viewerImages, setViewerImages] = createSignal<{ images: UUID[], initialIndex?: number } | null>(null);
   const [liked, setLiked] = createSignal(props.recipe.liked);
   const [likes, setLikes] = createSignal(props.recipe.likes);
   const [likePending, setLikePending] = createSignal(false);
@@ -43,9 +41,6 @@ export default function BlogProvider(props: BlogProviderProps) {
   const user = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-
-  const openViewer = (images: UUID[], initialIndex: number = 0) => setViewerImages({ images: images, initialIndex: initialIndex });
-  const closeViewer = () => setViewerImages(null);
 
   /**
    * A signed-out visitor gets sent straight to the login page instead of the
@@ -83,21 +78,8 @@ export default function BlogProvider(props: BlogProviderProps) {
       liked,
       likes,
       toggleLike,
-      viewerImages,
-      openViewer,
-      closeViewer,
     }}>
       {props.children}
-      <Show when={viewerImages()?.images}>
-        <ImageViewer
-          images={viewerImages()!.images}
-          imageMap={recipe.images}
-          initialIndex={viewerImages()?.initialIndex}
-          onClose={closeViewer}
-        />
-      </Show>
     </BlogContext.Provider>
-
-
   )
 }

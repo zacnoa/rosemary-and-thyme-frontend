@@ -26,9 +26,7 @@ type RecipeContextType = {
   removeInstruction: (id: UUID) => void
   addBannerImage: (image: RecipeImage) => void
   removeBannerImage: (index: number) => void,
-  viewerImages: () => { images: UUID[], initialIndex?: number } | null
-  openViewer: (images: UUID[], initialIndex?: number) => void
-  closeViewer: () => void
+  /** Deletes an image everywhere it's referenced - see RecipeProvider. Called by ImageGallery, as DeleteImageModal's `onConfirm`. */
   removeImage: (id: UUID) => void,
   saveRecipe: (recipe: Recipe) => void
 

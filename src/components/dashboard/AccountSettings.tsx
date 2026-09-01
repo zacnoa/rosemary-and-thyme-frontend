@@ -47,28 +47,36 @@ function ChangePasswordForm(props: { hasPassword: boolean }) {
     e.preventDefault();
     setPending(true);
 
-    const { ok, status, json } = await changePassword(currentPassword(), newPassword());
-    setPending(false);
+    // try/finally - a network failure or non-JSON error body rejects the
+    // promise rather than returning a value; without this the button would
+    // stay stuck on "Changing..." forever with no indication anything went wrong.
+    try {
+      const { ok, status, json } = await changePassword(currentPassword(), newPassword());
 
-    if (!ok) {
-      // 422 = Google-only account, no password to change - see GoogleAccountException
-      // on the backend and queries/changePassword.ts. Shouldn't actually be reachable
-      // here since the form is hidden for that case (see the `!hasPassword` branch
-      // below), but kept as a defensive fallback in case that ever drifts out of sync.
-      const message =
-        status === 422
-          ? "This account signs in with Google and has no password to change."
-          : (json?.detail ?? "Could not change password");
-      notify("error", message);
-      return;
+      if (!ok) {
+        // 422 = Google-only account, no password to change - see GoogleAccountException
+        // on the backend and queries/changePassword.ts. Shouldn't actually be reachable
+        // here since the form is hidden for that case (see the `!hasPassword` branch
+        // below), but kept as a defensive fallback in case that ever drifts out of sync.
+        const message =
+          status === 422
+            ? "This account signs in with Google and has no password to change."
+            : (json?.detail ?? "Could not change password");
+        notify("error", message);
+        return;
+      }
+
+      notify("success", "Password changed");
+      // The backend rotated the session cookie (every other session was revoked) -
+      // a full reload is needed to keep this tab's session in sync going forward,
+      // same reasoning as login.tsx's own post-login redirect. Delayed slightly so
+      // the success toast above is actually visible before the page swaps out.
+      setTimeout(() => window.location.reload(), RELOAD_DELAY_MS);
+    } catch {
+      notify("error", "Could not reach the server - check your connection and try again");
+    } finally {
+      setPending(false);
     }
-
-    notify("success", "Password changed");
-    // The backend rotated the session cookie (every other session was revoked) -
-    // a full reload is needed to keep this tab's session in sync going forward,
-    // same reasoning as login.tsx's own post-login redirect. Delayed slightly so
-    // the success toast above is actually visible before the page swaps out.
-    setTimeout(() => window.location.reload(), RELOAD_DELAY_MS);
   };
 
   if (!props.hasPassword) {
@@ -131,24 +139,34 @@ function DeleteAccountControl(props: { deletionRequestedAt: string | null }) {
 
   const cancel = async () => {
     setCancelling(true);
-    const { ok, json } = await cancelAccountDeletion();
-    if (!ok) {
+    try {
+      const { ok, json } = await cancelAccountDeletion();
+      if (!ok) {
+        notify("error", json?.detail ?? "Could not cancel deletion");
+        return;
+      }
+      window.location.reload();
+    } catch {
+      notify("error", "Could not reach the server - check your connection and try again");
+    } finally {
       setCancelling(false);
-      notify("error", json?.detail ?? "Could not cancel deletion");
-      return;
     }
-    window.location.reload();
   };
 
   const confirmDelete = async () => {
     setDeleting(true);
-    const { ok, json } = await requestAccountDeletion();
-    if (!ok) {
+    try {
+      const { ok, json } = await requestAccountDeletion();
+      if (!ok) {
+        notify("error", json?.detail ?? "Could not delete account");
+        return;
+      }
+      window.location.reload();
+    } catch {
+      notify("error", "Could not reach the server - check your connection and try again");
+    } finally {
       setDeleting(false);
-      notify("error", json?.detail ?? "Could not delete account");
-      return;
     }
-    window.location.reload();
   };
 
   return (

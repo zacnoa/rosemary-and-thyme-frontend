@@ -57,6 +57,7 @@ export default function CreateRecipeButton() {
       ingredientsOrder: [],
       instructionsOrder: [],
       heroImagesOrder: [],
+      isPrivate: false,
     };
 
     const formData = new FormData();
@@ -65,16 +66,24 @@ export default function CreateRecipeButton() {
       new Blob([JSON.stringify(blankRecipe)], { type: "application/json" })
     );
 
-    const { ok, json } = await putRecipe(tempId, formData);
-    setPending(false);
+    // try/finally - a network failure or non-JSON error body rejects the
+    // promise rather than returning a value; without this the button would
+    // stay stuck on "Creating..." forever with no indication anything went wrong.
+    try {
+      const { ok, json } = await putRecipe(tempId, formData);
 
-    if (!ok) {
-      notify("error", json.detail ?? "Could not create recipe");
-      return;
+      if (!ok) {
+        notify("error", json.detail ?? "Could not create recipe");
+        return;
+      }
+
+      setName("");
+      navigate(`/recipe/${json.id}`);
+    } catch {
+      notify("error", "Could not reach the server - check your connection and try again");
+    } finally {
+      setPending(false);
     }
-
-    setName("");
-    navigate(`/recipe/${json.id}`);
   };
 
   onMount(() => {

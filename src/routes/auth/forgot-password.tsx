@@ -14,13 +14,25 @@ export default function ForgotPasswordPage() {
   const [email, setEmail] = createSignal("")
   const [pending, setPending] = createSignal(false)
   const [sent, setSent] = createSignal(false)
+  const [error, setError] = createSignal("")
 
   const submit = async (e: SubmitEvent) => {
     e.preventDefault()
     setPending(true)
-    await requestPasswordReset(email())
-    setPending(false)
-    setSent(true)
+    setError("")
+
+    // requestPasswordReset always resolves ok:true for any real server
+    // response (see its own KDoc - avoids leaking registration status), so
+    // the only way this can fail is a network failure never reaching the
+    // server at all - a plain try/catch is enough, no ok check needed.
+    try {
+      await requestPasswordReset(email())
+      setSent(true)
+    } catch {
+      setError("Could not reach the server - check your connection and try again")
+    } finally {
+      setPending(false)
+    }
   }
 
   return (
@@ -56,6 +68,10 @@ export default function ForgotPasswordPage() {
               onInput={(e) => setEmail(e.target.value)}
             />
           </div>
+
+          <Show when={error()}>
+            <p class="text-red text-sm">{error()}</p>
+          </Show>
 
           <button
             type="submit"

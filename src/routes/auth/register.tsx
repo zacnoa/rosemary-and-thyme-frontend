@@ -34,17 +34,26 @@ export default function RegisterPage() {
     setError("")
     setPending(true)
 
-    const { ok, json } = await registerUser(username, email, password)
-    setPending(false)
+    // try/finally - same reasoning as routes/auth/login.tsx's own login(): a
+    // network failure or non-JSON error body rejects the promise rather than
+    // returning a value, so without this the button would stay stuck on
+    // "Creating account..." forever with no indication anything went wrong.
+    try {
+      const { ok, json } = await registerUser(username, email, password)
 
-    if (!ok) {
-      setError(json.detail ?? "Registration failed")
-      return
+      if (!ok) {
+        setError(json.detail ?? "Registration failed")
+        return
+      }
+
+      // account exists but is unusable until the verification link is clicked -
+      // no session cookie is set on register anymore, so there's nowhere to redirect to
+      setRegistered(true)
+    } catch {
+      setError("Could not reach the server - check your connection and try again")
+    } finally {
+      setPending(false)
     }
-
-    // account exists but is unusable until the verification link is clicked -
-    // no session cookie is set on register anymore, so there's nowhere to redirect to
-    setRegistered(true)
   }
 
   return (

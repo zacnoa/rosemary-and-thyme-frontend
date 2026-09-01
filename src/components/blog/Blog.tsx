@@ -14,9 +14,9 @@ import { formatAmount } from "~/utils/parseAmount";
  * recipeEditor ones with a "readonly" prop) so this file has zero
  * dependency on RecipeContext/RecipeProvider.
  *
- * ImageGallery here still opens the shared ImageViewer on click, same as
- * recipeEditor/ImageGallery.tsx - see BlogProvider, which mounts it with no
- * `onDelete` since this context has no mutators at all.
+ * ImageGallery here is a static strip - no lightbox, no click handler at all
+ * (unlike recipeEditor/ImageGallery.tsx, where a click opens DeleteImageModal -
+ * there's nothing to delete from this read-only view).
  */
 
 
@@ -178,19 +178,16 @@ function BasicInformation() {
 
 function ImageGallery(props: { images: string[] }) {
 
-
-
-  const { recipe, openViewer } = useBlog()
-
+  const { recipe } = useBlog()
 
   return (
     <div class="flex flex-col gap-y-4"  >
-      <div class="w-full overflow-x-auto cursor-pointer" onClick={() => openViewer(props.images)}>
+      <div class="w-full overflow-x-auto">
         <div class="flex flex-row gap-4" style="width: max-content">
           <For each={props.images}>
-            {(image, index) => (
+            {(image) => (
               <div class="shrink-0">
-                <img onClick={() => openViewer(props.images, index())} class="h-32 md:h-72 w-auto" src={recipe.images[image].url ?? recipe.images[image].blobURL!} />
+                <img class="h-32 md:h-72 w-auto" src={recipe.images[image].url ?? recipe.images[image].blobURL!} />
               </div>
             )}
           </For>

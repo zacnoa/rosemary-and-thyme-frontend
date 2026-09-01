@@ -11,6 +11,9 @@ import { UUID } from "../types/UUID";
  *
  * @property heroImageUrl the recipe's first hero image, or `null` if it has none -
  * see components/home/RecipePost.tsx, which simply omits the image in that case
+ * @property isPrivate mirrors the backend's `RecipeDTO.isPrivate` - only ever `true`
+ * on a card from the dashboard's own-recipes feed (the global feed excludes private
+ * recipes server-side), used by DashboardRecipeCard to render its private/public toggle
  */
 export interface RecipeFeed {
   id: UUID;
@@ -20,4 +23,5 @@ export interface RecipeFeed {
   userName: string;
   createDate: Date;
   heroImageUrl: string | null;
+  isPrivate: boolean;
 }

@@ -1,11 +1,10 @@
-import { createEffect, createSignal, on, ParentProps, Show } from "solid-js";
+import { createEffect, createSignal, on, ParentProps } from "solid-js";
 import { createStore, produce, reconcile } from "solid-js/store";
 import { RecipeContext } from "./recipeContext";
 import { Recipe } from "~/model/interfaces/Recipe";
 import { UUID } from "~/model/types/UUID";
 import { Ingredient, Instruction } from "~/model/types/recipeTypes";
 import { RecipeDTO, RecipeImage, stripBlobData } from "~/model/types/utils";
-import ImageViewer from "~/components/recipeEditor/ImageViewer";
 import { useNotification } from "~/components/notification/context/useNotification";
 import { putRecipe } from "~/queries/putRecipe";
 import { getSaveBlockers } from "~/utils/validateRecipe";
@@ -37,7 +36,6 @@ interface RecipeProviderProps extends ParentProps {
 export default function RecipeProvider(props: RecipeProviderProps) {
 
   const [recipe, setRecipe] = createStore<Recipe>(props.initialRecipe);
-  const [viewerImages, setViewerImages] = createSignal<{ images: UUID[], initialIndex?: number } | null>(null);
   const [changedFlag, setChangedFlag] = createSignal<boolean>(false);
   const { notify } = useNotification();
 
@@ -108,16 +106,23 @@ export default function RecipeProvider(props: RecipeProviderProps) {
       }
     });
 
-    const { ok, json } = await putRecipe(recipe.id, formData);
+    // try/catch - a network failure or non-JSON error body rejects the
+    // promise rather than returning a value; without this the "loading" toast
+    // above (which doesn't auto-dismiss) would stay up forever with no error shown.
+    try {
+      const { ok, json } = await putRecipe(recipe.id, formData);
 
-    if (!ok) {
-      notify("error", json.detail ?? "Saving failed");
-      return;
+      if (!ok) {
+        notify("error", json.detail ?? "Saving failed");
+        return;
+      }
+
+      applyServerRecipe(json as RecipeDTO);
+      setChangedFlag(false);
+      notify("success", "Saving successful");
+    } catch {
+      notify("error", "Could not reach the server - check your connection and try again");
     }
-
-    applyServerRecipe(json as RecipeDTO);
-    setChangedFlag(false);
-    notify("success", "Saving successful");
   }
 
   /**
@@ -174,16 +179,11 @@ export default function RecipeProvider(props: RecipeProviderProps) {
   }, { defer: true }))
 
 
-  /** Opens the fullscreen ImageViewer over `images`, starting at `initialIndex`. */
-  const openViewer = (images: UUID[], initialIndex: number = 0) => setViewerImages({ images: images, initialIndex: initialIndex });
-  const closeViewer = () => setViewerImages(null);
-
   /**
    * Deletes an image everywhere it might be referenced - a hero image slot,
-   * any instruction's image list, the `images` map itself, and the
-   * currently-open viewer, if any. Also revokes the image's `blobURL` (if
-   * it has one) to free the browser-side object URL, since after this call
-   * nothing will hold a reference to it any more.
+   * any instruction's image list, and the `images` map itself. Also revokes
+   * the image's `blobURL` (if it has one) to free the browser-side object
+   * URL, since after this call nothing will hold a reference to it any more.
    *
    * @param id the image id to remove (see model/types/utils.ts's RecipeImage)
    */
@@ -209,15 +209,6 @@ export default function RecipeProvider(props: RecipeProviderProps) {
       if (img?.blobURL) URL.revokeObjectURL(img.blobURL);
       delete r.images[id];
     }));
-
-    // update the open viewer's image list too, if one is open
-    setViewerImages((imgs) => {
-      if (!imgs) return null;
-      const updated = imgs.images.filter((i) => i !== id);
-      return updated.length > 0
-        ? { ...imgs, images: updated } // keep initialIndex as-is
-        : null;
-    });
   };
 
   const editName = (text: string) => setRecipe("name", text);
@@ -301,9 +292,6 @@ export default function RecipeProvider(props: RecipeProviderProps) {
       recipe,
       changedFlag,
       saveBlockers: () => getSaveBlockers(recipe),
-      viewerImages,
-      openViewer,
-      closeViewer,
       removeImage,
       editName,
       editDescription,
@@ -324,15 +312,6 @@ export default function RecipeProvider(props: RecipeProviderProps) {
       saveRecipe
     }}>
       {props.children}
-      <Show when={viewerImages()?.images}>
-        <ImageViewer
-          images={viewerImages()!.images}
-          imageMap={recipe.images}
-          initialIndex={viewerImages()?.initialIndex}
-          onDelete={removeImage}
-          onClose={closeViewer}
-        />
-      </Show>
     </RecipeContext.Provider>
   );
 }

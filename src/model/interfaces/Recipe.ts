@@ -40,5 +40,11 @@ export interface Recipe {
   instructionsOrder: UUID[],
   heroImagesOrder: UUID[],
 
-
+  /**
+   * Mirrors the backend's `RecipeDTO.isPrivate`. The editor never exposes a control
+   * for this - it's toggled from the dashboard (see queries/setRecipePrivate.ts) - so
+   * a plain save just carries whatever value the recipe was fetched with straight
+   * back through.
+   */
+  isPrivate: boolean,
 }
