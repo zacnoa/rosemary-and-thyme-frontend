@@ -14,23 +14,12 @@ import type { User } from "~/components/auth/context/authContext";
 const RELOAD_DELAY_MS = 1200;
 
 /**
- * Dashboard-only "Account settings" section: change password, and
- * request/cancel account deletion. Both actions reload the page
- * (`window.location.href`) on success rather than updating anything in
- * place - same reasoning as login/logout everywhere else in this app (see
- * AuthProvider): `useAuth()` is a one-time snapshot from the server, so the
- * only way to see a changed `deletionRequestedAt` (or to pick up the fresh
- * session cookie a password change/reset sets) is a fresh page load.
- *
- * Password change and account deletion are otherwise unrelated actions,
- * kept in one file/section only because both are "manage my account"
- * settings that only make sense once, on the dashboard - not because they
- * share any logic.
+ * Provides the AccountSettings function.
  */
 export default function AccountSettings(props: { user: User }) {
   return (
     <section class="flex flex-col gap-8 mt-10 pt-8 border-t-2 border-foreground2">
-      <h2 class="text-fluid-xl-2xl font-bold">Account settings</h2>
+      <h2 class="text-xl md:text-2xl font-bold">Account settings</h2>
       <ChangePasswordForm hasPassword={props.user.hasPassword} />
       <DeleteAccountControl deletionRequestedAt={props.user.deletionRequestedAt} />
     </section>
@@ -82,7 +71,7 @@ function ChangePasswordForm(props: { hasPassword: boolean }) {
   if (!props.hasPassword) {
     return (
       <div class="flex flex-col gap-2 max-w-sm">
-        <h3 class="text-fluid-lg-xl font-bold">Change password</h3>
+        <h3 class="text-lg md:text-xl font-bold">Change password</h3>
         <p class="text-sm text-foreground3">
           This account signs in with Google and has no password to change.
         </p>
@@ -92,27 +81,27 @@ function ChangePasswordForm(props: { hasPassword: boolean }) {
 
   return (
     <form class="flex flex-col gap-4 max-w-sm" onSubmit={submit}>
-      <h3 class="text-fluid-lg-xl font-bold">Change password</h3>
+      <h3 class="text-lg md:text-xl font-bold">Change password</h3>
       <div class="flex flex-col gap-1">
-        <label for="current-password" class="text-fluid-sm-base text-foreground3">Current password</label>
+        <label for="current-password" class="text-sm md:text-base text-foreground3">Current password</label>
         <input
           id="current-password"
           type="password"
           autocomplete="current-password"
           required
-          class="outline-none bg-transparent border-b-2 border-foreground3 focus:border-orange py-1 text-fluid-base-lg"
+          class="outline-none bg-transparent border-b-2 border-foreground3 focus:border-orange py-1 text-base md:text-lg"
           value={currentPassword()}
           onInput={(e) => setCurrentPassword(e.target.value)}
         />
       </div>
       <div class="flex flex-col gap-1">
-        <label for="new-password" class="text-fluid-sm-base text-foreground3">New password</label>
+        <label for="new-password" class="text-sm md:text-base text-foreground3">New password</label>
         <input
           id="new-password"
           type="password"
           autocomplete="new-password"
           required
-          class="outline-none bg-transparent border-b-2 border-foreground3 focus:border-orange py-1 text-fluid-base-lg"
+          class="outline-none bg-transparent border-b-2 border-foreground3 focus:border-orange py-1 text-base md:text-lg"
           value={newPassword()}
           onInput={(e) => setNewPassword(e.target.value)}
         />
@@ -171,7 +160,7 @@ function DeleteAccountControl(props: { deletionRequestedAt: string | null }) {
 
   return (
     <div class="flex flex-col gap-4 max-w-sm">
-      <h3 class="text-fluid-lg-xl font-bold">Delete account</h3>
+      <h3 class="text-lg md:text-xl font-bold">Delete account</h3>
 
       <Show
         when={daysLeft() !== null}

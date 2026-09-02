@@ -12,24 +12,7 @@ interface BlogProviderProps extends ParentProps {
 }
 
 /**
- * Read-only view of a recipe for visitors who aren't its owner (see
- * routes/recipe/[id].tsx, which picks this vs. RecipeProvider based on that).
- * Still wraps `props.recipe` in a store (like RecipeProvider does) purely
- * for consistent, fine-grained reactive reads by shared components like
- * IngredientsModule - nothing here ever calls `setRecipe`, so in practice
- * this store's value never changes after mount.
- *
- * No image viewer/modal here at all (unlike RecipeProvider's DeleteImageModal) -
- * this context exposes no mutators, so there's nothing a click on an image could
- * meaningfully do; see components/blog/Blog.tsx's own ImageGallery, which renders
- * a plain static strip.
- *
- * `liked`/`likes` are tracked as their own signals rather than read straight off
- * `recipe.liked`/`recipe.likes` - `recipe` here is a `createStore` snapshot seeded
- * once at mount (see the class doc on routes/recipe/[id].tsx for why that's fine for
- * everything else, which never changes after mount), but a like *can* change during
- * this component's lifetime (the visitor clicking the like button), so it needs its
- * own reactive signal `toggleLike` actually writes to.
+ * Provides the BlogProvider function.
  */
 export default function BlogProvider(props: BlogProviderProps) {
 
@@ -43,16 +26,8 @@ export default function BlogProvider(props: BlogProviderProps) {
   const location = useLocation();
 
   /**
-   * A signed-out visitor gets sent straight to the login page instead of the
-   * request ever firing - the backend would reject it anyway (see
-   * queries/likeRecipe.ts), but there's no reason to round-trip to the server just
-   * to find that out when `useAuth()` already knows locally. `likePending` guards
-   * against a second click firing a second request before the first one's response
-   * comes back (e.g. an impatient double-click) - not a possible double-*like*
-   * either way (the backend is idempotent, see RecipeService.likeRecipe/unlikeRecipe),
-   * but it would otherwise let `liked`/`likes` end up set from whichever of the two
-   * responses happens to land last.
-   */
+ * Provides the toggleLike function.
+ */
   const toggleLike = async () => {
     if (!user) {
       navigate(loginHref(location.pathname));

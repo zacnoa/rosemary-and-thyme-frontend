@@ -2,10 +2,7 @@
 import { createHandler, StartServer } from "@solidjs/start/server";
 
 /**
- * Server entry point: renders the outer HTML document every request is
- * wrapped in (fonts, viewport meta, the `data-theme`-driven background
- * pattern from app.css, and the `<div id="app">` entry-client.tsx hydrates
- * into) - `app.tsx`'s `<Router>` fills in `{children}`.
+ * Describes this component.
  */
 export default createHandler(() => (
   <StartServer

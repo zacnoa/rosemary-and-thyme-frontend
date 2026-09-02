@@ -4,15 +4,7 @@ import { useRecipe } from "./context/useRecipe";
 import { resizeTextarea } from "~/utils/resizeTextarea";
 
 /**
- * Recipe name/description as auto-growing `<textarea>`s (see
- * utils/resizeTextarea.ts) instead of plain inputs, so long text wraps
- * in-place rather than scrolling horizontally.
- *
- * [resizeTextarea] is called both from `onInput` (as the user types) and
- * once from `onMount` below - without the `onMount` call, a textarea whose
- * *initial* value is already long (opening an existing recipe with a long
- * name/description) would stay locked at its collapsed `rows={1}` height
- * until the user's first edit, clipping text that's already there.
+ * Provides the Header function.
  */
 export default function Header() {
   const context = useRecipe();
@@ -29,7 +21,7 @@ export default function Header() {
       <div class="flex border-b-3 md:border-b-4 border-foreground2">
         <textarea
           ref={titleRef}
-          class="flex-1 text-fluid-2xl-5xl outline-none resize-none min-w-0  leading-tight"
+          class="flex-1 text-2xl md:text-5xl outline-none resize-none min-w-0  leading-tight"
           rows={1}
           placeholder="Recipe name"
           onInput={(e) => {
@@ -42,16 +34,16 @@ export default function Header() {
           <span class="flex items-center">
             <ThumbsUp stroke="var(--color-green)" class="md:size-8 size-5" />
           </span>
-          <span class="text-fluid-sm-2xl mt-1.75 md:mt-2 leading-none">{context.recipe.likes}</span>
+          <span class="text-sm md:text-2xl mt-1.75 md:mt-2 leading-none">{context.recipe.likes}</span>
         </div>
       </div>
 
       <div class="flex">
         <div class="flex-1 min-w-0">
-          <div class="text-fluid-base-4xl">By {context.recipe.userName}</div>
+          <div class="text-base md:text-4xl">By {context.recipe.userName}</div>
           <textarea
             ref={descRef}
-            class=" outline-none w-full resize-none text-fluid-sm-xl pt-3 pr-2 md:pr-3 leading-tight"
+            class=" outline-none w-full resize-none text-sm md:text-xl pt-3 pr-2 md:pr-3 leading-tight"
             placeholder="Description..."
             onInput={(e) => {
               resizeTextarea(descRef);
@@ -60,7 +52,7 @@ export default function Header() {
             spellcheck="false"
           >{context.recipe.description}</textarea>
         </div>
-        <div class=" border-l-3 md:border-l-4 border-orange  pt-2 w-20 md:w-32 text-fluid-xs-2xl">
+        <div class=" border-l-3 md:border-l-4 border-orange  pt-2 w-20 md:w-32 text-md md:text-2xl">
           <ul class="text-center">
             <li>{context.recipe.createDate.getDate()}.</li>
             <li>{context.recipe.createDate.getMonth()}.</li>

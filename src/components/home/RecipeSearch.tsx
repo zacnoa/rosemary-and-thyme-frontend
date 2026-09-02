@@ -5,24 +5,7 @@ import VirtualFeed from "~/components/common/VirtualFeed";
 import RecipePost from "./RecipePost";
 
 /**
- * Home page's recipe feed: a name filter over *all* users' recipes, ordered by like
- * count (see queries/searchAllRecipes.ts), each rendered as a RecipePost card inside
- * a <VirtualFeed/> (cursor-paginated infinite scroll - see that component) - fills
- * the space under the title that used to be empty, and doubles as a "what's popular"
- * landing feed for a visitor with nothing specific in mind.
- *
- * `initialQuery` seeds both the input and the first page's query - it's how the
- * dock's SearchModule hands off a query typed elsewhere: that module just navigates
- * to `/?query=...` rather than rendering its own results, and routes/index.tsx
- * passes the `query` search param straight through as this prop, so landing here
- * from the dock shows results immediately instead of an empty input.
- *
- * `debouncedQuery` (not `query` itself) is what actually drives VirtualFeed's
- * `resetKey`/`fetchPage` - typing a character shouldn't restart the feed from page
- * one on every keystroke, only once the visitor pauses for 300ms, same timing this
- * had before pagination. It's seeded directly from `query()`'s own initial value
- * (not `""`) so the very first page - for a landing with `initialQuery` set -
- * fetches immediately rather than waiting out that same 300ms unnecessarily.
+ * Provides the RecipeSearch function.
  */
 export default function RecipeSearch(props: { initialQuery?: string }) {
   const [query, setQuery] = createSignal(props.initialQuery ?? "");
@@ -42,7 +25,7 @@ export default function RecipeSearch(props: { initialQuery?: string }) {
         type="text"
         value={query()}
         onInput={(e) => onInput(e.currentTarget.value)}
-        class="w-full p-2 border-2 rounded-2xl border-foreground outline-none bg-transparent text-fluid-sm-base"
+        class="w-full p-2 border-2 rounded-2xl border-foreground outline-none bg-transparent text-sm md:text-base"
         placeholder="Search all recipes"
       />
       <VirtualFeed<RecipeFeed>

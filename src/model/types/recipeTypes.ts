@@ -1,7 +1,9 @@
 
 import { UUID } from "./UUID"
 
-/** Mirrors the backend's IngredientDTO. */
+/**
+ * Defines the Ingredient type.
+ */
 export type Ingredient = {
   id: UUID
   name: string,
@@ -9,7 +11,9 @@ export type Ingredient = {
   measuringUnit: string,
 }
 
-/** Mirrors the backend's InstructionDTO. `images` is a list of ids into `Recipe.images`, in display order. */
+/**
+ * Defines the Instruction type.
+ */
 export type Instruction = {
   id: UUID,
   text: string,

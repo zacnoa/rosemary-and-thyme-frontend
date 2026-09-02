@@ -8,12 +8,7 @@ import Notes from "./Notes";
 import { useRecipe } from "./context/useRecipe";
 
 /**
- * The editor page's layout, wrapped by RecipeProvider in routes/recipe/[id].tsx
- * (only rendered when the viewer is the recipe's owner - otherwise Blog.tsx
- * is shown instead, wrapped by BlogProvider).
- *
- * EditorDock is loaded via `clientOnly` (not rendered during SSR at all) since
- * Dock's open/close state and animation only make sense in a real browser.
+ * Provides the RecipeEditorContent function.
  */
 export default function RecipeEditorContent() {
   const { recipe, addBannerImage } = useRecipe()

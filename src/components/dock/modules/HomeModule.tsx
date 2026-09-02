@@ -1,7 +1,9 @@
 import { House } from "lucide-solid";
 import { A } from "@solidjs/router";
 
-/** Dock button that navigates back to `/`. */
+/**
+ * Provides the HomeButton function.
+ */
 export default function HomeButton() {
   return (
     <li class="bg-blue rounded-md">

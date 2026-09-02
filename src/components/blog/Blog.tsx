@@ -28,7 +28,7 @@ function Header() {
   return (
     <section>
       <div class="flex border-b-3 md:border-b-4 border-foreground2">
-        <h1 class="flex-1 text-fluid-2xl-5xl outline-none resize-none min-w-0  leading-tight"
+        <h1 class="flex-1 text-2xl md:text-5xl outline-none resize-none min-w-0  leading-tight"
         >{recipe.name}</h1>
         {/*
           The only interactive element on an otherwise read-only page - see
@@ -49,17 +49,17 @@ function Header() {
               class="md:size-8 size-5"
             />
           </span>
-          <span class="text-fluid-sm-2xl mt-1.75 md:mt-2 leading-none">{likes()}</span>
+          <span class="text-sm md:text-2xl mt-1.75 md:mt-2 leading-none">{likes()}</span>
         </button>
       </div>
 
       <div class="flex">
         <div class="flex-1 min-w-0">
-          <h2 class="text-fluid-base-4xl">By {recipe.userName}</h2>
-          <article class=" outline-none w-full resize-none text-fluid-sm-xl pt-3 pr-2 md:pr-3 leading-tight"
+          <h2 class="text-base md:text-4xl">By {recipe.userName}</h2>
+          <article class=" outline-none w-full resize-none text-sm md:text-xl pt-3 pr-2 md:pr-3 leading-tight"
           >{recipe.description}</article>
         </div>
-        <div class=" border-l-3 md:border-l-4 border-orange  pt-2 w-20 md:w-32 text-fluid-xs-2xl">
+        <div class=" border-l-3 md:border-l-4 border-orange  pt-2 w-20 md:w-32 text-md md:text-2xl">
           <ul class="text-center">
             <li>{recipe.createDate.getDate()}.</li>
             <li>{recipe.createDate.getMonth()}.</li>
@@ -98,7 +98,7 @@ function BasicInformation() {
   return (
     <section>
       <div class="flex border-b-3 md:border-b-4 border-foreground2">
-        <h2 class="text-fluid-lg-4xl font-bold pb-1 w-1/2 border-r-3 md:border-r-4 border-orange">
+        <h2 class="text-lg md:text-4xl font-bold pb-1 w-1/2 border-r-3 md:border-r-4 border-orange">
           What You Need
         </h2>
         {/*
@@ -114,7 +114,7 @@ function BasicInformation() {
           onClick={wakeLock.toggle}
           disabled={!wakeLock.supported()}
           title={wakeLock.supported() ? undefined : "Keeping the screen on isn't supported in this browser"}
-          class={`flex-1 flex items-center pl-2 md:pl-4 gap-1 md:gap-2 pb-1 text-fluid-xs-sm ${wakeLock.supported() ? "cursor-pointer" : "cursor-not-allowed opacity-50"
+          class={`flex-1 flex items-center pl-2 md:pl-4 gap-1 md:gap-2 pb-1 text-xs md:text-sm ${wakeLock.supported() ? "cursor-pointer" : "cursor-not-allowed opacity-50"
             } ${wakeLock.active() ? "text-green" : "text-foreground3"}`}
         >
           <Show when={wakeLock.active()} fallback={<EyeOff class="size-3 md:size-4 shrink-0" />}>
@@ -127,7 +127,7 @@ function BasicInformation() {
         <ul class="w-full md:w-1/2 order-2 md:order-1 flex flex-col gap-4 list-none border-orange md:border-r-4 pt-3 pr-0 md:pr-3">
           <For each={recipe.ingredientsOrder}>
             {(id) => (
-              <li class="text-fluid-sm-xl">
+              <li class="text-sm md:text-xl">
                 <Ingredient id={id} />
               </li>
             )}
@@ -135,26 +135,26 @@ function BasicInformation() {
         </ul>
         <aside class="w-full md:w-1/2 order-1 md:order-2 border-orange border-b-3 md:border-b-0 pt-3 pb-4 md:pb-0 pl-0 md:pl-3 flex flex-col gap-4">
           <div class="flex items-center gap-2">
-            <span class="text-fluid-sm-xl">Preparation</span>
+            <span class="text-sm md:text-xl">Preparation</span>
             <span class="text-orange">→</span>
-            <p class="outline-none text-fluid-base-xl flex-1">
+            <p class="outline-none text-base md:text-xl flex-1">
               {recipe.cookTime}
             </p>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-fluid-sm-xl">Portions</span>
+            <span class="text-sm md:text-xl">Portions</span>
             <span class="text-orange">→</span>
-            <p class="outline-none text-fluid-sm-xl w-12">
+            <p class="outline-none text-sm md:text-xl w-12">
               {recipe.portions}
             </p>
           </div>
           <div class="flex items-center gap-2 flex-wrap">
-            <span class="text-fluid-sm-xl">Difficulty</span>
+            <span class="text-sm md:text-xl">Difficulty</span>
             <div class="flex gap-1">
               <Index each={[1, 2, 3, 4, 5]}>
                 {(star) => (
                   <span
-                    class="cursor-pointer text-fluid-xl-2xl"
+                    class="cursor-pointer text-xl md:text-2xl"
                     style={{
                       color: star() <= recipe.difficulty
                         ? "var(--color-blue)"
@@ -208,9 +208,9 @@ function InstructionItem({ id }: { id: string }) {
   return (
     <div class="flex flex-col gap-2">
       <div class="flex items-center justify-between md:border-b-3 border-b-2 border-orange">
-        <span class="font-bold text-fluid-xl-3xl">{index() + 1}.</span>
+        <span class="font-bold text-xl md:text-3xl">{index() + 1}.</span>
       </div>
-      <p class="outline-none resize-none w-full text-fluid-base-lg">
+      <p class="outline-none resize-none w-full text-base md:text-lg">
         {instruction().text}
       </p>
       <ImageGallery images={instruction().images} />
@@ -244,11 +244,11 @@ function Notes() {
   return (
     <section class="flex flex-col gap-4">
       <div class="flex border-b-3 md:border-b-4 border-orange">
-        <h2 class="text-fluid-lg-4xl font-bold pb-1">
+        <h2 class="text-lg md:text-4xl font-bold pb-1">
           Additional Notes
         </h2>
       </div>
-      <p class="outline-none resize-none w-full bg-transparent text-fluid-base-lg" >
+      <p class="outline-none resize-none w-full bg-transparent text-base md:text-lg" >
         {recipe.sideNotes}
       </p >
     </section>
@@ -257,7 +257,9 @@ function Notes() {
 }
 
 
-/** Full read-only recipe page, shown to any viewer who isn't the recipe's owner (see routes/recipe/[id].tsx). */
+/**
+ * Provides the Blog function.
+ */
 export default function Blog() {
 
   const BlogDock = clientOnly(() => import("./BlogDock"))

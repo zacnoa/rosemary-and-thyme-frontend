@@ -4,11 +4,15 @@ import { Ingredient, Instruction } from "~/model/types/recipeTypes";
 import { RecipeImage } from "~/model/types/utils";
 import { UUID } from "~/model/types/UUID";
 
-/** The editable recipe store plus every mutator on it - see RecipeProvider, the only implementation. */
+/**
+ * Defines the RecipeContextType type.
+ */
 type RecipeContextType = {
   recipe: Recipe,
   changedFlag: () => boolean,
-  /** Reasons `saveRecipe` would currently refuse to save (limit violations) - see utils/validateRecipe.ts. Empty when the recipe is within every limit. */
+  /**
+ * Reasons `saveRecipe` would currently refuse to save (limit violations) - see utils/validateRecipe.ts.
+ */
   saveBlockers: () => string[],
   editName: (text: string) => void
   editDescription: (text: string) => void
@@ -26,7 +30,9 @@ type RecipeContextType = {
   removeInstruction: (id: UUID) => void
   addBannerImage: (image: RecipeImage) => void
   removeBannerImage: (index: number) => void,
-  /** Deletes an image everywhere it's referenced - see RecipeProvider. Called by ImageGallery, as DeleteImageModal's `onConfirm`. */
+  /**
+ * Deletes an image everywhere it's referenced - see RecipeProvider.
+ */
   removeImage: (id: UUID) => void,
   saveRecipe: (recipe: Recipe) => void
 

@@ -10,22 +10,7 @@ import { daysUntilAccountDeletion } from "~/utils/accountDeletion";
 export const ACCOUNT_DELETION_NOTICE_SHOWN_KEY = "account_deletion_notice_shown";
 
 /**
- * Renders nothing - purely a side effect that fires once per login: if the signed-in
- * user has a pending deletion request (see AccountSettings.tsx's persistent dashboard
- * banner, the *other* place this is surfaced), show a one-off toast on whichever page
- * they land on right after signing in, so the warning isn't something they only see
- * if they happen to visit the dashboard.
- *
- * "Once per login": every login (password, Google, or the fresh session a
- * verify-email/password-reset confirm issues) ends in a full page load - see
- * AuthProvider for why useAuth() is a page-level snapshot rather than something that
- * updates in place - so this component remounts fresh each time. [SHOWN_KEY] in
- * `sessionStorage` stops it from re-firing on every subsequent page navigation within
- * that same login, and UserModule.tsx's logout clears the key so the next login (by
- * the same or a different account) isn't suppressed by a stale flag from before.
- *
- * Mounted inside both AuthProvider and NotificationProvider in app.tsx (unlike
- * CookieNotice, which needs neither) - see app.tsx for the exact placement.
+ * Provides the AccountDeletionNotice function.
  */
 export default function AccountDeletionNotice() {
   const user = useAuth();

@@ -2,8 +2,6 @@
 import { mount, StartClient } from "@solidjs/start/client";
 
 /**
- * Browser entry point: hydrates the server-rendered markup in place (see
- * entry-server.tsx for the `<div id="app">` this mounts into). Standard
- * SolidStart boilerplate - app-specific setup lives in app.tsx instead.
+ * Describes this component.
  */
 mount(() => <StartClient />, document.getElementById("app")!);

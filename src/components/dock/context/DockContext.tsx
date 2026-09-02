@@ -10,11 +10,7 @@ type DockContextType = {
 const DockContext = createContext<DockContextType>();
 
 /**
- * @returns the enclosing `<Dock>`'s open/close API - see Dock.tsx for what
- * each member actually does. Every dock module (IngredientsModule,
- * SearchModule, ...) calls this to register its panel content and to toggle
- * itself open/closed from its `<li>` button.
- * @throws if called outside a `<Dock>`
+ * Provides the useDock function.
  */
 export function useDock() {
   const ctx = useContext(DockContext);

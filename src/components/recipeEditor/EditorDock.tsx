@@ -11,11 +11,7 @@ import Dock from "../dock/Dock";
 
 
 /**
- * Dock module set for the recipe editor - the only one that includes IngredientsModule
- * wired to the *editable* store and SaveButton. No wake-lock icon here (unlike the old
- * ScreenOnModule this used to render): editing isn't a hands-off, screen-glancing
- * activity the way following a recipe read-only is, so there's no need to keep the
- * screen from sleeping while typing.
+ * Provides the EditorDock function.
  */
 export default function EditorDock() {
   const { recipe } = useRecipe();

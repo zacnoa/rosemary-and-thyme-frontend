@@ -2,17 +2,12 @@ const LAST_UPDATED = "August 27, 2026"
 const CONTACT_EMAIL = "privacy@rosemary-n-thyme.com"
 
 /**
- * Static privacy policy page - required as the "Privacy Policy" link on
- * Google Cloud Console's OAuth consent screen (see SecurityConfig.kt on the
- * backend for the Google sign-in flow this describes), and linked from
- * routes/auth/login.tsx and routes/auth/register.tsx next to the "Continue
- * with Google" button. No auth/data fetching - this is plain content, so
- * unlike every other route it has no loading state to worry about.
+ * Provides the PrivacyPolicy function.
  */
 export default function PrivacyPolicy() {
   return (
     <main class="max-w-2xl mx-2 md:mx-auto mt-20 mb-20 px-2 flex flex-col gap-6">
-      <h1 class="text-fluid-2xl-5xl border-b-3 md:border-b-4 border-foreground2 pb-2 leading-tight">
+      <h1 class="text-2xl md:text-5xl border-b-3 md:border-b-4 border-foreground2 pb-2 leading-tight">
         Privacy Policy
       </h1>
       <p class="text-sm text-foreground3">Last updated: {LAST_UPDATED}</p>
@@ -168,7 +163,7 @@ export default function PrivacyPolicy() {
 function Section(props: { title: string; children: any }) {
   return (
     <section class="flex flex-col gap-2">
-      <h2 class="text-fluid-lg-2xl font-bold">{props.title}</h2>
+      <h2 class="text-lg md:text-2xl font-bold">{props.title}</h2>
       {props.children}
     </section>
   )

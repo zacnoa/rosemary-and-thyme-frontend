@@ -2,22 +2,12 @@ import { createSignal, createMemo, JSX, ParentProps, Show } from "solid-js";
 import { DockContext } from "./context/DockContext";
 
 /**
- * Must match the `duration-300` transform transition below: content is kept
- * mounted (and the panel kept at its open height) for the full slide-down
- * duration, so it collapses only once it's already off-screen instead of
- * mid-slide.
+ * Provides the CLOSE_ANIMATION_MS function.
  */
 const CLOSE_ANIMATION_MS = 300;
 
 /**
- * Bottom action bar + slide-down panel shell, shared by every page (see
- * HomeDock/BlogDock/EditorDock, which each just fill in a different set of
- * module `<li>`s as `props.children`). Panel *content* is owned by the
- * individual module components (IngredientsModule, SearchModule, ...) via
- * [registerPanel]; Dock itself only knows "which panel id is open" and how
- * to animate that, not what any panel actually renders.
- *
- * @param props.children the module `<li>` buttons for this page's dock bar
+ * Provides the Dock function.
  */
 export default function Dock(props: ParentProps) {
   const [activePanel, setActivePanel] = createSignal<string | null>(null);
@@ -26,19 +16,8 @@ export default function Dock(props: ParentProps) {
   let closeTimeout: ReturnType<typeof setTimeout> | undefined;
 
   /**
-   * Opens `id`'s panel, or closes it if it's already the open one.
-   *
-   * `activePanel` (drives the animation) and `renderedPanel` (drives what's
-   * actually mounted in the DOM) are deliberately two separate signals with
-   * two different lifetimes: opening sets both immediately, but closing only
-   * clears `activePanel` right away - `renderedPanel` (and so the panel's
-   * content/DOM) is kept alive for [CLOSE_ANIMATION_MS] more so the
-   * slide-down transition has something to animate, then torn down once it's
-   * already off-screen. Reopening (or switching straight to a different panel)
-   * cancels that pending teardown via `closeTimeout`.
-   *
-   * @param id the panel id to open/close (see [registerPanel])
-   */
+ * Provides the toggle function.
+ */
   const toggle = (id: string) => {
     clearTimeout(closeTimeout);
 
@@ -52,27 +31,15 @@ export default function Dock(props: ParentProps) {
   };
 
   /**
-   * Registers what a panel renders, keyed by id. Content is stored as a
-   * function (not JSX directly) so it's only actually evaluated when the
-   * panel is opened (via [activeContent]) - modules call this once from
-   * `onMount`, regardless of whether their panel is ever opened at all.
-   *
-   * @param id a unique panel id, also passed to [toggle] by whatever button
-   * should open this panel (each module picks its own, e.g. `"search"`)
-   * @param content renders the panel's body; re-invoked fresh each time the
-   * panel transitions from closed to open (see [activeContent])
-   */
+ * Provides the registerPanel function.
+ */
   const registerPanel = (id: string, content: () => JSX.Element) => {
     setPanels((prev) => ({ ...prev, [id]: content }));
   };
 
   /**
-   * The currently mounted panel's rendered content, or `null` when none is
-   * mounted. A memo (not a plain derived call) so `panels()[id]?.()` only
-   * actually runs when `renderedPanel`/`panels` change - i.e. once per
-   * open, not on every unrelated reactive update - which matters since that
-   * call is what freshly evaluates a panel's `content` function.
-   */
+ * Provides the activeContent function.
+ */
   const activeContent = createMemo(() => {
     const id = renderedPanel();
     if (!id) return null;
@@ -80,8 +47,8 @@ export default function Dock(props: ParentProps) {
   });
 
   /**
-   * Because DockContext is not reliant on any external calls for its state we forego a separate DockProvider.ts file
-   */
+ * Because DockContext is not reliant on any external calls for its state we forego a separate DockProvider.ts file
+ */
   return (
     <DockContext.Provider value={{ activePanel, toggle, registerPanel, panels }}>
       <div class="relative w-full">

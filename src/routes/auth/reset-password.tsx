@@ -5,14 +5,7 @@ import { confirmPasswordReset } from "~/queries/confirmPasswordReset"
 type Status = "form" | "pending" | "success" | "error"
 
 /**
- * Landing page for the link emailed by PasswordResetService on the backend
- * (`/auth/reset-password?token=...`) - takes a new password, then confirms
- * the reset. Same shape as routes/auth/verify-email.tsx: on success the
- * backend has already set a fresh session cookie (every other session for
- * the account was revoked first - see AuthService.resetPassword), so this
- * redirects with `window.location.href` rather than a client-side route
- * change, so that cookie is picked up by a fresh queries/getUser.ts
- * resolution.
+ * Provides the ResetPasswordPage function.
  */
 export default function ResetPasswordPage() {
   const [searchParams] = useSearchParams()
@@ -56,7 +49,7 @@ export default function ResetPasswordPage() {
 
   return (
     <main class="md:max-w-md mx-2 md:mx-auto mt-20 px-2">
-      <h1 class="text-fluid-2xl-5xl border-b-3 md:border-b-4 border-foreground2 pb-2 leading-tight mb-6">
+      <h1 class="text-2xl md:text-5xl border-b-3 md:border-b-4 border-foreground2 pb-2 leading-tight mb-6">
         Reset password
       </h1>
 
@@ -76,13 +69,13 @@ export default function ResetPasswordPage() {
       <Show when={status() === "form" || status() === "pending"}>
         <form class="flex flex-col gap-6" onSubmit={submit}>
           <div class="flex flex-col gap-1">
-            <label for="new-password" class="text-fluid-sm-base text-foreground3">New password</label>
+            <label for="new-password" class="text-sm md:text-base text-foreground3">New password</label>
             <input
               id="new-password"
               type="password"
               autocomplete="new-password"
               required
-              class="outline-none bg-transparent border-b-2 border-foreground3 focus:border-orange py-1 text-fluid-base-lg"
+              class="outline-none bg-transparent border-b-2 border-foreground3 focus:border-orange py-1 text-base md:text-lg"
               value={newPassword()}
               onInput={(e) => setNewPassword(e.target.value)}
             />

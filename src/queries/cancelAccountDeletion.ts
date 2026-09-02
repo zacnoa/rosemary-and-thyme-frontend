@@ -1,9 +1,7 @@
 import { API_URL } from "~/utils/apiUrl";
 
 /**
- * Cancels a pending account deletion via `DELETE /user/delete` - the "undo"
- * for queries/requestAccountDeletion.ts, usable any time within the 30-day
- * grace period. No-ops (still `ok: true`) if none was pending.
+ * Provides the cancelAccountDeletion function.
  */
 export const cancelAccountDeletion = async () => {
   const result = await fetch(`${API_URL}/user/delete`, {

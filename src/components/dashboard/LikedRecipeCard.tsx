@@ -7,15 +7,7 @@ import type { RecipeFeed } from "~/model/interfaces/RecipeFeed";
 import type { UUID } from "~/model/types/UUID";
 
 /**
- * One entry in the dashboard's "Liked Recipes" section (see LikedRecipes.tsx): the
- * same RecipePost card DashboardRecipeCard uses, plus an unlike slider underneath -
- * the counterpart of DashboardRecipeCard's toggle/delete pair, swapped out here
- * because a liked recipe isn't one you own: there's nothing to make private and
- * nothing to delete, only your own like on it to remove.
- *
- * Same SlideToConfirm styling/reasoning as DashboardRecipeCard's delete slider - see
- * that component's KDoc for why it's rendered bare (no intermediate button, no
- * surrounding card) directly on the page background.
+ * Provides the LikedRecipeCard function.
  */
 export default function LikedRecipeCard(props: {
   recipe: RecipeFeed;
@@ -23,7 +15,9 @@ export default function LikedRecipeCard(props: {
 }) {
   const [unliking, setUnliking] = createSignal(false);
 
-  /** Fire-and-forget from SlideToConfirm's point of view - only removes the card from the list on a confirmed success; a failed unlike just re-enables the slider so the user can try again. */
+  /**
+ * Provides the confirmUnlike function.
+ */
   const confirmUnlike = async () => {
     setUnliking(true);
     // try/catch - a network failure rejects the promise rather than

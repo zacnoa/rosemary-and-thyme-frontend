@@ -5,16 +5,7 @@ import { useDock } from "../context/DockContext";
 const PANEL_ID = "more";
 
 /**
- * Catch-all settings panel, opened from a vertical "..." bar icon rather than
- * getting its own permanent icon per setting - today that's just the dark/light
- * theme toggle (folded in from the old standalone `ThemeModule` bar icon), but the
- * panel shape is meant to grow: any future per-viewer preference belongs inside
- * this panel instead of adding yet another icon to an already-crowded bar
- * (EditorDock renders 7 of them even after this).
- *
- * The `theme` signal starts at `"dark"` unconditionally rather than reading any
- * persisted preference (e.g. `localStorage` or `prefers-color-scheme`), so the
- * choice doesn't survive a page reload/new session - same as the old ThemeModule.
+ * Provides the MoreModule function.
  */
 export default function MoreModule() {
   const { toggle, activePanel, registerPanel } = useDock();

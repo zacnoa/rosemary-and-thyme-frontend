@@ -1,65 +1,28 @@
 import { JSX, createSignal, Show } from "solid-js";
 
 /**
- * Fraction of the track's draggable range the thumb must cross before releasing
- * counts as a confirmed slide, not an accidental tap/short drag - see [onPointerUp].
+ * Sets the drag distance required to confirm an action.
  */
 const CONFIRM_THRESHOLD = 0.85;
 
 /**
- * The thumb's resting inset from the track's edge - matches the `top-1 left-1` (4px)
- * Tailwind classes on the thumb below, and the `+ 4` added to `offsetPx()` in its
- * `style.left`. Subtracted from *both* sides when computing [maxOffset] so the thumb
- * ends its drag with the same 4px gap from the track's right edge that it starts with
- * on the left - without this, the fully-dragged thumb's right edge lands 4px past the
- * track's own right edge (only the track's `overflow-hidden` was hiding that as a
- * clipped, flattened-looking circle instead of a full round thumb sitting flush
- * inside the track).
+ * Sets the thumb inset used by the drag track.
  */
 const THUMB_INSET_PX = 4;
 
 type SlideToConfirmProps = {
-  /** Text shown centered on the track, e.g. "Slide to save →" / "Slide to delete →". */
   label: string;
-  /** Rendered inside the thumb, already sized/colored for it (e.g. `<Save class="size-5" color="var(--color-background)" />`). */
   icon: JSX.Element;
-  /** Tailwind `bg-*` class for the thumb while enabled/draggable - the only thing that visually distinguishes one use of this component from another (e.g. `"bg-green"` for save, `"bg-red"` for delete). */
   thumbColor: string;
-  /** The first reason the slide can't be completed right now, or `null` if it can - shown under the track, and disables dragging entirely while set. */
   disabledReason: () => string | null;
-  /** Called once, on a successful release past [CONFIRM_THRESHOLD] - fire-and-forget from this component's point of view, the thumb always snaps back to the start shortly after regardless of the outcome. */
   onConfirm: () => void;
-  /**
-   * Tailwind `bg-*` class for the track itself. Defaults to `"bg-background"`, which
-   * only reads as a distinct track when this component sits on some *other* surface
-   * (e.g. the dock's `bg-foreground3` panel, or a card wrapper) - a caller rendering
-   * it straight on the page (which is itself `bg-background`, see `entry-server.tsx`)
-   * needs to override this or the track disappears entirely. Paired with [labelClass]/
-   * [mutedTextClass] below, which need to flip along with it for the text to stay legible.
-   */
   trackClass?: string;
-  /** Tailwind `text-*` class for the centered label - must contrast against [trackClass]. Defaults to `"text-foreground"`, matching the default dark `trackClass`. */
   labelClass?: string;
-  /** Tailwind `text-*` class for the `disabledReason` line under the track - unlike the label, this sits *outside* the track, directly on whatever surface this component itself is placed on, so it must contrast against that (not against [trackClass]). Defaults to `"text-background"`, matching the dock/card surfaces this component originally shipped inside. */
   mutedTextClass?: string;
 };
 
 /**
- * A "slide to confirm" gesture: drag a thumb across a track instead of tapping a
- * plain button, so confirming a consequential action needs a deliberate drag rather
- * than a single tap that's easy to trigger by accident. Originally built just for
- * saving a recipe, now shared between that (components/dock/modules/SaveModule.tsx)
- * and deleting one from the dashboard (components/dashboard/DashboardRecipeCard.tsx) -
- * the two differ only in [label]/[icon]/[thumbColor]/[disabledReason]/[onConfirm],
- * everything about the drag mechanics below is identical either way.
- *
- * Dragging is driven entirely by pointer events on the thumb itself
- * (`onPointerDown`/`onPointerMove`/`onPointerUp`, using `setPointerCapture` so the
- * drag keeps tracking the pointer even once it leaves the thumb's own bounds) rather
- * than a native `<input type="range">` - this isn't really "pick a value", it's
- * "perform a confirm gesture", which a range input doesn't model well (its value
- * would need resetting after every use, and there's no natural way to distinguish
- * "let go early" from "completed the gesture").
+ * Confirms an action through a deliberate drag gesture.
  */
 export default function SlideToConfirm(props: SlideToConfirmProps) {
   const trackClass = () => props.trackClass ?? "bg-background";
@@ -113,7 +76,7 @@ export default function SlideToConfirm(props: SlideToConfirmProps) {
         class={`relative h-12 rounded-full ${trackClass()} overflow-hidden ${props.disabledReason() ? "opacity-50" : ""
           }`}
       >
-        <p class={`absolute inset-0 flex items-center justify-center ${labelClass()} text-fluid-sm-base pointer-events-none select-none`}>
+        <p class={`absolute inset-0 flex items-center justify-center ${labelClass()} text-sm md:text-base pointer-events-none select-none`}>
           {props.label}
         </p>
         <div
@@ -131,7 +94,7 @@ export default function SlideToConfirm(props: SlideToConfirmProps) {
         </div>
       </div>
       <Show when={props.disabledReason()}>
-        <p class={`${mutedTextClass()} text-fluid-xs-sm opacity-80`}>{props.disabledReason()}</p>
+        <p class={`${mutedTextClass()} text-xs md:text-sm opacity-80`}>{props.disabledReason()}</p>
       </Show>
     </div>
   );

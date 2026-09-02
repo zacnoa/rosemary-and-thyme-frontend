@@ -3,12 +3,7 @@ import { resizeTextarea } from "~/utils/resizeTextarea";
 import { useRecipe } from "./context/useRecipe";
 
 /**
- * Free-text notes field, the last section of the editor.
- *
- * [resizeTextarea] runs once on mount (in addition to every `onInput`) so a
- * recipe loaded with existing, already-long notes shows fully expanded
- * right away, instead of staying clipped at its collapsed height until the
- * first edit - see Header.tsx for the same fix and fuller explanation.
+ * Provides the Notes function.
  */
 export default function Notes() {
   const context = useRecipe();
@@ -19,13 +14,13 @@ export default function Notes() {
   return (
     <section class="flex flex-col gap-4">
       <div class="flex border-b-3 md:border-b-4 border-orange">
-        <h2 class="text-fluid-lg-4xl font-bold pb-1">
+        <h2 class="text-lg md:text-4xl font-bold pb-1">
           Additional Notes
         </h2>
       </div>
       <textarea
         ref={notesRef}
-        class="outline-none resize-none w-full bg-transparent text-fluid-base-lg"
+        class="outline-none resize-none w-full bg-transparent text-base md:text-lg"
         placeholder="Add a note..."
         onInput={(e) => {
           resizeTextarea(notesRef);

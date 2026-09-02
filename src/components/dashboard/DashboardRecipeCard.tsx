@@ -9,18 +9,7 @@ import type { RecipeFeed } from "~/model/interfaces/RecipeFeed";
 import type { UUID } from "~/model/types/UUID";
 
 /**
- * One "My Recipes" dashboard card: RecipePost plus a private/public toggle and a
- * delete slider. Rendered by components/dashboard/RecipeSearch.tsx, one per recipe
- * the caller owns - the "Liked Recipes" counterpart is LikedRecipeCard, which swaps
- * this pair for a single unlike slider (a liked recipe isn't yours to toggle/delete).
- *
- * `onDeleted`/`onPrivacyChange` don't touch the store themselves - they report a
- * confirmed server-side change back to the caller, which owns the actual list.
- *
- * The delete slider sits straight on the page background, not a card - its default
- * `bg-background` track would blend into `<html>` (also `bg-background`, see
- * entry-server.tsx), hence the `trackClass`/`labelClass`/`mutedTextClass` overrides
- * to the more subdued `bg-foreground3` below.
+ * Provides the DashboardRecipeCard function.
  */
 export default function DashboardRecipeCard(props: {
   recipe: RecipeFeed;
@@ -31,7 +20,9 @@ export default function DashboardRecipeCard(props: {
   const [togglingPrivate, setTogglingPrivate] = createSignal(false);
   const { notify } = useNotification();
 
-  /** Fire-and-forget from SlideToConfirm's point of view - only removes the card from the list on a confirmed success; a failed delete just re-enables the slider so the user can try again. */
+  /**
+ * Provides the confirmDelete function.
+ */
   const confirmDelete = async () => {
     setDeleting(true);
     // try/catch - a network failure rejects the promise rather than resolving
@@ -51,12 +42,8 @@ export default function DashboardRecipeCard(props: {
   };
 
   /**
-   * Flips this recipe's private/public flag via `PATCH /recipe/{id}/private`.
-   * Waits for the request to confirm before updating anything - unlike
-   * confirmDelete's card removal, there's no harmless "undo" for an optimistic
-   * flip that turns out wrong, so a failure just leaves the toggle as it was and
-   * surfaces a toast instead.
-   */
+ * Provides the togglePrivate function.
+ */
   const togglePrivate = async () => {
     if (togglingPrivate()) return;
     setTogglingPrivate(true);
@@ -86,7 +73,7 @@ export default function DashboardRecipeCard(props: {
         type="button"
         disabled={togglingPrivate()}
         onClick={togglePrivate}
-        class="self-start flex items-center gap-2 px-3 py-1.5 rounded-full border-2 border-foreground3 text-foreground3 text-fluid-xs-sm cursor-pointer disabled:opacity-50"
+        class="self-start flex items-center gap-2 px-3 py-1.5 rounded-full border-2 border-foreground3 text-foreground3 text-xs md:text-sm cursor-pointer disabled:opacity-50"
       >
         <Show when={props.recipe.isPrivate} fallback={<LockOpen class="size-4" />}>
           <Lock class="size-4" />

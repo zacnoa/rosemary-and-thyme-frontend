@@ -6,24 +6,7 @@ import { API_URL } from "~/utils/apiUrl"
 import { sanitizeRedirect } from "~/utils/loginRedirect"
 
 /**
- * On success, does a full `window.location.href` redirect rather than a
- * client-side route change, so the next page load re-resolves
- * queries/getUser.ts server-side and picks up the now-logged-in state (see
- * AuthProvider) - there's no way to update the auth context in place.
- *
- * A 403 specifically means "credentials were fine, but the email isn't
- * verified yet" (see AuthService.login on the backend) - that's the one
- * failure case with its own UI (a resend-verification-email button) instead
- * of just the generic error message.
- *
- * `redirectTarget` is the "return to where the visitor started" value carried
- * through a `?redirect=` query param (see utils/loginRedirect.ts, and every
- * `loginHref()` caller that lands someone here) - re-sanitized on read even
- * though the caller already sanitized it once, since it's still just a plain
- * string that arrived over the URL. Threaded into both the plain login
- * success redirect below and the "Continue with Google" link, which forwards
- * it through the backend/Google round trip via its own cookie (see
- * AuthController.startGoogleLogin / GoogleOidcSuccessHandler).
+ * Provides the LoginPage function.
  */
 export default function LoginPage() {
 
@@ -93,31 +76,31 @@ export default function LoginPage() {
           login(email(), password())
         }}
       >
-        <h1 class="text-fluid-2xl-5xl border-b-3 md:border-b-4 border-foreground2 pb-2 leading-tight">
+        <h1 class="text-2xl md:text-5xl border-b-3 md:border-b-4 border-foreground2 pb-2 leading-tight">
           Login
         </h1>
 
         <div class="flex flex-col gap-1">
-          <label for="email" class="text-fluid-sm-base text-foreground3">Email</label>
+          <label for="email" class="text-sm md:text-base text-foreground3">Email</label>
           <input
             id="email"
             type="email"
             autocomplete="email"
             required
-            class="outline-none bg-transparent border-b-2 border-foreground3 focus:border-orange py-1 text-fluid-base-lg"
+            class="outline-none bg-transparent border-b-2 border-foreground3 focus:border-orange py-1 text-base md:text-lg"
             value={email()}
             onInput={(e) => setEmail(e.target.value)}
           />
         </div>
 
         <div class="flex flex-col gap-1">
-          <label for="password" class="text-fluid-sm-base text-foreground3">Password</label>
+          <label for="password" class="text-sm md:text-base text-foreground3">Password</label>
           <input
             id="password"
             type="password"
             autocomplete="current-password"
             required
-            class="outline-none bg-transparent border-b-2 border-foreground3 focus:border-orange py-1 text-fluid-base-lg"
+            class="outline-none bg-transparent border-b-2 border-foreground3 focus:border-orange py-1 text-base md:text-lg"
             value={password()}
             onInput={(e) => setPassword(e.target.value)}
           />

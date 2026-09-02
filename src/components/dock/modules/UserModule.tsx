@@ -10,18 +10,16 @@ import { loginHref } from "~/utils/loginRedirect";
 const PANEL_ID = "user";
 
 /**
- * Panel showing either the signed-in user's profile + logout, or
- * login/register links for a signed-out visitor - `user` is a one-time
- * snapshot from useAuth(), so this doesn't need to react to auth state
- * changing (see AuthProvider for why: login/logout both force a full page
- * reload rather than updating anything in place).
+ * Provides the UserButton function.
  */
 export default function UserButton() {
   const { toggle, activePanel, registerPanel } = useDock();
   const user = useAuth();
   const location = useLocation();
 
-  /** Clears the session server-side, then hard-reloads to `/` so the next page load resolves queries/getUser.ts fresh (see AuthProvider). */
+  /**
+ * Provides the logout function.
+ */
   const logout = async () => {
     await logoutUser();
     // Clears AccountDeletionNotice's "already shown this login" flag, so a fresh
@@ -40,8 +38,8 @@ export default function UserButton() {
       user ? (
         <div class="flex flex-col gap-3 text-background">
           <div class="border-b-2 border-background pb-2">
-            <p class="text-fluid-base-lg font-bold">{user.username}</p>
-            <p class="text-fluid-xs-sm opacity-80">{user.email}</p>
+            <p class="text-base md:text-lg font-bold">{user.username}</p>
+            <p class="text-xs md:text-sm opacity-80">{user.email}</p>
           </div>
           <A href="/dashboard" class="flex items-center gap-2 self-start px-3 py-1 rounded-md bg-linear-to-r from-green to-blue cursor-pointer">
             <LayoutDashboard class="size-5" />
@@ -54,7 +52,7 @@ export default function UserButton() {
             <LogOut class="size-5" />
             Log out
           </button>
-          <A href="/privacy" class="flex items-center gap-2 text-fluid-xs-sm opacity-80 border-t-2 border-background pt-2">
+          <A href="/privacy" class="flex items-center gap-2 text-xs md:text-sm opacity-80 border-t-2 border-background pt-2">
             <Shield class="size-4" />
             Privacy Policy
           </A>
@@ -74,7 +72,7 @@ export default function UserButton() {
             </A>
           </li>
           <li class="border-t-2 border-background pt-2">
-            <A href="/privacy" class="flex items-center gap-2 text-fluid-xs-sm opacity-80">
+            <A href="/privacy" class="flex items-center gap-2 text-xs md:text-sm opacity-80">
               <Shield class="size-4" />
               Privacy Policy
             </A>

@@ -4,31 +4,13 @@ import SlideToConfirm from "~/components/common/SlideToConfirm";
 import { RecipeImage } from "~/model/types/utils";
 
 type DeleteImageModalProps = {
-  /**
-   * `undefined` for one instant on a confirmed delete: `onConfirm` removes the
-   * image from the store synchronously, before the caller's own state update that
-   * unmounts this modal is processed - the `<Show>` below covers that gap instead
-   * of reading `.url` off a value that's already gone.
-   */
   image: RecipeImage | undefined;
   onConfirm: () => void;
   onClose: () => void;
 };
 
 /**
- * Fullscreen "delete this image?" confirmation for exactly one image - no
- * gallery/browsing, just that image plus a `SlideToConfirm` to delete it.
- * Rendered by ImageGallery, which owns the open/closed state and passes its own
- * `removeImage` as `onConfirm`.
- *
- * `trackClass`/`labelClass`/`mutedTextClass` on the slider match
- * DashboardRecipeCard's delete slider - both sit directly on a blurred backdrop,
- * not a solid card, so `SlideToConfirm`'s default `bg-background` track would
- * otherwise blend straight into it.
- *
- * Three equivalent ways to close without deleting: the X button, the backdrop, or
- * Escape - the image and the slider both `stopPropagation` so interacting with
- * either doesn't also trigger the backdrop's close.
+ * Confirms deletion of a single recipe image.
  */
 export default function DeleteImageModal(props: DeleteImageModalProps) {
   const confirmDelete = () => {

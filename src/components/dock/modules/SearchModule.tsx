@@ -6,22 +6,7 @@ import { useDock } from "../context/DockContext";
 const PANEL_ID = "search";
 
 /**
- * Search entry point over *every* user's recipes - the dock bar's own search icon is
- * present on every dock configuration (Home/Blog/Editor), so it needs to behave the
- * way a bare "search" icon in a dock intuitively reads: search everything, not just
- * whatever's signed in.
- *
- * Doesn't run the search or render results itself - it just takes a query and sends
- * the visitor to `/?query=...` (see routes/index.tsx / components/home/RecipeSearch.tsx),
- * which already renders full RecipePost cards (name, description, image, likes,
- * author) via the same `GET /recipe/search` endpoint. A bare title-only list inside
- * this small dock panel wasn't enough to tell recipes apart, especially with several
- * similarly-named ones - the home page's feed already solves that, so this just
- * reuses it instead of duplicating a second, thinner results view.
- *
- * The "my own recipes only" search lives on the dashboard instead (see
- * components/dashboard/RecipeSearch.tsx / queries/searchUserFeed.ts) - that one's
- * scoping is just as intuitive, since the whole page is already "your recipes".
+ * Provides the SearchModule function.
  */
 export default function SearchModule() {
   const { toggle, activePanel, registerPanel } = useDock();

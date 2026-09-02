@@ -3,13 +3,7 @@ import { CircleCheck, CircleX, LoaderCircle, X } from "lucide-solid";
 import { useNotification } from "./context/useNotification";
 
 /**
- * Fixed-position toast, rendered by NotificationProvider. Renders nothing
- * while `notification()` is `null`. Three visual variants, one per
- * NotificationType: green + checkmark for `"success"`, red + X for
- * `"error"`, and a neutral spinner for `"loading"` - the last one also
- * hides the manual dismiss button, since dismissing a toast that's tracking
- * an in-progress action (e.g. a save request still in flight) wouldn't stop
- * that action, just hide its only status indicator.
+ * Provides the NotificationModal function.
  */
 export default function NotificationModal() {
   const { notification, dismiss } = useNotification();
@@ -31,7 +25,7 @@ export default function NotificationModal() {
             <Show when={n().type === "loading"}>
               <LoaderCircle class="size-6 shrink-0 animate-spin" />
             </Show>
-            <p class="flex-1 text-fluid-sm-base">{n().message}</p>
+            <p class="flex-1 text-sm md:text-base">{n().message}</p>
             <Show when={n().type !== "loading"}>
               <button
                 class="cursor-pointer shrink-0"

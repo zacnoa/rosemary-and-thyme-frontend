@@ -3,12 +3,7 @@ import { A } from "@solidjs/router"
 import { requestPasswordReset } from "~/queries/requestPasswordReset"
 
 /**
- * Entry point for the "forgot password" flow (linked from routes/auth/login.tsx) -
- * takes just an email, then always shows the same "check your email" confirmation
- * regardless of whether that email is actually registered - see
- * PasswordResetService.requestReset on the backend for why (avoids leaking which
- * emails are registered or how they sign in). Same shape as routes/auth/register.tsx's
- * own post-submit state.
+ * Provides the ForgotPasswordPage function.
  */
 export default function ForgotPasswordPage() {
   const [email, setEmail] = createSignal("")
@@ -38,7 +33,7 @@ export default function ForgotPasswordPage() {
   return (
     <main class="md:max-w-md mx-2 md:mx-auto mt-20 px-2">
       <Show when={sent()}>
-        <h1 class="text-fluid-2xl-5xl border-b-3 md:border-b-4 border-foreground2 pb-2 leading-tight mb-6">
+        <h1 class="text-2xl md:text-5xl border-b-3 md:border-b-4 border-foreground2 pb-2 leading-tight mb-6">
           Check your email
         </h1>
         <p class="text-foreground3">
@@ -48,7 +43,7 @@ export default function ForgotPasswordPage() {
 
       <Show when={!sent()}>
         <form class="flex flex-col gap-6" onSubmit={submit}>
-          <h1 class="text-fluid-2xl-5xl border-b-3 md:border-b-4 border-foreground2 pb-2 leading-tight">
+          <h1 class="text-2xl md:text-5xl border-b-3 md:border-b-4 border-foreground2 pb-2 leading-tight">
             Forgot password
           </h1>
 
@@ -57,13 +52,13 @@ export default function ForgotPasswordPage() {
           </p>
 
           <div class="flex flex-col gap-1">
-            <label for="email" class="text-fluid-sm-base text-foreground3">Email</label>
+            <label for="email" class="text-sm md:text-base text-foreground3">Email</label>
             <input
               id="email"
               type="email"
               autocomplete="email"
               required
-              class="outline-none bg-transparent border-b-2 border-foreground3 focus:border-orange py-1 text-fluid-base-lg"
+              class="outline-none bg-transparent border-b-2 border-foreground3 focus:border-orange py-1 text-base md:text-lg"
               value={email()}
               onInput={(e) => setEmail(e.target.value)}
             />

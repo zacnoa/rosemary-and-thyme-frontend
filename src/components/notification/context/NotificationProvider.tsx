@@ -5,34 +5,23 @@ import NotificationModal from "../NotificationModal";
 const DISPLAY_DURATION_MS = 4000;
 
 /**
- * App-wide toast notifications - a single slot, not a queue: calling
- * [notify] while one is already showing replaces it outright (see below)
- * rather than stacking a second toast. Mounted once, near the root (see
- * app.tsx), and renders its own NotificationModal so callers just call
- * `notify(...)` from anywhere via useNotification() without needing to
- * render anything themselves.
+ * Provides the NotificationProvider function.
  */
 export default function NotificationProvider(props: ParentProps) {
   const [notification, setNotification] = createSignal<Notification>(null);
   let timeoutId: ReturnType<typeof setTimeout> | undefined;
 
-  /** Hides the current notification immediately (also called automatically after [DISPLAY_DURATION_MS] - see notify). */
+  /**
+ * Provides the dismiss function.
+ */
   const dismiss = () => {
     clearTimeout(timeoutId);
     setNotification(null);
   };
 
   /**
-   * Shows a toast, auto-dismissing after [DISPLAY_DURATION_MS] - except for
-   * `type: "loading"`, which is left showing indefinitely (no timer is
-   * started for it at all) since it's meant to track an in-progress action
-   * of unknown duration rather than a fire-and-forget message. Clears any
-   * pending auto-dismiss timer first, so calling this again while a toast is
-   * already showing (e.g. a `"loading"` toast being replaced by the
-   * `"success"`/`"error"` result once the action finishes) swaps its content
-   * and restarts the countdown, rather than the old timer dismissing the new
-   * message early.
-   */
+ * Provides the notify function.
+ */
   const notify = (type: NotificationType, message: string) => {
     clearTimeout(timeoutId);
     setNotification({ type, message });

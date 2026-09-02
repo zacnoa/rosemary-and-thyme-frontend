@@ -17,21 +17,7 @@ interface RecipeProviderProps extends ParentProps {
 }
 
 /**
- * Owns the recipe editor's entire editable state and every mutation on it.
- * Every `editX`/`addX`/`removeX` function below is a thin wrapper around a
- * `setRecipe(...)` call using Solid's store path-setter syntax
- * (`setRecipe("ingredients", id, ...)` etc.) rather than replacing whole
- * objects, so that only the DOM bound to the specific path that actually
- * changed re-renders - e.g. editing one ingredient's name doesn't re-render
- * the rest of the ingredient list or any other section of the page. This is
- * also what makes components like IngredientsModule (which read
- * `recipe.ingredients`/`recipe.ingredientsOrder` straight from this store)
- * update live as the user types, with no extra plumbing on their end.
- *
- * "Has this recipe changed since it was last saved" ([changedFlag]) is
- * derived generically from the store itself (see the `createEffect` below)
- * rather than each mutator setting it individually, so no new edit function
- * can forget to mark the recipe dirty.
+ * Provides the RecipeProvider function.
  */
 export default function RecipeProvider(props: RecipeProviderProps) {
 
@@ -47,35 +33,8 @@ export default function RecipeProvider(props: RecipeProviderProps) {
   let applyingServerRecipe = false;
 
   /**
-   * Submits the current recipe as `multipart/form-data`: the recipe itself
-   * as a JSON blob under the `"recipe"` part, plus one binary part per image
-   * that still has a local `blob` (i.e. picked but not yet successfully
-   * uploaded/persisted - see model/types/utils.ts for the blob/url split).
-   * On success, reconciles the store with the server's response - see
-   * [applyServerRecipe].
-   *
-   * Guarded by two checks *before* any network request is made, both
-   * enforced here (not only in SaveModule's slider UI) so this is the one
-   * place a save can actually happen from, and nothing can bypass the
-   * checks by calling this directly:
-   * - `changedFlag()` must be true - nothing to save otherwise, so this
-   *   silently no-ops rather than round-tripping an identical recipe.
-   * - [getSaveBlockers] must return no blockers (e.g. too many ingredients,
-   *   description over the word limit) - if it does, the first one is shown
-   *   as an error toast and the save is refused. Mirrored server-side by
-   *   RecipeValidation.kt (see RecipeService.saveRecipe on the backend),
-   *   which is the check that actually matters - this one just fails fast
-   *   without a network round trip.
-   *
-   * While the request is in flight, a `"loading"` toast is shown via
-   * [notify] (see NotificationProvider - that type doesn't auto-dismiss),
-   * replaced by the existing success/error toast once the request settles.
-   *
-   * @param recipe the recipe to save (always the live store, `context.recipe` -
-   * taken as a parameter rather than closing over the outer `recipe` purely
-   * so callers read naturally as "save this recipe", not because a
-   * different recipe is ever actually passed in)
-   */
+ * Provides the saveRecipe function.
+ */
   const saveRecipe = async (recipe: Recipe) => {
     if (!changedFlag()) return;
 
@@ -126,21 +85,8 @@ export default function RecipeProvider(props: RecipeProviderProps) {
   }
 
   /**
-   * Reconciles the store with the server's response after a successful save.
-   *
-   * The backend never reuses a client-submitted id when it inserts a new row
-   * (new ingredients/instructions get a DB-generated UUID, new images get
-   * their real Cloudinary url - see RecipeRepository.upsertRecipeBase/sync*
-   * on the backend). Without this, the store would keep the stale
-   * client-side ids/blob previews after save, and the *next* save would
-   * treat everything under those stale ids as new again - inserting
-   * duplicate rows and re-uploading already-uploaded images every time.
-   *
-   * Uses `reconcile()` rather than replacing the store outright so that
-   * unrelated DOM (anything keyed by an id that didn't change) doesn't get
-   * torn down and rebuilt - only the ids/values that actually differ from
-   * the server's response are patched in.
-   */
+ * Provides the applyServerRecipe function.
+ */
   const applyServerRecipe = (dto: RecipeDTO) => {
     // release the object URLs created for local previews - superseded by
     // the server's own urls now that the images are actually persisted
@@ -180,13 +126,8 @@ export default function RecipeProvider(props: RecipeProviderProps) {
 
 
   /**
-   * Deletes an image everywhere it might be referenced - a hero image slot,
-   * any instruction's image list, and the `images` map itself. Also revokes
-   * the image's `blobURL` (if it has one) to free the browser-side object
-   * URL, since after this call nothing will hold a reference to it any more.
-   *
-   * @param id the image id to remove (see model/types/utils.ts's RecipeImage)
-   */
+ * Provides the removeImage function.
+ */
   const removeImage = (id: UUID) => {
     // drop it from heroImagesOrder, if present there
     setRecipe("heroImagesOrder", (order) => order.filter((i) => i !== id));
@@ -219,14 +160,18 @@ export default function RecipeProvider(props: RecipeProviderProps) {
   const editDifficulty = (difficulty: number) => setRecipe("difficulty", difficulty);
   const editSideNotes = (text: string) => setRecipe("sideNotes", text);
 
-  /** Appends a new, blank ingredient (client-generated id - see RecipeRepository.upsertRecipeBase on the backend for why the real id only exists after save) to the end of the list. */
+  /**
+ * Provides the addIngredient function.
+ */
   const addIngredient = () => {
     const id: UUID = crypto.randomUUID();
     setRecipe("ingredients", id, { id, name: "", amount: 0, measuringUnit: "" });
     setRecipe("ingredientsOrder", recipe.ingredientsOrder.length, id);
   };
 
-  /** Replaces an ingredient's full value by id (see recipeEditor/Ingredient.tsx, which calls this on every keystroke once its combined name/amount/unit field parses). */
+  /**
+ * Provides the editIngredient function.
+ */
   const editIngredient = (ingredient: Ingredient) => {
     setRecipe("ingredients", ingredient.id, reconcile(ingredient));
   };
@@ -237,13 +182,8 @@ export default function RecipeProvider(props: RecipeProviderProps) {
   };
 
   /**
-   * Appends a new, blank instruction step. Inserted right after `afterId`
-   * (so "add step" on step 2 of 5 lands as the new step 3) rather than
-   * always at the end.
-   *
-   * @param afterId the step to insert after, or `""` to append at the end
-   * (used when there are no steps yet at all - see recipeEditor/Instructions.tsx)
-   */
+ * Provides the addInstruction function.
+ */
   const addInstruction = (afterId: UUID | "") => {
     const id: UUID = crypto.randomUUID();
     setRecipe("instructions", id, { id, text: "", images: [] });
@@ -256,12 +196,16 @@ export default function RecipeProvider(props: RecipeProviderProps) {
     });
   };
 
-  /** Replaces an instruction's full value by id (text and/or images). */
+  /**
+ * Provides the editInstruction function.
+ */
   const editInstruction = (instruction: Instruction) => {
     setRecipe("instructions", instruction.id, reconcile(instruction));
   };
 
-  /** Adds a freshly-picked image (see recipeEditor/ImageGallery.tsx) to both the shared `images` map and the given instruction's own image list. */
+  /**
+ * Provides the addInstructionImage function.
+ */
   const addInstructionImage = (image: RecipeImage, instructionId: UUID) => {
     setRecipe("images", image.id, image);
     setRecipe("instructions", instructionId, "images", (images) => [...images, image.id]);
@@ -272,13 +216,17 @@ export default function RecipeProvider(props: RecipeProviderProps) {
     setRecipe(produce((recipe) => { delete recipe.instructions[id]; }));
   };
 
-  /** Adds a freshly-picked image to both the `images` map and the end of `heroImagesOrder` (the banner gallery). */
+  /**
+ * Provides the addBannerImage function.
+ */
   const addBannerImage = (image: RecipeImage) => {
     setRecipe("images", image.id, image);
     setRecipe("heroImagesOrder", recipe.heroImagesOrder.length, image.id);
   };
 
-  /** @param index the image's position in `heroImagesOrder`, not its id */
+  /**
+ * Provides the removeBannerImage function.
+ */
   const removeBannerImage = (index: number) => {
     const imageId = recipe.heroImagesOrder[index];
     const image = recipe.images[imageId];

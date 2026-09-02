@@ -5,14 +5,7 @@ import { verifyEmail } from "~/queries/verifyEmail"
 type Status = "pending" | "success" | "error"
 
 /**
- * Landing page for the link emailed by EmailVerificationService on the
- * backend (`/auth/verify-email?token=...`). Runs the verification in
- * `onMount` (not a server-side `createAsync`/query) since it's a one-shot
- * action tied to this specific page visit, not cacheable route data.
- *
- * On success, redirects with `window.location.href` (not a client-side route
- * change) so the session cookie the backend just set is picked up by a fresh
- * queries/getUser.ts resolution - same reasoning as login.tsx.
+ * Provides the VerifyEmailPage function.
  */
 export default function VerifyEmailPage() {
 
@@ -51,7 +44,7 @@ export default function VerifyEmailPage() {
 
   return (
     <main class="md:max-w-md mx-2 md:mx-auto mt-20 px-2">
-      <h1 class="text-fluid-2xl-5xl border-b-3 md:border-b-4 border-foreground2 pb-2 leading-tight mb-6">
+      <h1 class="text-2xl md:text-5xl border-b-3 md:border-b-4 border-foreground2 pb-2 leading-tight mb-6">
         Email verification
       </h1>
 
