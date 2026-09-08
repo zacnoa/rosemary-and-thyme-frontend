@@ -4,9 +4,7 @@ import { useDock } from "../context/DockContext";
 
 const PANEL_ID = "more";
 
-/**
- * Provides the MoreModule function.
- */
+/** Provides the MoreModule function. */
 export default function MoreModule() {
   const { toggle, activePanel, registerPanel } = useDock();
   const [theme, setTheme] = createSignal<"dark" | "light">("dark");

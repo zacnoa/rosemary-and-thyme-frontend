@@ -10,9 +10,7 @@ import Loading from "~/components/Loading";
 import ServerError from "~/components/error/ServerError";
 
 
-/**
- * Provides the RecipeEditor function.
- */
+/** Provides the RecipeEditor function. */
 export default function RecipeEditor() {
   const params = useParams();
   const user = useAuth();

@@ -13,9 +13,7 @@ import type { User } from "~/components/auth/context/authContext";
 // to actually be read.
 const RELOAD_DELAY_MS = 1200;
 
-/**
- * Provides the AccountSettings function.
- */
+/** Provides the AccountSettings function. */
 export default function AccountSettings(props: { user: User }) {
   return (
     <section class="flex flex-col gap-8 mt-10 pt-8 border-t-2 border-foreground2">

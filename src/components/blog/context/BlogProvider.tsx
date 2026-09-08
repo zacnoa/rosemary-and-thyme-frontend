@@ -11,9 +11,7 @@ interface BlogProviderProps extends ParentProps {
   recipe: Recipe
 }
 
-/**
- * Provides the BlogProvider function.
- */
+/** Provides the BlogProvider function. */
 export default function BlogProvider(props: BlogProviderProps) {
 
   const [recipe, setRecipe] = createStore<Recipe>(props.recipe)
@@ -25,9 +23,7 @@ export default function BlogProvider(props: BlogProviderProps) {
   const navigate = useNavigate();
   const location = useLocation();
 
-  /**
- * Provides the toggleLike function.
- */
+  /** Provides the toggleLike function. */
   const toggleLike = async () => {
     if (!user) {
       navigate(loginHref(location.pathname));

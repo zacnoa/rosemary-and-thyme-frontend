@@ -2,9 +2,7 @@ import { createSignal, Show } from "solid-js"
 import { A } from "@solidjs/router"
 import { requestPasswordReset } from "~/queries/requestPasswordReset"
 
-/**
- * Provides the ForgotPasswordPage function.
- */
+/** Provides the ForgotPasswordPage function. */
 export default function ForgotPasswordPage() {
   const [email, setEmail] = createSignal("")
   const [pending, setPending] = createSignal(false)

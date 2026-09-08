@@ -1,8 +1,6 @@
 import { API_URL } from "~/utils/apiUrl";
 
-/**
- * Provides the changePassword function.
- */
+/** Provides the changePassword function. */
 export const changePassword = async (currentPassword: string, newPassword: string) => {
   const result = await fetch(`${API_URL}/user/password`, {
     method: "PUT",

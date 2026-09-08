@@ -1,8 +1,6 @@
 import { API_URL } from "~/utils/apiUrl";
 
-/**
- * Provides the confirmPasswordReset function.
- */
+/** Provides the confirmPasswordReset function. */
 export const confirmPasswordReset = async (token: string, newPassword: string) => {
   const result = await fetch(`${API_URL}/auth/password-reset/confirm`, {
     method: "POST",

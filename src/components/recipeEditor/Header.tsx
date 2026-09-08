@@ -3,9 +3,7 @@ import { ThumbsUp } from "lucide-solid";
 import { useRecipe } from "./context/useRecipe";
 import { resizeTextarea } from "~/utils/resizeTextarea";
 
-/**
- * Provides the Header function.
- */
+/** Provides the Header function. */
 export default function Header() {
   const context = useRecipe();
   let titleRef: HTMLTextAreaElement | undefined;

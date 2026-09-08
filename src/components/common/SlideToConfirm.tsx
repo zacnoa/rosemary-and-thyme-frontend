@@ -1,13 +1,9 @@
 import { JSX, createSignal, Show } from "solid-js";
 
-/**
- * Sets the drag distance required to confirm an action.
- */
+/** Sets the drag distance required to confirm an action. */
 const CONFIRM_THRESHOLD = 0.85;
 
-/**
- * Sets the thumb inset used by the drag track.
- */
+/** Sets the thumb inset used by the drag track. */
 const THUMB_INSET_PX = 4;
 
 type SlideToConfirmProps = {
@@ -21,9 +17,7 @@ type SlideToConfirmProps = {
   mutedTextClass?: string;
 };
 
-/**
- * Confirms an action through a deliberate drag gesture.
- */
+/** Confirms an action through a deliberate drag gesture. */
 export default function SlideToConfirm(props: SlideToConfirmProps) {
   const trackClass = () => props.trackClass ?? "bg-background";
   const labelClass = () => props.labelClass ?? "text-foreground";

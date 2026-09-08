@@ -2,9 +2,7 @@ import { For, Index, createSignal } from "solid-js";
 import { useRecipe } from "./context/useRecipe";
 import Ingredient from "./Ingredient";
 
-/**
- * Provides the BasicInformation function.
- */
+/** Provides the BasicInformation function. */
 export default function BasicInformation() {
   const context = useRecipe();
 
@@ -25,9 +23,7 @@ export default function BasicInformation() {
     }
   };
 
-  /**
- * Provides the revertPortionsIfInvalid function.
- */
+  /** Provides the revertPortionsIfInvalid function. */
   const revertPortionsIfInvalid = () => {
     if (!Number.isFinite(Number(portionsText()))) {
       setPortionsText(String(context.recipe.portions));

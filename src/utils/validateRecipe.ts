@@ -1,24 +1,18 @@
 import { Recipe } from "~/model/interfaces/Recipe";
 
-/**
- * Sets the maximum number of ingredients allowed in a recipe.
- */
+/** Sets the maximum number of ingredients allowed in a recipe. */
 export const MAX_INGREDIENTS = 50;
 export const MAX_INSTRUCTIONS = 50;
 export const MAX_DESCRIPTION_WORDS = 1000;
 export const MAX_NAME_CHARS = 100;
 
-/**
- * Provides the wordCount function.
- */
+/** Provides the wordCount function. */
 const wordCount = (text: string) => {
   const trimmed = text.trim();
   return trimmed.length === 0 ? 0 : trimmed.split(/\s+/).length;
 };
 
-/**
- * Provides the getSaveBlockers function.
- */
+/** Provides the getSaveBlockers function. */
 export const getSaveBlockers = (recipe: Recipe): string[] => {
   const blockers: string[] = [];
 

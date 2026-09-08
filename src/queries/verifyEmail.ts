@@ -1,8 +1,6 @@
 import { API_URL } from "~/utils/apiUrl";
 
-/**
- * Provides the verifyEmail function.
- */
+/** Provides the verifyEmail function. */
 export const verifyEmail = async (token: string) => {
   const result = await fetch(`${API_URL}/auth/verify-email`, {
     method: "POST",

@@ -1,9 +1,7 @@
 import { A } from "@solidjs/router";
 import { CookingPot } from "lucide-solid";
 
-/**
- * Provides the RecipeNotFound function.
- */
+/** Provides the RecipeNotFound function. */
 export default function RecipeNotFound() {
   return (
     <main class="md:max-w-md mx-2 md:mx-auto mt-20 px-2 text-center flex flex-col items-center gap-6">

@@ -1,17 +1,13 @@
 import { createEffect, For, on, onCleanup, Show, createSignal, type JSX } from "solid-js";
 import type { FeedPage } from "~/model/interfaces/FeedPage";
 
-/**
- * Defines the handle used to update items in a mounted feed.
- */
+/** Defines the handle used to update items in a mounted feed. */
 export interface VirtualFeedHandle<T> {
   remove: (id: string) => void;
   patch: (id: string, updater: (item: T) => T) => void;
 }
 
-/**
- * Renders a cursor-paginated feed with infinite scrolling.
- */
+/** Renders a cursor-paginated feed with infinite scrolling. */
 export default function VirtualFeed<T>(props: {
   fetchPage: (cursor: string | null) => Promise<FeedPage<T>>;
   renderItem: (item: T) => JSX.Element;
@@ -66,9 +62,7 @@ export default function VirtualFeed<T>(props: {
     )
   );
 
-  /**
- * Provides the attachSentinel function.
- */
+  /** Provides the attachSentinel function. */
   const attachSentinel = (el: HTMLDivElement) => {
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) loadNext();

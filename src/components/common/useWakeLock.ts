@@ -1,8 +1,6 @@
 import { createSignal, onCleanup } from "solid-js";
 
-/**
- * Provides the useWakeLock function.
- */
+/** Provides the useWakeLock function. */
 export function useWakeLock() {
   const [active, setActive] = createSignal(false);
   const [supported, setSupported] = createSignal(false);

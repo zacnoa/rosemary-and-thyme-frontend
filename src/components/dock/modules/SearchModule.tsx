@@ -5,9 +5,7 @@ import { useDock } from "../context/DockContext";
 
 const PANEL_ID = "search";
 
-/**
- * Provides the SearchModule function.
- */
+/** Provides the SearchModule function. */
 export default function SearchModule() {
   const { toggle, activePanel, registerPanel } = useDock();
   const navigate = useNavigate();

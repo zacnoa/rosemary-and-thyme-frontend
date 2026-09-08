@@ -6,15 +6,11 @@ import SlideToConfirm from "~/components/common/SlideToConfirm";
 
 const PANEL_ID = "save";
 
-/**
- * Provides the SaveSlider function.
- */
+/** Provides the SaveSlider function. */
 function SaveSlider() {
   const context = useRecipe();
 
-  /**
- * Provides the disabledReason function.
- */
+  /** Provides the disabledReason function. */
   const disabledReason = (): string | null => {
     if (!context.changedFlag()) return "Nothing to save yet";
     const blockers = context.saveBlockers();
@@ -32,9 +28,7 @@ function SaveSlider() {
   );
 }
 
-/**
- * Provides the SaveButton function.
- */
+/** Provides the SaveButton function. */
 export default function SaveButton() {
   const context = useRecipe();
   const { toggle, activePanel, registerPanel } = useDock();

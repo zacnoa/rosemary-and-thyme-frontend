@@ -1,8 +1,6 @@
 import { API_URL } from "~/utils/apiUrl";
 
-/**
- * Provides the registerUser function.
- */
+/** Provides the registerUser function. */
 export const registerUser = async (username: string, email: string, password: string) => {
   const result = await fetch(`${API_URL}/auth/register`, {
     method: "POST",

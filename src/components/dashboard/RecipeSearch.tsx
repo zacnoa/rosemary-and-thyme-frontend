@@ -5,9 +5,7 @@ import type { UUID } from "~/model/types/UUID";
 import VirtualFeed, { type VirtualFeedHandle } from "~/components/common/VirtualFeed";
 import DashboardRecipeCard from "./DashboardRecipeCard";
 
-/**
- * Provides the RecipeSearch function.
- */
+/** Provides the RecipeSearch function. */
 export default function RecipeSearch() {
   const [query, setQuery] = createSignal("");
   const [debouncedQuery, setDebouncedQuery] = createSignal(query());
@@ -21,14 +19,10 @@ export default function RecipeSearch() {
     debounceId = setTimeout(() => setDebouncedQuery(value), 300);
   };
 
-  /**
- * Provides the onDeleted function.
- */
+  /** Provides the onDeleted function. */
   const onDeleted = (id: UUID) => feedHandle?.remove(id);
 
-  /**
- * Provides the onPrivacyChange function.
- */
+  /** Provides the onPrivacyChange function. */
   const onPrivacyChange = (id: UUID, isPrivate: boolean) =>
     feedHandle?.patch(id, (recipe) => ({ ...recipe, isPrivate }));
 

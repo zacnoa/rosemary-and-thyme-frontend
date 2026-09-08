@@ -7,9 +7,7 @@ import Instructions from "./Instructions";
 import Notes from "./Notes";
 import { useRecipe } from "./context/useRecipe";
 
-/**
- * Provides the RecipeEditorContent function.
- */
+/** Provides the RecipeEditorContent function. */
 export default function RecipeEditorContent() {
   const { recipe, addBannerImage } = useRecipe()
 

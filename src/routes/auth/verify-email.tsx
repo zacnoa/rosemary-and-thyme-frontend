@@ -4,9 +4,7 @@ import { verifyEmail } from "~/queries/verifyEmail"
 
 type Status = "pending" | "success" | "error"
 
-/**
- * Provides the VerifyEmailPage function.
- */
+/** Provides the VerifyEmailPage function. */
 export default function VerifyEmailPage() {
 
   const [searchParams] = useSearchParams()

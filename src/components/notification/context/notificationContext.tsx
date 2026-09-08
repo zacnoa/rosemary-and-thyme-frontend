@@ -2,9 +2,7 @@ import { Accessor, createContext } from "solid-js";
 
 export type NotificationType = "success" | "error" | "loading";
 
-/**
- * Defines the Notification type.
- */
+/** Defines the Notification type. */
 export type Notification = {
   type: NotificationType;
   message: string;

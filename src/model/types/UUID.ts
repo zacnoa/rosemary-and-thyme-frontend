@@ -1,4 +1,2 @@
-/**
- * Defines the UUID type.
- */
+/** Defines the UUID type. */
 export type UUID = string

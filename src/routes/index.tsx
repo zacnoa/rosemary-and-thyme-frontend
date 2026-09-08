@@ -2,9 +2,7 @@ import { clientOnly } from "@solidjs/start";
 import { useSearchParams } from "@solidjs/router";
 import RecipeSearch from "~/components/home/RecipeSearch";
 
-/**
- * Provides the Home function.
- */
+/** Provides the Home function. */
 export default function Home() {
   const HomeDock = clientOnly(() => import("~/components/home/HomeDock"));
   const [searchParams] = useSearchParams();

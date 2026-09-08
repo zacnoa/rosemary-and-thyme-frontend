@@ -2,9 +2,7 @@ import { Show } from "solid-js";
 import { CircleCheck, CircleX, LoaderCircle, X } from "lucide-solid";
 import { useNotification } from "./context/useNotification";
 
-/**
- * Provides the NotificationModal function.
- */
+/** Provides the NotificationModal function. */
 export default function NotificationModal() {
   const { notification, dismiss } = useNotification();
 

@@ -4,9 +4,7 @@ import { registerUser } from "~/queries/registerUser"
 import { API_URL } from "~/utils/apiUrl"
 import { sanitizeRedirect } from "~/utils/loginRedirect"
 
-/**
- * Provides the RegisterPage function.
- */
+/** Provides the RegisterPage function. */
 export default function RegisterPage() {
 
   const [searchParams] = useSearchParams()

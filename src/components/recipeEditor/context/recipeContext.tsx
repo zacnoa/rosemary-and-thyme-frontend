@@ -4,15 +4,11 @@ import { Ingredient, Instruction } from "~/model/types/recipeTypes";
 import { RecipeImage } from "~/model/types/utils";
 import { UUID } from "~/model/types/UUID";
 
-/**
- * Defines the RecipeContextType type.
- */
+/** Defines the RecipeContextType type. */
 type RecipeContextType = {
   recipe: Recipe,
   changedFlag: () => boolean,
-  /**
- * Reasons `saveRecipe` would currently refuse to save (limit violations) - see utils/validateRecipe.ts.
- */
+  /** Reasons `saveRecipe` would currently refuse to save (limit violations) - see utils/validateRecipe.ts. */
   saveBlockers: () => string[],
   editName: (text: string) => void
   editDescription: (text: string) => void
@@ -30,9 +26,7 @@ type RecipeContextType = {
   removeInstruction: (id: UUID) => void
   addBannerImage: (image: RecipeImage) => void
   removeBannerImage: (index: number) => void,
-  /**
- * Deletes an image everywhere it's referenced - see RecipeProvider.
- */
+  /** Deletes an image everywhere it's referenced - see RecipeProvider. */
   removeImage: (id: UUID) => void,
   saveRecipe: (recipe: Recipe) => void
 

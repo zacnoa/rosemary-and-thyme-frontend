@@ -5,18 +5,23 @@ import { resendVerificationEmail } from "~/queries/resendVerificationEmail"
 import { API_URL } from "~/utils/apiUrl"
 import { sanitizeRedirect } from "~/utils/loginRedirect"
 
-/**
- * Provides the LoginPage function.
- */
+/** Provides the LoginPage function. */
 export default function LoginPage() {
 
   const [searchParams] = useSearchParams()
   const redirectTarget = () =>
     sanitizeRedirect(Array.isArray(searchParams.redirect) ? searchParams.redirect[0] : searchParams.redirect)
+  const googleError = Array.isArray(searchParams.googleError)
+    ? searchParams.googleError[0]
+    : searchParams.googleError
 
   const [email, setEmail] = createSignal("")
   const [password, setPassword] = createSignal("")
-  const [error, setError] = createSignal("")
+  const [error, setError] = createSignal(
+    googleError === "unverified-email"
+      ? "This Google account must have a verified email before it can be used to sign in."
+      : ""
+  )
   const [pending, setPending] = createSignal(false)
   const [unverified, setUnverified] = createSignal(false)
   const [resendSent, setResendSent] = createSignal(false)

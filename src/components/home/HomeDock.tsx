@@ -5,9 +5,7 @@ import MoreModule from "../dock/modules/MoreModule";
 import SearchModule from "../dock/modules/SearchModule";
 import UserButton from "../dock/modules/UserModule";
 
-/**
- * Provides the HomeDock function.
- */
+/** Provides the HomeDock function. */
 export default function HomeDock() {
   return (
     <Dock>

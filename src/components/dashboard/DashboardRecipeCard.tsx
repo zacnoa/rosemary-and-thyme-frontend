@@ -8,9 +8,7 @@ import { useNotification } from "~/components/notification/context/useNotificati
 import type { RecipeFeed } from "~/model/interfaces/RecipeFeed";
 import type { UUID } from "~/model/types/UUID";
 
-/**
- * Provides the DashboardRecipeCard function.
- */
+/** Provides the DashboardRecipeCard function. */
 export default function DashboardRecipeCard(props: {
   recipe: RecipeFeed;
   onDeleted: (id: UUID) => void;
@@ -20,9 +18,7 @@ export default function DashboardRecipeCard(props: {
   const [togglingPrivate, setTogglingPrivate] = createSignal(false);
   const { notify } = useNotification();
 
-  /**
- * Provides the confirmDelete function.
- */
+  /** Provides the confirmDelete function. */
   const confirmDelete = async () => {
     setDeleting(true);
     // try/catch - a network failure rejects the promise rather than resolving
@@ -41,9 +37,7 @@ export default function DashboardRecipeCard(props: {
     }
   };
 
-  /**
- * Provides the togglePrivate function.
- */
+  /** Provides the togglePrivate function. */
   const togglePrivate = async () => {
     if (togglingPrivate()) return;
     setTogglingPrivate(true);

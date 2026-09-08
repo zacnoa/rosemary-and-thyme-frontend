@@ -3,9 +3,7 @@ import { getRequestEvent } from "solid-js/web";
 import { Recipe } from "~/model/interfaces/Recipe";
 import { API_URL } from "~/utils/apiUrl";
 
-/**
- * Provides the getRecipe function.
- */
+/** Provides the getRecipe function. */
 export const getRecipe = query(async (id: string) => {
 
   "use server"

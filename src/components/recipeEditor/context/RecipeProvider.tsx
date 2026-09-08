@@ -16,9 +16,7 @@ interface RecipeProviderProps extends ParentProps {
   initialRecipe: Recipe;
 }
 
-/**
- * Provides the RecipeProvider function.
- */
+/** Provides the RecipeProvider function. */
 export default function RecipeProvider(props: RecipeProviderProps) {
 
   const [recipe, setRecipe] = createStore<Recipe>(props.initialRecipe);
@@ -32,9 +30,7 @@ export default function RecipeProvider(props: RecipeProviderProps) {
   // saveRecipe just set it to false.
   let applyingServerRecipe = false;
 
-  /**
- * Provides the saveRecipe function.
- */
+  /** Provides the saveRecipe function. */
   const saveRecipe = async (recipe: Recipe) => {
     if (!changedFlag()) return;
 
@@ -84,9 +80,7 @@ export default function RecipeProvider(props: RecipeProviderProps) {
     }
   }
 
-  /**
- * Provides the applyServerRecipe function.
- */
+  /** Provides the applyServerRecipe function. */
   const applyServerRecipe = (dto: RecipeDTO) => {
     // release the object URLs created for local previews - superseded by
     // the server's own urls now that the images are actually persisted
@@ -125,9 +119,7 @@ export default function RecipeProvider(props: RecipeProviderProps) {
   }, { defer: true }))
 
 
-  /**
- * Provides the removeImage function.
- */
+  /** Provides the removeImage function. */
   const removeImage = (id: UUID) => {
     // drop it from heroImagesOrder, if present there
     setRecipe("heroImagesOrder", (order) => order.filter((i) => i !== id));
@@ -160,18 +152,14 @@ export default function RecipeProvider(props: RecipeProviderProps) {
   const editDifficulty = (difficulty: number) => setRecipe("difficulty", difficulty);
   const editSideNotes = (text: string) => setRecipe("sideNotes", text);
 
-  /**
- * Provides the addIngredient function.
- */
+  /** Provides the addIngredient function. */
   const addIngredient = () => {
     const id: UUID = crypto.randomUUID();
     setRecipe("ingredients", id, { id, name: "", amount: 0, measuringUnit: "" });
     setRecipe("ingredientsOrder", recipe.ingredientsOrder.length, id);
   };
 
-  /**
- * Provides the editIngredient function.
- */
+  /** Provides the editIngredient function. */
   const editIngredient = (ingredient: Ingredient) => {
     setRecipe("ingredients", ingredient.id, reconcile(ingredient));
   };
@@ -181,9 +169,7 @@ export default function RecipeProvider(props: RecipeProviderProps) {
     setRecipe(produce((recipe) => { delete recipe.ingredients[id]; }));
   };
 
-  /**
- * Provides the addInstruction function.
- */
+  /** Provides the addInstruction function. */
   const addInstruction = (afterId: UUID | "") => {
     const id: UUID = crypto.randomUUID();
     setRecipe("instructions", id, { id, text: "", images: [] });
@@ -196,16 +182,12 @@ export default function RecipeProvider(props: RecipeProviderProps) {
     });
   };
 
-  /**
- * Provides the editInstruction function.
- */
+  /** Provides the editInstruction function. */
   const editInstruction = (instruction: Instruction) => {
     setRecipe("instructions", instruction.id, reconcile(instruction));
   };
 
-  /**
- * Provides the addInstructionImage function.
- */
+  /** Provides the addInstructionImage function. */
   const addInstructionImage = (image: RecipeImage, instructionId: UUID) => {
     setRecipe("images", image.id, image);
     setRecipe("instructions", instructionId, "images", (images) => [...images, image.id]);
@@ -216,17 +198,13 @@ export default function RecipeProvider(props: RecipeProviderProps) {
     setRecipe(produce((recipe) => { delete recipe.instructions[id]; }));
   };
 
-  /**
- * Provides the addBannerImage function.
- */
+  /** Provides the addBannerImage function. */
   const addBannerImage = (image: RecipeImage) => {
     setRecipe("images", image.id, image);
     setRecipe("heroImagesOrder", recipe.heroImagesOrder.length, image.id);
   };
 
-  /**
- * Provides the removeBannerImage function.
- */
+  /** Provides the removeBannerImage function. */
   const removeBannerImage = (index: number) => {
     const imageId = recipe.heroImagesOrder[index];
     const image = recipe.images[imageId];

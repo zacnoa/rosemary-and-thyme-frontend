@@ -7,9 +7,7 @@ import LikedRecipes from "~/components/dashboard/LikedRecipes";
 import AccountSettings from "~/components/dashboard/AccountSettings";
 import { loginHref } from "~/utils/loginRedirect";
 
-/**
- * Provides the Dashboard function.
- */
+/** Provides the Dashboard function. */
 export default function Dashboard() {
   const user = useAuth();
   const navigate = useNavigate();

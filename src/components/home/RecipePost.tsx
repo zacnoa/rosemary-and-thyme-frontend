@@ -3,18 +3,14 @@ import { A } from "@solidjs/router";
 import { ThumbsUp } from "lucide-solid";
 import type { RecipeFeed } from "~/model/interfaces/RecipeFeed";
 
-/**
- * Provides the formatDate function.
- */
+/** Provides the formatDate function. */
 function formatDate(date: Date): string {
   const day = String(date.getDate()).padStart(2, "0");
   const month = String(date.getMonth() + 1).padStart(2, "0");
   return `${day}.${month}.${date.getFullYear()}.`;
 }
 
-/**
- * Provides the RecipePost function.
- */
+/** Provides the RecipePost function. */
 export default function RecipePost(props: { recipe: RecipeFeed }) {
   return (
     <A

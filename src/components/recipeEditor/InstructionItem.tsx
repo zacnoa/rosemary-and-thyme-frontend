@@ -3,9 +3,7 @@ import { useRecipe } from "./context/useRecipe";
 import { resizeTextarea } from "~/utils/resizeTextarea";
 import ImageGallery from "./ImageGallery";
 
-/**
- * Provides the InstructionItem function.
- */
+/** Provides the InstructionItem function. */
 export default function InstructionItem({ id }: { id: string }) {
   const context = useRecipe();
   const instruction = () => context.recipe.instructions[id];

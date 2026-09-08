@@ -1,9 +1,7 @@
 import { useContext } from "solid-js"
 import { RecipeContext } from "./recipeContext"
 
-/**
- * Provides the useRecipe function.
- */
+/** Provides the useRecipe function. */
 export const useRecipe = () => {
 
   const ctx = useContext(RecipeContext)

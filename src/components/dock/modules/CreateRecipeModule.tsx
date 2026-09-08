@@ -10,9 +10,7 @@ import type { RecipeWriteDTO } from "~/model/types/utils";
 
 const PANEL_ID = "createRecipe";
 
-/**
- * Provides the CreateRecipeButton function.
- */
+/** Provides the CreateRecipeButton function. */
 export default function CreateRecipeButton() {
   const user = useAuth();
   const location = useLocation();

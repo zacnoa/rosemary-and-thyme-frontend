@@ -3,9 +3,7 @@ import { getRequestEvent } from "solid-js/web";
 import { User } from "~/components/auth/context/authContext";
 import { API_URL } from "~/utils/apiUrl";
 
-/**
- * Provides the getUser function.
- */
+/** Provides the getUser function. */
 export const getUser = query(async () => {
   "use server";
   const event = getRequestEvent();

@@ -1,8 +1,6 @@
 import { API_URL } from "~/utils/apiUrl";
 
-/**
- * Provides the requestAccountDeletion function.
- */
+/** Provides the requestAccountDeletion function. */
 export const requestAccountDeletion = async () => {
   const result = await fetch(`${API_URL}/user/delete`, {
     method: "POST",

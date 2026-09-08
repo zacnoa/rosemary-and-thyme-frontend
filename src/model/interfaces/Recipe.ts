@@ -2,9 +2,7 @@ import { Ingredient, Instruction } from "../types/recipeTypes";
 import { RecipeImage } from "../types/utils";
 import { UUID } from "../types/UUID";
 
-/**
- * Defines the Recipe type.
- */
+/** Defines the Recipe type. */
 export interface Recipe {
 
   id: UUID,
@@ -27,8 +25,6 @@ export interface Recipe {
   instructionsOrder: UUID[],
   heroImagesOrder: UUID[],
 
-  /**
- * Mirrors the backend's `RecipeDTO.isPrivate`.
- */
+  /** Mirrors the backend's `RecipeDTO.isPrivate`. */
   isPrivate: boolean,
 }

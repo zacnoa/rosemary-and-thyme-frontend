@@ -3,9 +3,7 @@ import { A } from "@solidjs/router"
 
 const DISMISSED_KEY = "cookie_notice_dismissed"
 
-/**
- * Provides the CookieNotice function.
- */
+/** Provides the CookieNotice function. */
 export default function CookieNotice() {
   const [visible, setVisible] = createSignal(false)
 

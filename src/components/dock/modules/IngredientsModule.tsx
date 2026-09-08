@@ -11,15 +11,11 @@ type IngredientsModuleProps = {
   ingredientsOrder: UUID[];
 }
 
-/**
- * Displays the recipe ingredients in a read-only dock panel.
- */
+/** Displays the recipe ingredients in a read-only dock panel. */
 export default function IngredientsModule(props: IngredientsModuleProps) {
   const { toggle, activePanel, registerPanel } = useDock();
 
-  /**
- * Provides the namedIngredientIds function.
- */
+  /** Provides the namedIngredientIds function. */
   const namedIngredientIds = () =>
     props.ingredientsOrder.filter((id) => props.ingredients[id]?.name);
 

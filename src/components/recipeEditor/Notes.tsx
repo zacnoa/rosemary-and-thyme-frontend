@@ -2,9 +2,7 @@ import { onMount } from "solid-js";
 import { resizeTextarea } from "~/utils/resizeTextarea";
 import { useRecipe } from "./context/useRecipe";
 
-/**
- * Provides the Notes function.
- */
+/** Provides the Notes function. */
 export default function Notes() {
   const context = useRecipe();
   let notesRef: HTMLTextAreaElement | undefined

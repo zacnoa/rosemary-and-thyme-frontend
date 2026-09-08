@@ -1,23 +1,17 @@
 import { createSignal, createMemo, JSX, ParentProps, Show } from "solid-js";
 import { DockContext } from "./context/DockContext";
 
-/**
- * Provides the CLOSE_ANIMATION_MS function.
- */
+/** Provides the CLOSE_ANIMATION_MS function. */
 const CLOSE_ANIMATION_MS = 300;
 
-/**
- * Provides the Dock function.
- */
+/** Provides the Dock function. */
 export default function Dock(props: ParentProps) {
   const [activePanel, setActivePanel] = createSignal<string | null>(null);
   const [renderedPanel, setRenderedPanel] = createSignal<string | null>(null);
   const [panels, setPanels] = createSignal<Record<string, () => JSX.Element>>({});
   let closeTimeout: ReturnType<typeof setTimeout> | undefined;
 
-  /**
- * Provides the toggle function.
- */
+  /** Provides the toggle function. */
   const toggle = (id: string) => {
     clearTimeout(closeTimeout);
 
@@ -30,25 +24,19 @@ export default function Dock(props: ParentProps) {
     }
   };
 
-  /**
- * Provides the registerPanel function.
- */
+  /** Provides the registerPanel function. */
   const registerPanel = (id: string, content: () => JSX.Element) => {
     setPanels((prev) => ({ ...prev, [id]: content }));
   };
 
-  /**
- * Provides the activeContent function.
- */
+  /** Provides the activeContent function. */
   const activeContent = createMemo(() => {
     const id = renderedPanel();
     if (!id) return null;
     return panels()[id]?.() ?? null;
   });
 
-  /**
- * Because DockContext is not reliant on any external calls for its state we forego a separate DockProvider.ts file
- */
+  /** Because DockContext is not reliant on any external calls for its state we forego a separate DockProvider.ts file. */
   return (
     <DockContext.Provider value={{ activePanel, toggle, registerPanel, panels }}>
       <div class="relative w-full">

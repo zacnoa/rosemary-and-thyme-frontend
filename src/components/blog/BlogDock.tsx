@@ -8,9 +8,7 @@ import SearchModule from "../dock/modules/SearchModule";
 import UserButton from "../dock/modules/UserModule";
 import { useBlog } from "./context/useBlog";
 
-/**
- * Provides the BlogDock function.
- */
+/** Provides the BlogDock function. */
 export default function BlogDock() {
   const { recipe } = useBlog();
   return (

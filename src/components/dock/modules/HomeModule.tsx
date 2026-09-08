@@ -1,9 +1,7 @@
 import { House } from "lucide-solid";
 import { A } from "@solidjs/router";
 
-/**
- * Provides the HomeButton function.
- */
+/** Provides the HomeButton function. */
 export default function HomeButton() {
   return (
     <li class="bg-blue rounded-md">

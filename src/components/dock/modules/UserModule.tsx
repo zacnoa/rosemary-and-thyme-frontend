@@ -9,17 +9,13 @@ import { loginHref } from "~/utils/loginRedirect";
 
 const PANEL_ID = "user";
 
-/**
- * Provides the UserButton function.
- */
+/** Provides the UserButton function. */
 export default function UserButton() {
   const { toggle, activePanel, registerPanel } = useDock();
   const user = useAuth();
   const location = useLocation();
 
-  /**
- * Provides the logout function.
- */
+  /** Provides the logout function. */
   const logout = async () => {
     await logoutUser();
     // Clears AccountDeletionNotice's "already shown this login" flag, so a fresh

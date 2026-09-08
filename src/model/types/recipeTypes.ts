@@ -1,9 +1,7 @@
 
 import { UUID } from "./UUID"
 
-/**
- * Defines the Ingredient type.
- */
+/** Defines the Ingredient type. */
 export type Ingredient = {
   id: UUID
   name: string,
@@ -11,9 +9,7 @@ export type Ingredient = {
   measuringUnit: string,
 }
 
-/**
- * Defines the Instruction type.
- */
+/** Defines the Instruction type. */
 export type Instruction = {
   id: UUID,
   text: string,

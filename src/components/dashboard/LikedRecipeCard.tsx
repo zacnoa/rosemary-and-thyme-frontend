@@ -6,18 +6,14 @@ import { setRecipeLiked } from "~/queries/likeRecipe";
 import type { RecipeFeed } from "~/model/interfaces/RecipeFeed";
 import type { UUID } from "~/model/types/UUID";
 
-/**
- * Provides the LikedRecipeCard function.
- */
+/** Provides the LikedRecipeCard function. */
 export default function LikedRecipeCard(props: {
   recipe: RecipeFeed;
   onUnliked: (id: UUID) => void;
 }) {
   const [unliking, setUnliking] = createSignal(false);
 
-  /**
- * Provides the confirmUnlike function.
- */
+  /** Provides the confirmUnlike function. */
   const confirmUnlike = async () => {
     setUnliking(true);
     // try/catch - a network failure rejects the promise rather than

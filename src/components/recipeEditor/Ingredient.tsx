@@ -2,9 +2,7 @@ import { createSignal } from "solid-js";
 import { useRecipe } from "./context/useRecipe";
 import { formatAmount, parseAmount } from "~/utils/parseAmount";
 
-/**
- * Provides the Ingredient function.
- */
+/** Provides the Ingredient function. */
 export default function Ingredient({ id }: { id: string }) {
   const context = useRecipe();
   const ingredient = () => context.recipe.ingredients[id];
@@ -19,9 +17,7 @@ export default function Ingredient({ id }: { id: string }) {
     }
   };
 
-  /**
- * Provides the revertAmountIfInvalid function.
- */
+  /** Provides the revertAmountIfInvalid function. */
   const revertAmountIfInvalid = () => {
     if (parseAmount(amountText()) === undefined) {
       setAmountText(formatAmount(ingredient().amount));

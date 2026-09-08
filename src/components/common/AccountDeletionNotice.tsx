@@ -9,9 +9,7 @@ import { daysUntilAccountDeletion } from "~/utils/accountDeletion";
 // forever.
 export const ACCOUNT_DELETION_NOTICE_SHOWN_KEY = "account_deletion_notice_shown";
 
-/**
- * Provides the AccountDeletionNotice function.
- */
+/** Provides the AccountDeletionNotice function. */
 export default function AccountDeletionNotice() {
   const user = useAuth();
   const { notify } = useNotification();

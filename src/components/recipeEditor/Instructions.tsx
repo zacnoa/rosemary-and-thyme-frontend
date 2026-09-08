@@ -2,9 +2,7 @@ import { For } from "solid-js";
 import { useRecipe } from "./context/useRecipe";
 import InstructionItem from "./InstructionItem";
 
-/**
- * Provides the Instructions function.
- */
+/** Provides the Instructions function. */
 export default function Instructions() {
   const context = useRecipe();
 

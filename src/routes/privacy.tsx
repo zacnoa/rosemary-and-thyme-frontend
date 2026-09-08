@@ -1,9 +1,7 @@
 const LAST_UPDATED = "August 27, 2026"
 const CONTACT_EMAIL = "privacy@rosemary-n-thyme.com"
 
-/**
- * Provides the PrivacyPolicy function.
- */
+/** Provides the PrivacyPolicy function. */
 export default function PrivacyPolicy() {
   return (
     <main class="max-w-2xl mx-2 md:mx-auto mt-20 mb-20 px-2 flex flex-col gap-6">

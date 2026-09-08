@@ -1,8 +1,6 @@
 import { UUID } from "../types/UUID";
 
-/**
- * Defines the RecipeFeed type.
- */
+/** Defines the RecipeFeed type. */
 export interface RecipeFeed {
   id: UUID;
   name: string;

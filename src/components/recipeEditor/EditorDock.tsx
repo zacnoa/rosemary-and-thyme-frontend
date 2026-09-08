@@ -10,9 +10,7 @@ import Dock from "../dock/Dock";
 
 
 
-/**
- * Provides the EditorDock function.
- */
+/** Provides the EditorDock function. */
 export default function EditorDock() {
   const { recipe } = useRecipe();
   return (

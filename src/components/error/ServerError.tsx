@@ -1,9 +1,7 @@
 import { A } from "@solidjs/router";
 import { ServerCrash } from "lucide-solid";
 
-/**
- * Provides the ServerError function.
- */
+/** Provides the ServerError function. */
 export default function ServerError() {
   return (
     <main class="md:max-w-md mx-2 md:mx-auto mt-20 px-2 text-center flex flex-col items-center gap-6">

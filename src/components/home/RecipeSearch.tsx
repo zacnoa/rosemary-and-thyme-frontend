@@ -4,9 +4,7 @@ import type { RecipeFeed } from "~/model/interfaces/RecipeFeed";
 import VirtualFeed from "~/components/common/VirtualFeed";
 import RecipePost from "./RecipePost";
 
-/**
- * Provides the RecipeSearch function.
- */
+/** Provides the RecipeSearch function. */
 export default function RecipeSearch(props: { initialQuery?: string }) {
   const [query, setQuery] = createSignal(props.initialQuery ?? "");
   const [debouncedQuery, setDebouncedQuery] = createSignal(query());

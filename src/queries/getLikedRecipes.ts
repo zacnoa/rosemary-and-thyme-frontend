@@ -2,14 +2,10 @@ import { API_URL } from "~/utils/apiUrl";
 import type { RecipeFeed } from "~/model/interfaces/RecipeFeed";
 import type { FeedPage } from "~/model/interfaces/FeedPage";
 
-/**
- * Defines the RecipeFeedWire type.
- */
+/** Defines the RecipeFeedWire type. */
 type RecipeFeedWire = Omit<RecipeFeed, "createDate"> & { createDate: string };
 
-/**
- * Provides the getLikedRecipes function.
- */
+/** Provides the getLikedRecipes function. */
 export const getLikedRecipes = async (cursor: string | null): Promise<FeedPage<RecipeFeed>> => {
   const params = new URLSearchParams();
   if (cursor) params.set("cursor", cursor);

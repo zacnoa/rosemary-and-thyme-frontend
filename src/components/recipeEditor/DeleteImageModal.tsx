@@ -9,9 +9,7 @@ type DeleteImageModalProps = {
   onClose: () => void;
 };
 
-/**
- * Confirms deletion of a single recipe image.
- */
+/** Confirms deletion of a single recipe image. */
 export default function DeleteImageModal(props: DeleteImageModalProps) {
   const confirmDelete = () => {
     props.onConfirm();

@@ -1,9 +1,7 @@
 // @refresh reload
 import { createHandler, StartServer } from "@solidjs/start/server";
 
-/**
- * Describes this component.
- */
+/** Describes this component. */
 export default createHandler(() => (
   <StartServer
     document={({ assets, children, scripts }) => (

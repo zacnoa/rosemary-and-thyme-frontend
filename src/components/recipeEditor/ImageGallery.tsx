@@ -10,16 +10,12 @@ export type ImageGalleryProps = {
   addImage: (image: RecipeImage, ...args: unknown[]) => void
 }
 
-/**
- * Displays recipe images and handles image selection and deletion.
- */
+/** Displays recipe images and handles image selection and deletion. */
 export default function ImageGallery(props: ImageGalleryProps) {
   const { recipe, removeImage } = useRecipe()
   const [deleteTarget, setDeleteTarget] = createSignal<UUID | null>(null);
 
-  /**
- * Provides the handleChange function.
- */
+  /** Provides the handleChange function. */
   const handleChange: JSX.EventHandler<HTMLInputElement, Event> = (e) => {
     const file = e.currentTarget.files?.[0];
     if (!file) return;

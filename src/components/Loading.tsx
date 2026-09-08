@@ -1,8 +1,6 @@
 import { LoaderCircle } from "lucide-solid";
 
-/**
- * Provides the Loading function.
- */
+/** Provides the Loading function. */
 export default function Loading() {
   return (
     <div class="fixed inset-0 flex flex-col items-center justify-center gap-3 bg-background">

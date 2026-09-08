@@ -2,9 +2,7 @@
 import { createContext } from "solid-js";
 import { UUID } from "~/model/types/UUID";
 
-/**
- * Defines the User type.
- */
+/** Defines the User type. */
 export type User = {
   username: string,
   id: UUID,
@@ -18,7 +16,5 @@ export type User = {
   hasPassword: boolean
 }
 
-/**
- * Provides the AuthContext function.
- */
+/** Provides the AuthContext function. */
 export const AuthContext = createContext<User | null>();

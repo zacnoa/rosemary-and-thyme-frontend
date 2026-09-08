@@ -257,9 +257,7 @@ function Notes() {
 }
 
 
-/**
- * Provides the Blog function.
- */
+/** Provides the Blog function. */
 export default function Blog() {
 
   const BlogDock = clientOnly(() => import("./BlogDock"))

@@ -1,8 +1,6 @@
 import { API_URL } from "~/utils/apiUrl";
 
-/**
- * Provides the putRecipe function.
- */
+/** Provides the putRecipe function. */
 export const putRecipe = async (id: string, formData: FormData) => {
   const result = await fetch(`${API_URL}/recipe/${id}`, {
     method: "PUT",

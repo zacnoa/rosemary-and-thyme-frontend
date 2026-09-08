@@ -10,9 +10,7 @@ import ServerError from "./components/error/ServerError";
 import CookieNotice from "./components/common/CookieNotice";
 import AccountDeletionNotice from "./components/common/AccountDeletionNotice";
 
-/**
- * Provides the App function.
- */
+/** Provides the App function. */
 export default function App() {
   return (
     <Router

@@ -1,8 +1,6 @@
 import { API_URL } from "~/utils/apiUrl";
 
-/**
- * Provides the resendVerificationEmail function.
- */
+/** Provides the resendVerificationEmail function. */
 export const resendVerificationEmail = async (email: string) => {
   const result = await fetch(`${API_URL}/auth/verify-email/resend`, {
     method: "POST",

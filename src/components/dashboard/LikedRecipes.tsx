@@ -4,15 +4,11 @@ import { getLikedRecipes } from "~/queries/getLikedRecipes";
 import VirtualFeed, { type VirtualFeedHandle } from "~/components/common/VirtualFeed";
 import LikedRecipeCard from "./LikedRecipeCard";
 
-/**
- * Provides the LikedRecipes function.
- */
+/** Provides the LikedRecipes function. */
 export default function LikedRecipes() {
   let feedHandle: VirtualFeedHandle<RecipeFeed> | undefined;
 
-  /**
- * Provides the onUnliked function.
- */
+  /** Provides the onUnliked function. */
   const onUnliked = (id: UUID) => feedHandle?.remove(id);
 
   return (

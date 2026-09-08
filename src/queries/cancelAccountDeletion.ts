@@ -1,8 +1,6 @@
 import { API_URL } from "~/utils/apiUrl";
 
-/**
- * Provides the cancelAccountDeletion function.
- */
+/** Provides the cancelAccountDeletion function. */
 export const cancelAccountDeletion = async () => {
   const result = await fetch(`${API_URL}/user/delete`, {
     method: "DELETE",

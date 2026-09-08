@@ -5,9 +5,7 @@ type AuthProviderProps = ParentProps & {
   user: User | null
 }
 
-/**
- * Provides the AuthProvider function.
- */
+/** Provides the AuthProvider function. */
 export default function AuthProvider(props: AuthProviderProps) {
 
 
