@@ -1,9 +1,10 @@
 import { For, Index, Show } from "solid-js";
-import { Eye, EyeOff, ThumbsUp } from "lucide-solid";
+import { CookingPot, Eye, EyeOff, ThumbsUp } from "lucide-solid";
 import { clientOnly } from "@solidjs/start";
 import { useBlog } from "./context/useBlog";
 import { useWakeLock } from "~/components/common/useWakeLock";
 import { formatAmount } from "~/utils/parseAmount";
+import MadeRecipeSlider from "~/components/common/MadeRecipeSlider";
 
 /*
  * Read-only mirror of the recipeEditor/* components, section for section
@@ -24,7 +25,7 @@ import { formatAmount } from "~/utils/parseAmount";
 
 function Header() {
 
-  const { recipe, liked, likes, toggleLike } = useBlog();
+  const { recipe, liked, likes, timesMade, toggleLike } = useBlog();
   return (
     <section>
       <div class="flex border-b-3 md:border-b-4 border-foreground2">
@@ -37,20 +38,25 @@ function Header() {
           liked/unliked state so it reads clearly at the icon's small mobile size,
           not just by the color difference alone.
         */}
-        <button
-          type="button"
-          onClick={toggleLike}
-          class="flex items-center gap-2 text-green border-l-3 md:border-l-4 border-orange pl-2 md:pl-4 w-20 md:w-32 cursor-pointer"
-        >
-          <span class="flex items-center">
+        <div class="flex flex-col justify-center gap-1 border-l-3 md:border-l-4 border-orange pl-2 md:pl-4 w-20 md:w-32">
+          <button
+            type="button"
+            onClick={toggleLike}
+            class="flex items-center gap-2 text-green cursor-pointer"
+            title="Like this recipe"
+          >
             <ThumbsUp
               stroke="var(--color-green)"
               fill={liked() ? "var(--color-green)" : "none"}
               class="md:size-8 size-5"
             />
-          </span>
-          <span class="text-sm md:text-2xl mt-1.75 md:mt-2 leading-none">{likes()}</span>
-        </button>
+            <span class="text-sm md:text-2xl leading-none">{likes()}</span>
+          </button>
+          <div class="flex items-center gap-2 text-orange" title="Times made">
+            <CookingPot stroke="var(--color-orange)" class="md:size-7 size-4" />
+            <span class="text-sm md:text-xl leading-none">{timesMade()}</span>
+          </div>
+        </div>
       </div>
 
       <div class="flex">
@@ -261,7 +267,7 @@ function Notes() {
 export default function Blog() {
 
   const BlogDock = clientOnly(() => import("./BlogDock"))
-  const { recipe } = useBlog()
+  const { recipe, madePending, markMade } = useBlog()
   return (
     <div class="w-full overflow-hidden">
       <main class="md:max-w-4xl my-4 mx-2 md:mx-auto">
@@ -271,7 +277,10 @@ export default function Blog() {
         </section>
         <section class="mt-20"><BasicInformation /></section>
         <section class="mt-20"><Instructions /></section>
-        <section class="mt-20 mb-40"><Notes /></section>
+        <section class="mt-20"><Notes /></section>
+        <section class="mt-20 mb-40">
+          <MadeRecipeSlider pending={madePending} onConfirm={markMade} />
+        </section>
         <section class="fixed bottom-10 left-1/2 -translate-x-1/2 w-[92vw] max-w-md md:w-auto md:max-w-none">
           <BlogDock />
         </section>

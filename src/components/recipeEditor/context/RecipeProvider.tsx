@@ -8,6 +8,7 @@ import { RecipeDTO, RecipeImage, stripBlobData } from "~/model/types/utils";
 import { useNotification } from "~/components/notification/context/useNotification";
 import { putRecipe } from "~/queries/putRecipe";
 import { getSaveBlockers } from "~/utils/validateRecipe";
+import { markRecipeMade } from "~/queries/markRecipeMade";
 
 
 
@@ -21,6 +22,8 @@ export default function RecipeProvider(props: RecipeProviderProps) {
 
   const [recipe, setRecipe] = createStore<Recipe>(props.initialRecipe);
   const [changedFlag, setChangedFlag] = createSignal<boolean>(false);
+  const [timesMade, setTimesMade] = createSignal(props.initialRecipe.timesMade);
+  const [madePending, setMadePending] = createSignal(false);
   const { notify } = useNotification();
 
   // Set (synchronously, before the reconcile()) whenever applyServerRecipe
@@ -96,6 +99,7 @@ export default function RecipeProvider(props: RecipeProviderProps) {
     );
 
     applyingServerRecipe = true;
+    setTimesMade(dto.timesMade);
     setRecipe(reconcile({
       ...dto,
       createDate: new Date(dto.createDate),
@@ -151,6 +155,28 @@ export default function RecipeProvider(props: RecipeProviderProps) {
   const editCookTime = (text: string) => setRecipe("cookTime", text);
   const editDifficulty = (difficulty: number) => setRecipe("difficulty", difficulty);
   const editSideNotes = (text: string) => setRecipe("sideNotes", text);
+
+  /** Records one completed preparation independently from unsaved editor changes. */
+  const markMade = async () => {
+    if (madePending()) return;
+
+    setMadePending(true);
+    try {
+      const { ok, status, json } = await markRecipeMade(recipe.id);
+      if (ok) {
+        setTimesMade(json.timesMade);
+        notify("success", "Recipe marked as made");
+      } else if (status === 429) {
+        notify("error", json.detail ?? "This recipe was already marked as made from your network in the last 6 hours.");
+      } else {
+        notify("error", json.detail ?? "Could not mark this recipe as made");
+      }
+    } catch {
+      notify("error", "Could not reach the server - check your connection and try again");
+    } finally {
+      setMadePending(false);
+    }
+  };
 
   /** Provides the addIngredient function. */
   const addIngredient = () => {
@@ -218,6 +244,9 @@ export default function RecipeProvider(props: RecipeProviderProps) {
       recipe,
       changedFlag,
       saveBlockers: () => getSaveBlockers(recipe),
+      timesMade,
+      madePending,
+      markMade,
       removeImage,
       editName,
       editDescription,

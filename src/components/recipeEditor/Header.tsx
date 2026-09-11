@@ -1,5 +1,5 @@
 import { onMount } from "solid-js";
-import { ThumbsUp } from "lucide-solid";
+import { CookingPot, ThumbsUp } from "lucide-solid";
 import { useRecipe } from "./context/useRecipe";
 import { resizeTextarea } from "~/utils/resizeTextarea";
 
@@ -28,11 +28,15 @@ export default function Header() {
           }}
           spellcheck="false"
         >{context.recipe.name}</textarea>
-        <div class="flex items-center gap-2 text-green border-l-3 md:border-l-4 border-orange pl-2 md:pl-4 w-20 md:w-32">
-          <span class="flex items-center">
+        <div class="flex flex-col justify-center gap-1 border-l-3 md:border-l-4 border-orange pl-2 md:pl-4 w-20 md:w-32">
+          <div class="flex items-center gap-2 text-green" title="Likes">
             <ThumbsUp stroke="var(--color-green)" class="md:size-8 size-5" />
-          </span>
-          <span class="text-sm md:text-2xl mt-1.75 md:mt-2 leading-none">{context.recipe.likes}</span>
+            <span class="text-sm md:text-2xl leading-none">{context.recipe.likes}</span>
+          </div>
+          <div class="flex items-center gap-2 text-orange" title="Times made">
+            <CookingPot stroke="var(--color-orange)" class="md:size-7 size-4" />
+            <span class="text-sm md:text-xl leading-none">{context.timesMade()}</span>
+          </div>
         </div>
       </div>
 

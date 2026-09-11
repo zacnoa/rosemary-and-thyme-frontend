@@ -1,10 +1,13 @@
-import { For, Index, createSignal } from "solid-js";
+import { For, Index, Show, createSignal } from "solid-js";
+import { Eye, EyeOff } from "lucide-solid";
 import { useRecipe } from "./context/useRecipe";
 import Ingredient from "./Ingredient";
+import { useWakeLock } from "~/components/common/useWakeLock";
 
 /** Provides the BasicInformation function. */
 export default function BasicInformation() {
   const context = useRecipe();
+  const wakeLock = useWakeLock();
 
   // Local buffer for the Portions input, same reasoning as Ingredient.tsx's
   // amount field: `Number(e.currentTarget.value)` on a non-numeric string
@@ -36,7 +39,19 @@ export default function BasicInformation() {
         <h2 class="text-lg md:text-4xl font-bold pb-1 w-1/2 border-r-3 md:border-r-4 border-orange">
           What You Need
         </h2>
-        <span class="flex-1" />
+        <button
+          type="button"
+          onClick={wakeLock.toggle}
+          disabled={!wakeLock.supported()}
+          title={wakeLock.supported() ? undefined : "Keeping the screen on isn't supported in this browser"}
+          class={`flex-1 flex items-center pl-2 md:pl-4 gap-1 md:gap-2 pb-1 text-xs md:text-sm ${wakeLock.supported() ? "cursor-pointer" : "cursor-not-allowed opacity-50"
+            } ${wakeLock.active() ? "text-green" : "text-foreground3"}`}
+        >
+          <Show when={wakeLock.active()} fallback={<EyeOff class="size-3 md:size-4 shrink-0" />}>
+            <Eye class="size-3 md:size-4 shrink-0" />
+          </Show>
+          Press to keep screen awake
+        </button>
       </div>
       <div class="flex flex-col md:flex-row">
         <ul class="w-full md:w-1/2 order-2 md:order-1 flex flex-col gap-4 list-none border-orange md:border-r-4 pt-3 pr-0 md:pr-3">

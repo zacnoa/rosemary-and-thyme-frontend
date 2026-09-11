@@ -6,10 +6,11 @@ import ImageGallery from "./ImageGallery";
 import Instructions from "./Instructions";
 import Notes from "./Notes";
 import { useRecipe } from "./context/useRecipe";
+import MadeRecipeSlider from "~/components/common/MadeRecipeSlider";
 
 /** Provides the RecipeEditorContent function. */
 export default function RecipeEditorContent() {
-  const { recipe, addBannerImage } = useRecipe()
+  const { recipe, addBannerImage, madePending, markMade } = useRecipe()
 
   const EditorDock = clientOnly(() => import("./EditorDock"))
   return (
@@ -21,7 +22,10 @@ export default function RecipeEditorContent() {
         </section>
         <section class="mt-20"><BasicInformation /></section>
         <section class="mt-20"><Instructions /></section>
-        <section class="mt-20 mb-40"><Notes /></section>
+        <section class="mt-20"><Notes /></section>
+        <section class="mt-20 mb-40">
+          <MadeRecipeSlider pending={madePending} onConfirm={markMade} />
+        </section>
         <section class="fixed bottom-10 left-1/2 -translate-x-1/2 w-[92vw] max-w-md md:w-auto md:max-w-none">
           <EditorDock />
         </section>

@@ -1,4 +1,4 @@
-import { createContext } from "solid-js";
+import { Accessor, createContext } from "solid-js";
 import { Recipe } from "~/model/interfaces/Recipe";
 import { Ingredient, Instruction } from "~/model/types/recipeTypes";
 import { RecipeImage } from "~/model/types/utils";
@@ -10,6 +10,9 @@ type RecipeContextType = {
   changedFlag: () => boolean,
   /** Reasons `saveRecipe` would currently refuse to save (limit violations) - see utils/validateRecipe.ts. */
   saveBlockers: () => string[],
+  timesMade: Accessor<number>,
+  madePending: Accessor<boolean>,
+  markMade: () => void,
   editName: (text: string) => void
   editDescription: (text: string) => void
   editRating: (rating: number) => void
