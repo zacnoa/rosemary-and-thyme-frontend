@@ -38,7 +38,7 @@ function Header() {
           liked/unliked state so it reads clearly at the icon's small mobile size,
           not just by the color difference alone.
         */}
-        <div class="flex flex-col justify-center gap-1 border-l-3 md:border-l-4 border-orange pl-2 md:pl-4 w-20 md:w-32">
+        <div class="flex flex-col justify-center gap-2 md:gap-3 border-l-3 md:border-l-4 border-orange pl-2 md:pl-4 w-20 md:w-32">
           <button
             type="button"
             onClick={toggleLike}
@@ -53,7 +53,7 @@ function Header() {
             <span class="text-sm md:text-2xl leading-none">{likes()}</span>
           </button>
           <div class="flex items-center gap-2 text-orange" title="Times made">
-            <CookingPot stroke="var(--color-orange)" class="md:size-7 size-4" />
+            <CookingPot stroke="var(--color-orange)" class="size-5 md:size-8" />
             <span class="text-sm md:text-xl leading-none">{timesMade()}</span>
           </div>
         </div>
