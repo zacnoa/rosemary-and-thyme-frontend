@@ -23,20 +23,23 @@ export default function VirtualFeed<T>(props: {
   const [hasMore, setHasMore] = createSignal(true);
   const [loading, setLoading] = createSignal(false);
   const [error, setError] = createSignal(false);
+  let requestVersion = 0;
 
   const loadNext = async () => {
     if (loading() || !hasMore()) return;
+    const version = requestVersion;
     setLoading(true);
     setError(false);
     try {
       const page = await props.fetchPage(cursor());
+      if (version !== requestVersion) return;
       setItems((prev) => [...prev, ...page.items]);
       setCursor(page.nextCursor);
       setHasMore(page.nextCursor !== null);
     } catch {
-      setError(true);
+      if (version === requestVersion) setError(true);
     } finally {
-      setLoading(false);
+      if (version === requestVersion) setLoading(false);
     }
   };
 
@@ -53,10 +56,12 @@ export default function VirtualFeed<T>(props: {
     on(
       () => props.resetKey,
       () => {
+        requestVersion += 1;
         setItems([]);
         setCursor(null);
         setHasMore(true);
         setError(false);
+        setLoading(false);
         loadNext();
       }
     )
