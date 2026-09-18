@@ -6,8 +6,9 @@ import type { FeedPage } from "~/model/interfaces/FeedPage";
 type RecipeFeedWire = Omit<RecipeFeed, "createDate"> & { createDate: string };
 
 /** Provides the getLikedRecipes function. */
-export const getLikedRecipes = async (cursor: string | null): Promise<FeedPage<RecipeFeed>> => {
+export const getLikedRecipes = async (q: string, cursor: string | null): Promise<FeedPage<RecipeFeed>> => {
   const params = new URLSearchParams();
+  if (q.trim()) params.set("q", q.trim());
   if (cursor) params.set("cursor", cursor);
   const qs = params.toString();
 

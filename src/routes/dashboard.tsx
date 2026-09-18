@@ -2,8 +2,7 @@ import { onMount, Show } from "solid-js";
 import { useNavigate } from "@solidjs/router";
 import { clientOnly } from "@solidjs/start";
 import { useAuth } from "~/components/auth/context/useAuth";
-import RecipeSearch from "~/components/dashboard/RecipeSearch";
-import LikedRecipes from "~/components/dashboard/LikedRecipes";
+import DashboardRecipeFeed from "~/components/dashboard/DashboardRecipeFeed";
 import AccountSettings from "~/components/dashboard/AccountSettings";
 import { loginHref } from "~/utils/loginRedirect";
 
@@ -29,10 +28,7 @@ export default function Dashboard() {
               <p class="mt-4 mb-6 text-sm md:text-lg text-foreground3">
                 {u().email}
               </p>
-              <div class="flex flex-col gap-10">
-                <RecipeSearch />
-                <LikedRecipes />
-              </div>
+              <DashboardRecipeFeed />
               <AccountSettings user={u()} />
             </section>
             <section class="fixed bottom-10 left-1/2 -translate-x-1/2 w-[92vw] max-w-md md:w-auto md:max-w-none">

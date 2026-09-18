@@ -35,7 +35,7 @@ export default function Header() {
           </div>
           <div class="flex items-center gap-2 text-orange" title="Times made">
             <CookingPot stroke="var(--color-orange)" class="size-5 md:size-8" />
-            <span class="text-sm md:text-xl leading-none">{context.timesMade()}</span>
+            <span class="text-sm md:text-xl leading-none mb-2">{context.timesMade()}</span>
           </div>
         </div>
       </div>
