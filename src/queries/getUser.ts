@@ -9,10 +9,18 @@ export const getUser = query(async () => {
   const event = getRequestEvent();
   const cookie = event?.locals.sessionCookie ?? "";
 
-  const response = await fetch(`${API_URL}/user/aboutme`, {
-    method: "GET",
-    headers: { "Content-Type": "application/json", cookie: `session_cookie=${cookie}` },
-  });
+  let response: Response;
+  try {
+    response = await fetch(`${API_URL}/user/aboutme`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json", cookie: `session_cookie=${cookie}` },
+    });
+  } catch (error) {
+    // An unavailable API should leave visitors anonymous instead of aborting
+    // the entire SSR stream before Solid's hydration script is emitted.
+    console.error("Auth check could not reach the API:", error);
+    return null;
+  }
 
   if (response.status === 401 || response.status === 403) {
     //user not logged in, normal bahaviour not an error

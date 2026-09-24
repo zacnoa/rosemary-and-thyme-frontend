@@ -33,7 +33,7 @@ export default function Header() {
             <ThumbsUp stroke="var(--color-green)" class="md:size-8 size-5" />
             <span class="text-sm md:text-2xl leading-none">{context.recipe.likes}</span>
           </div>
-          <div class="flex items-center gap-2 text-orange" title="Times made">
+          <div class="flex items-center gap-2 text-orange md:mb-2 mb-1" title="Times made">
             <CookingPot stroke="var(--color-orange)" class="size-5 md:size-8" />
             <span class="text-sm md:text-xl leading-none mb-2">{context.timesMade()}</span>
           </div>
