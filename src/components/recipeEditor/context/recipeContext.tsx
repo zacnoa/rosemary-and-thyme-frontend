@@ -8,6 +8,7 @@ import { UUID } from "~/model/types/UUID";
 type RecipeContextType = {
   recipe: Recipe,
   changedFlag: () => boolean,
+  savePending: Accessor<boolean>,
   /** Reasons `saveRecipe` would currently refuse to save (limit violations) - see utils/validateRecipe.ts. */
   saveBlockers: () => string[],
   timesMade: Accessor<number>,

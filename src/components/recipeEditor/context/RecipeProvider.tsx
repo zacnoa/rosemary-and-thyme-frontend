@@ -22,6 +22,7 @@ export default function RecipeProvider(props: RecipeProviderProps) {
 
   const [recipe, setRecipe] = createStore<Recipe>(props.initialRecipe);
   const [changedFlag, setChangedFlag] = createSignal<boolean>(false);
+  const [savePending, setSavePending] = createSignal(false);
   const [timesMade, setTimesMade] = createSignal(props.initialRecipe.timesMade);
   const [madePending, setMadePending] = createSignal(false);
   const { notify } = useNotification();
@@ -35,7 +36,7 @@ export default function RecipeProvider(props: RecipeProviderProps) {
 
   /** Provides the saveRecipe function. */
   const saveRecipe = async (recipe: Recipe) => {
-    if (!changedFlag()) return;
+    if (savePending() || !changedFlag()) return;
 
     const blockers = getSaveBlockers(recipe);
     if (blockers.length > 0) {
@@ -43,31 +44,22 @@ export default function RecipeProvider(props: RecipeProviderProps) {
       return;
     }
 
-    notify("loading", "Saving...");
-
-    const formData = new FormData();
-
-    // recipe JSON without the blob data - the backend only wants the
-    // (already-uploaded) url, never the raw file object
-    const recipeDTO = stripBlobData(recipe);
-
-    // explicitly set the content-type so the backend can tell this part
-    // apart from the image parts
-    const recipeBlob = new Blob([JSON.stringify(recipeDTO)], { type: "application/json" });
-    formData.append("recipe", recipeBlob);
-
-    // images as binary parts, keyed by image id so the backend can match
-    // each upload back to the RecipeImageDTO with the same id in "recipe"
-    Object.entries(recipe.images).forEach(([id, img]) => {
-      if (img.blob) {
-        formData.append(id, img.blob);
-      }
-    });
-
-    // try/catch - a network failure or non-JSON error body rejects the
-    // promise rather than returning a value; without this the "loading" toast
-    // above (which doesn't auto-dismiss) would stay up forever with no error shown.
+    setSavePending(true);
     try {
+      notify("loading", "Saving...");
+
+      const formData = new FormData();
+      const recipeDTO = stripBlobData(recipe);
+      const recipeBlob = new Blob([JSON.stringify(recipeDTO)], { type: "application/json" });
+      formData.append("recipe", recipeBlob);
+
+      // Match each binary upload to its temporary image id in the recipe JSON.
+      Object.entries(recipe.images).forEach(([id, img]) => {
+        if (img.blob) {
+          formData.append(id, img.blob);
+        }
+      });
+
       const { ok, json } = await putRecipe(recipe.id, formData);
 
       if (!ok) {
@@ -80,6 +72,8 @@ export default function RecipeProvider(props: RecipeProviderProps) {
       notify("success", "Saving successful");
     } catch {
       notify("error", "Could not reach the server - check your connection and try again");
+    } finally {
+      setSavePending(false);
     }
   }
 
@@ -243,6 +237,7 @@ export default function RecipeProvider(props: RecipeProviderProps) {
     <RecipeContext.Provider value={{
       recipe,
       changedFlag,
+      savePending,
       saveBlockers: () => getSaveBlockers(recipe),
       timesMade,
       madePending,
